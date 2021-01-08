@@ -1,0 +1,76 @@
+export type Story = {
+  userId?: string;
+  uid?: number;
+  permission?: number;
+  source?: number;
+  seen?: 0 | 1;
+  seenList?: string[];
+  reactions?: string[];
+  hashtags?: string[];
+  mention?: string[];
+  messagesList?: string[];
+};
+
+export type UserInfo = {
+  email?: string;
+  birthday?: {
+    date: number;
+    month: number;
+    year: number;
+  };
+  followings?: string[];
+  fullname?: string;
+  phone?: string;
+  username?: string;
+  avatarURL?: string;
+  bio?: string;
+  website?: string;
+  gender?: 0 | 1 | 2;
+  storyNotificationList?: string[];
+  postNotificationList?: string[];
+  requestedList?: string[];
+  unSuggestList?: string[];
+};
+
+export type PostImage = {
+  uri: string,
+  width: number,
+  height: number,
+  extension: string,
+  fullSize: boolean,
+  tags: {
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    username: string
+  }[]
+}
+
+export type Post = {
+  userId?: string,
+  content?: string,
+  uid?: number,
+  isVideo?: boolean,
+  likes?: string[],
+  commentList?: string[],
+  permission?: number,
+  source?: PostImage[],
+  tags?: string[],
+  labels?: string[],
+  tagUsername?: string[],
+  notificationUsers?: string[],
+  altText?: string,
+  address?: string,
+  hashtags?: string[]
+}
+
+export type ExtraStory = {
+  storyList: Story[];
+  ownUser: UserInfo;
+};
+export type ExtraPost = Post & {
+  ownUser?: UserInfo
+}
+
+export type PostList = ExtraPost[]
