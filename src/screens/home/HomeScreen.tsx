@@ -18,6 +18,9 @@ import * as NavigationService from "react-navigation-helpers";
 import {POST_LIST, SCREEN_HEIGHT, STATUS_BAR_HEIGHT} from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
 import Posts from "../../shared/components/post-list/postList";
+import {NavigationContainer} from "@react-navigation/native";
+import { Header } from "react-native-elements";
+
 
 const HomeScreen = () => {
   const _scrollRef = useRef<ScrollView>(null);
@@ -59,6 +62,18 @@ const HomeScreen = () => {
         style={styles.keyboardAvoidingViewContainer}
         behavior="height"
       >
+        <Header
+          statusBarProps={{ barStyle: "dark-content" }}
+          barStyle="dark-content"
+          containerStyle={{
+            display: "flex",
+            backgroundColor: "#053280",
+          }}
+          centerComponent={{
+            text: "STYLEPOLL",
+            style: { color: "#FFF", fontWeight: "bold" },
+          }}
+        />
         <ScrollView
           // keyboardDismissMode="on-drag"
           // ref={_scrollRef}
@@ -83,7 +98,7 @@ const HomeScreen = () => {
 export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   keyboardAvoidingViewContainer: {
     position: "relative",

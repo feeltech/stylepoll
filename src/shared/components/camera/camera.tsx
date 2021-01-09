@@ -45,32 +45,22 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
                 }}
                 style={styles.preview}
                 type={this.state.cameraView}
-                children={
-                    <View
-                        style={{
-                            flex: 0,
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}
-                    >
-
-                        <TouchableOpacity
-                            onPress={this.takePicture.bind(this)}
-                            style={styles.capture}
-                        >
-                            <Icon name={"circle"} type="Feather" size={50} color={"#FFFFFF"}/>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={this.changeViewMode}
-                            style={styles.change_mode}
-                        >
-                            <Icon name={"refresh-cw"} type="Feather" size={35} color={"#FFFFFF"}/>
-                        </TouchableOpacity>
-
-                    </View>
-                }
-            />
+            >
+                <View style={{flexDirection: "row"}}>
+                    <TouchableOpacity
+                        onPress={this.changeViewMode.bind(this)}
+                        style={styles.change_mode}>
+                        <Icon name={"refresh-cw"} type="Feather" size={30} color={"#FFFFFF"}/>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, flexDirection: "row"}}>
+                    <TouchableOpacity
+                        onPress={this.takePicture.bind(this)}
+                        style={styles.capture}>
+                        <Icon name={"circle"} type="Feather" size={70} color={"#FFFFFF"}/>
+                    </TouchableOpacity>
+                </View>
+            </RNCamera>
         );
     }
 }
@@ -83,19 +73,23 @@ const styles = StyleSheet.create({
     },
     preview: {
         flex: 1,
-        justifyContent: "flex-end",
+        justifyContent: "center",
         alignItems: "center",
     },
     capture: {
-        flex: 10,
+        flex:1,
         borderRadius: 5,
         alignItems: "center",
-        marginBottom:10
+        justifyContent:"flex-end",
+        marginBottom: 10
     },
     change_mode: {
-        flex: 1,
+        flex:1,
         borderRadius: 5,
         alignItems: "flex-end",
+        // justifyContent:"center",
+        marginRight:10,
+        marginTop:10
     },
 });
 export default Camera;

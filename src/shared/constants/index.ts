@@ -6,10 +6,16 @@ import {ExtraPost, ExtraStory} from "../../modals";
 export const SCREENS = {
     HOME: "home",
     CAMERA: "camera",
-    CAPTURE_ACTION:"capture_action",
+    CAPTURE_ACTION: "capture_action",
     SEARCH: "search",
     FAVOURITES: "favourites",
     PROFILE: "profile",
+    ALERT_POLL: "alert_poll",
+    SEND_TO_FRIEND: "send_to_friend",
+    SEND_TO_FEED: "send_to_feed",
+    FEED_TO_FRIEND:"feed_to_friend",
+    POLL_DETAILS:"poll_details",
+    POLL_STATS:"poll_stats"
 };
 
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight();
@@ -79,16 +85,16 @@ export const STORY_LIST: ExtraStory[] = [
             {}
         ],
     },
-    {
-        ownUser: {
-            avatarURL:
-                "https://lh3.googleusercontent.com/proxy/faJq1RNJ4x2CCfzVfKKptAnotAr7SgOl8fMYNFfH-bAX_LvHn33OkjTzYKrLmumybzIkNlu3zZ_YVaFvfkJIkiBW3ukB07jC-YCvYv-xCURHPwQDerRWWM9RfI0AP3oTYmZH8_R2iNcxy8HiLMM2pJBXeb1_sGd5NQ",
-            username: "Camila Sofia"
-        },
-        storyList: [
-            {}
-        ],
-    },
+    // {
+    //     ownUser: {
+    //         avatarURL:
+    //             "https://lh3.googleusercontent.com/proxy/faJq1RNJ4x2CCfzVfKKptAnotAr7SgOl8fMYNFfH-bAX_LvHn33OkjTzYKrLmumybzIkNlu3zZ_YVaFvfkJIkiBW3ukB07jC-YCvYv-xCURHPwQDerRWWM9RfI0AP3oTYmZH8_R2iNcxy8HiLMM2pJBXeb1_sGd5NQ",
+    //         username: "Camila Sofia"
+    //     },
+    //     storyList: [
+    //         {}
+    //     ],
+    // },
     {
         ownUser: {
             avatarURL:
@@ -129,7 +135,7 @@ export const POST_LIST: ExtraPost[] = [{
     },
     content: "https://www.livinghours.com/wp-content/uploads/2016/04/Dessert-Tan-Dress.jpg",
     hashtags: ["top", "panties"],
-    source:[{
+    source: [{
         uri: "https://www.livinghours.com/wp-content/uploads/2016/04/Dessert-Tan-Dress.jpg",
         width: 50,
         height: 50,
@@ -152,7 +158,7 @@ export const POST_LIST: ExtraPost[] = [{
         },
         content: "https://www.livinghours.com/wp-content/uploads/2016/04/Dessert-Tan-Dress.jpg",
         hashtags: ["top", "panties"],
-        source:[{
+        source: [{
             uri: "https://i.pinimg.com/736x/cd/83/f5/cd83f51c1cf0dc3f1e9f632640fed7b7.jpg",
             width: 50,
             height: 50,

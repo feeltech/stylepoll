@@ -8,7 +8,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 /**
  * ? Local Imports
  */
-import { Header } from "react-native-elements";
 import { View } from "react-native";
 
 import { SCREENS } from "../../shared/constants";
@@ -17,6 +16,12 @@ import HomeScreen from "../../screens/home/HomeScreen";
 import SearchScreen from "../../screens/search/SearchScreen";
 import CameraScreen from "../../screens/camera/cameraScreen";
 import CaptureActions from "../../screens/camera/captureActions";
+import SendToFriend from "../../screens/sendToFriend/sendToFriend";
+import SendFeed from "../../screens/send-feed/sendFeed";
+import FeedToFriend from "../../screens/feed-to-friend/feedToFriend";
+import AlertPoll from "../../screens/alert-poll/alertPoll";
+import PollDetails from "../../screens/poll-details/pollDetails";
+import PollStats from "../../screens/poll-stats/pollStats";
 // ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -79,18 +84,7 @@ const Navigation = () => {
         isReadyRef.current = true;
       }}
     >
-      <Header
-        statusBarProps={{ barStyle: "dark-content" }}
-        barStyle="dark-content"
-        containerStyle={{
-          display: "flex",
-          backgroundColor: "#053280",
-        }}
-        centerComponent={{
-          text: "STYLEPOLL",
-          style: { color: "#FFF", fontWeight: "bold" },
-        }}
-      />
+
       <View style={{ flex: 12 }}>
         <Stack.Navigator
           screenOptions={{
@@ -100,6 +94,12 @@ const Navigation = () => {
           <Stack.Screen name={SCREENS.HOME} component={renderTabNavigation} />
           <Stack.Screen name={SCREENS.CAMERA} component={renderTabNavigation} />
           <Stack.Screen name={SCREENS.CAPTURE_ACTION} component={CaptureActions} />
+          <Stack.Screen name={SCREENS.SEND_TO_FEED} component={SendFeed} />
+          <Stack.Screen name={SCREENS.SEND_TO_FRIEND} component={SendToFriend} />
+          <Stack.Screen name={SCREENS.FEED_TO_FRIEND} component={FeedToFriend} />
+          <Stack.Screen name={SCREENS.ALERT_POLL} component={AlertPoll} />
+          <Stack.Screen name={SCREENS.POLL_DETAILS} component={PollDetails} />
+          <Stack.Screen name={SCREENS.POLL_STATS} component={PollStats} />
           {/*<Stack.Screen name={SCREENS.DETAIL}>*/}
           {/*  {(props) => <DetailScreen {...props} />}*/}
           {/*</Stack.Screen>*/}

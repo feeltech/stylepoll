@@ -1,6 +1,8 @@
 import React from "react";
 import {Alert, ImageBackground, StyleSheet, TouchableOpacity, View} from "react-native";
 import Share from 'react-native-share';
+import {navigate} from "../../services/navigation";
+
 
 interface ICaptureActionStatus {
     imageURI: string
@@ -29,12 +31,12 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
             [
                 {
                     text: "OK!",
-                    onPress: () => console.log("OK Pressed"),
+                    onPress: () => {navigate("send_to_feed",{imageUri: this.state.imageURI})},
                     style: "destructive"
                 },
                 {
                     text: "Send to a friend",
-                    onPress: () => console.log("Send to a friend Pressed")
+                    onPress: () => {navigate("feed_to_friend",{imageUri: this.state.imageURI})},
                 },
                 {
                     text: "Cancella",
@@ -53,7 +55,7 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
             [
                 {
                     text: "OK",
-                    onPress: () => console.log("OK Pressed"),
+                    onPress: () => {navigate("alert_poll",{imageUri: this.state.imageURI})},
                     style: "destructive"
                 },
                 {
@@ -68,7 +70,8 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private blueButtonActions = () => {
         const shareOptions = {
-            title: 'Share I,age',
+            title: 'Share Im' +
+                'age',
             failOnCancel: false,
             urls: [this.state.imageURI]
         };
@@ -93,6 +96,8 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     marginTop: 15,
+                    marginLeft:20,
+                    marginRight:20,
                     marginBottom: 5
                 }}>
                     <TouchableOpacity onPress={this.yellowButtonActions}>

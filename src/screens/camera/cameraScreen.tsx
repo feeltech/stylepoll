@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import {StyleSheet, TouchableOpacity, View} from "react-native";
 import Camera from "../../shared/components/camera/camera";
 import {navigate} from "../../services/navigation";
+import Icon from "react-native-dynamic-vector-icons";
 
 
 class CameraScreen extends React.Component<any, any> {

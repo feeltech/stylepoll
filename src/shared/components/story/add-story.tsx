@@ -7,7 +7,7 @@ export default class AddStory extends React.Component<any, any> {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => NavigationService.navigate("StoryTaker")}
+        onPress={() => NavigationService.navigate("camera")}
         activeOpacity={0.8}
         style={styles.container}
       >
