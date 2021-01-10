@@ -35,6 +35,7 @@ class SendToFriend extends React.Component<any, any> {
                             <Icon
                                 name="close"
                                 color="white"
+                                size={22}
                             />
                         </TouchableOpacity>}
                         centerComponent={{
