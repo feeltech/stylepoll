@@ -40,7 +40,7 @@ class FeedForm extends React.Component<any, IFeedFormStates> {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height">
@@ -116,7 +116,7 @@ class FeedForm extends React.Component<any, IFeedFormStates> {
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </View>
         );
     }
 }

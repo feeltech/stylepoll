@@ -61,6 +61,7 @@ const Navigation = () => {
           // inactiveTintColor: "gray",
           tabStyle: {
             backgroundColor: "#053280",
+            paddingBottom:0,
           },
           // inactiveBackgroundColor: "none",
           activeBackgroundColor: "#C3C3C3",

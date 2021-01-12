@@ -57,7 +57,7 @@ const HomeScreen = () => {
     ref.current.preOffsetY = y;
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingViewContainer}
         behavior="height"
@@ -91,7 +91,7 @@ const HomeScreen = () => {
           <Posts data={POST_LIST} />
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 

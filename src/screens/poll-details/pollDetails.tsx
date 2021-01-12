@@ -37,7 +37,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height"
@@ -145,7 +145,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </View>
         );
     }
 }
