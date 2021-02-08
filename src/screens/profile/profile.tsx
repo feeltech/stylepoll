@@ -106,7 +106,7 @@ export default class Profile extends React.Component<IProfileProps, IProfileStat
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <ScrollView style={{backgroundColor: 'none'}}>
                     <Header
                         statusBarProps={{barStyle: "dark-content"}}
@@ -224,7 +224,7 @@ export default class Profile extends React.Component<IProfileProps, IProfileStat
                         </View>
                     }
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         )
     }
 }
