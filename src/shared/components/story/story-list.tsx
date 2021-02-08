@@ -31,8 +31,8 @@ const StoryPreviewItem = ({
   //   setSeen(isSeen);
   // }, [storyList]);
   const [preloadingImage, setPreloadingImage] = useState<boolean>(false);
-  const _onShowStory = () => {
-    navigate("story_view")
+  const _onShowStory = (poll:AlertPoll) => {
+    navigate("story_view",{poll:poll})
     // if (seen) {
     //   return _onCompletedLoadingImage();
     // }
@@ -169,7 +169,7 @@ const StoryPreviewItem = ({
         )}
         <View style={styles.imageContainer}>
           <TouchableOpacity
-            onPress={_onShowStory}
+            onPress={()=>{_onShowStory(poll)}}
             activeOpacity={0.8}
             style={styles.imageWrapper}
           >

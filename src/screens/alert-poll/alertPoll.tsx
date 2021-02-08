@@ -43,6 +43,7 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
                 location: location,
                 isFeedPost: false,
                 isPollPost: true,
+                image:res,
                 user: this.state.user,
                 pollStartDate: pollStartDate ? pollStartDate : null,
                 userId:this.state.user.userId
@@ -55,7 +56,6 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
         }).catch(err => {
             console.log(err)
         })
-
     }
     render() {
         return (
