@@ -3,7 +3,7 @@ import {
     KeyboardAvoidingView,
     SafeAreaView,
     ScrollView,
-    StyleSheet,
+    StyleSheet, Switch,
     Text,
     TextInput,
     TouchableOpacity,
@@ -12,10 +12,96 @@ import {
 import {Header} from "react-native-elements";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {SCREEN_WIDTH} from "../../shared/constants";
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
+import {PostDoc, User} from "../../modals";
+import {createPost, discoverAllUsers, fetchAllUsers} from "../../services/firebase/firebaseService";
+import {includes,map,startCase} from 'lodash';
+import {uploadImageAndGetUrl} from "../../utils";
 
+interface ISendToFriendStates{
+    postDoc:any;
+    selectedFriends:string[],
+    imageURI: string,
+    followingFriends:User[]
+}
 
-class SendToFriend extends React.Component<any, any> {
+class SendToFriend extends React.Component<any, ISendToFriendStates> {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            postDoc: null,
+            selectedFriends:[],
+            imageURI:'',
+            followingFriends:[]
+        }
+    }
+
+    componentDidMount() {
+        const postDoc = this.props.route.params && this.props.route.params.postDoc
+        const imageURI = this.props.route.params && this.props.route.params.imageURI
+        this.setState({
+            postDoc:postDoc,
+            imageURI:imageURI
+        })
+        this.getFollowingUsers(null);
+    }
+
+    private onSave = () => {
+        const postDoc = this.state.postDoc;
+        postDoc.DMList = this.state.selectedFriends;
+        uploadImageAndGetUrl(this.state.imageURI).then(res => {
+            postDoc.image = res
+            createPost(postDoc).then(res => {
+                navigate("camera")
+            }).catch(err => {
+                console.log(err)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    private handleFriendsToSend = (userId:string) => {
+        const selectedFriends = this.state.selectedFriends;
+        if(includes(selectedFriends,userId)){
+            let index = 0
+            map(selectedFriends,(friend,i) => {
+                if(friend === userId){
+                    index = i
+                }
+            })
+            selectedFriends.splice(index,1)
+        }else{
+            selectedFriends.push(userId)
+        }
+        this.setState({selectedFriends:selectedFriends})
+    }
+
+    private onSearch = (search: string) => {
+        this.getFollowingUsers(search);
+    }
+
+    private getFollowingUsers = (search:string | null) =>{
+        if(search){
+            discoverAllUsers(search).then(res => {
+                this.setState({
+                    followingFriends:res
+                })
+            }).catch(err => {
+                console.log(err)
+            })
+        }else{
+            fetchAllUsers().then(res => {
+                this.setState({
+                    followingFriends:res
+                })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }
+
 
     render() {
         return (
@@ -31,7 +117,7 @@ class SendToFriend extends React.Component<any, any> {
                             display: "flex",
                             backgroundColor: "#053280",
                         }}
-                        leftComponent={<TouchableOpacity onPress={()=>{navigate("feed_to_friend")}}>
+                        leftComponent={<TouchableOpacity onPress={()=>{goBack()}}>
                             <Icon
                                 name="close"
                                 color="white"
@@ -42,6 +128,11 @@ class SendToFriend extends React.Component<any, any> {
                             text: "Send to Friend",
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
+                        rightComponent={
+                            <TouchableOpacity onPress={this.onSave}>
+                                <Text style={{color: "#FFF", fontWeight: "bold"}}>Send</Text>
+                            </TouchableOpacity>
+                        }
                     />
                     <ScrollView
                         style={{
@@ -65,8 +156,7 @@ class SendToFriend extends React.Component<any, any> {
                                     <Icon name="magnify" size={24} color={"#ddd"}/>
                                 </View>
                                 <TextInput
-                                    onChangeText={() => {
-                                    }}
+                                    onChangeText={this.onSearch}
                                     autoFocus={false}
                                     style={{
                                         width: SCREEN_WIDTH - 30 - 50,
@@ -80,87 +170,37 @@ class SendToFriend extends React.Component<any, any> {
                         <View style={{marginLeft:15}}>
                             <Text style={styles.input_label}>SEARCH TO WHO YOU WANT TO SEND IT</Text>
                         </View>
-                        <View style={styles.searchWrapper}>
-                            <View style={{
-                                width: SCREEN_WIDTH - 30,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                borderBottomColor: "#ddd",
-                                borderBottomWidth: 1
-                            }}>
-                                <Text
-                                    style={{
-                                        width: SCREEN_WIDTH - 30 - 50,
-                                        // height: 40,
-                                        fontSize: 16
-                                    }}
-                                >
-                                    Vermita Green
-                                </Text>
-                                <View style={{
-                                    width: 40,
-                                    height: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Icon name="send" size={24} color={"#000"}/>
+                        {
+                            map(this.state.followingFriends,friend => (
+                                <View style={styles.searchWrapper}>
+                                    <View style={{
+                                        width: SCREEN_WIDTH - 30,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        borderBottomColor: "#ddd",
+                                        borderBottomWidth: 1
+                                    }}>
+                                        <Text
+                                            style={{
+                                                width: SCREEN_WIDTH - 30 - 50,
+                                                // height: 40,
+                                                fontSize: 16
+                                            }}
+                                        >
+                                            {startCase(friend.name)}
+                                        </Text>
+                                        <View style={{
+                                            width: 40,
+                                            height: 40,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Switch value={includes(this.state.selectedFriends,friend.userId)}  onValueChange={() => {this.handleFriendsToSend(friend.userId)}}/>
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        </View>
-                        <View style={styles.searchWrapper}>
-                            <View style={{
-                                width: SCREEN_WIDTH - 30,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                borderBottomColor: "#ddd",
-                                borderBottomWidth: 1
-                            }}>
-                                <Text
-                                    style={{
-                                        width: SCREEN_WIDTH - 30 - 50,
-                                        // height: 40,
-                                        fontSize: 16
-                                    }}
-                                >
-                                    O-Ren Ishii
-                                </Text>
-                                <View style={{
-                                    width: 40,
-                                    height: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Icon name="send" size={24} color={"#000"}/>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.searchWrapper}>
-                            <View style={{
-                                width: SCREEN_WIDTH - 30,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                borderBottomColor: "#ddd",
-                                borderBottomWidth: 1
-                            }}>
-                                <Text
-                                    style={{
-                                        width: SCREEN_WIDTH - 30 - 50,
-                                        // height: 40,
-                                        fontSize: 16
-                                    }}
-                                >
-                                   Romeo Cameo
-                                </Text>
-                                <View style={{
-                                    width: 40,
-                                    height: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                    <Icon name="send" size={24} color={"#000"}/>
-                                </View>
-                            </View>
-                        </View>
+                            ))
+                        }
                     </ScrollView>
                 </KeyboardAvoidingView>
             </SafeAreaView>

@@ -25,7 +25,7 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
         if (this.cameraRef) {
             const options = {quality: 0.5, base64: true};
             this.cameraRef.takePictureAsync(options).then(data => {
-                this.props.onCapture(data.uri);
+                this.props.onCapture(data.base64);
             });
         }
     };

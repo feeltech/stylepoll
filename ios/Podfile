@@ -11,6 +11,8 @@ target 'RNTypescriptBoilerplate' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
+
   target 'RNTypescriptBoilerplateTests' do
     inherit! :complete
     # Pods for testing

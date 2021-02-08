@@ -1,28 +1,41 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {StyleSheet, View} from 'react-native'
 import PostItem from './postItem'
-import {PostList} from "../../../modals";
+import {ExtraPost, PostDoc, PostList} from "../../../modals";
+
 export interface PostListProps {
     data: PostList,
-}
-const Posts = ({ data }: PostListProps) => {
+    posts:PostDoc[]
 
-    useEffect(() => {
-    }, [])
-    return (
-        <View style={styles.container}>
-            {data.map((post, index) => (
-                <PostItem
-                    key={index} item={post} />
-            ))}
-        </View>
-    )
 }
 
+export interface PostListStates {
+    postList : PostList,
+}
+
+class Posts extends React.Component<PostListProps, PostListStates>{
+
+    constructor(props:PostListProps) {
+        super(props);
+        this.state = {
+            postList:[],
+        }
+    }
+
+
+    render() {
+        return (
+            <View style={styles.container}>
+                {this.props.posts.map((post, index) => (
+                    <PostItem
+                        key={index} post={post}/>
+                ))}
+            </View>
+        )
+    }
+}
 export default React.memo(Posts)
 
 const styles = StyleSheet.create({
-    container: {
-
-    }
+    container: {}
 })

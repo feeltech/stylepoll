@@ -1,10 +1,15 @@
 import React from "react";
 import FeedForm from "../../shared/components/feed-form/feedForm";
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
+import {PostDoc} from "../../modals";
+import {fetchLocalStorage} from "../../utils/local-storage";
+import {uploadImageAndGetUrl} from "../../utils";
+import {createPost} from "../../services/firebase/firebaseService";
 
 
 interface ISendFeedStates {
-    imageURI: string
+    imageURI: string;
+    user:any
 }
 
 class AlertPoll extends React.Component<any, ISendFeedStates>{
@@ -12,7 +17,8 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
     constructor(props: any) {
         super(props);
         this.state = {
-            imageURI: ''
+            imageURI: '',
+            user:''
         }
     }
 
@@ -21,11 +27,39 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
         this.setState({
             imageURI: imageURL
         })
+        fetchLocalStorage("loggedUser").then((res: any) => {
+            this.setState({
+                user: res,
+            })
+        })
     }
 
+    private onSave = (description: string, moods: string[], tags: string[], location: string,pollStartDate?: Date) => {
+        uploadImageAndGetUrl(this.state.imageURI).then(res => {
+            const post: PostDoc = {
+                description: description,
+                moods: moods,
+                tags: tags,
+                location: location,
+                isFeedPost: false,
+                isPollPost: true,
+                user: this.state.user,
+                pollStartDate: pollStartDate ? pollStartDate : null,
+                userId:this.state.user.userId
+            }
+            createPost(post).then(res => {
+                navigate("camera")
+            }).catch(err => {
+                console.log(err)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }
     render() {
         return (
-            <FeedForm showDate={true} headerTitle={"Alert Poll"} onSubmit={()=>{navigate("poll_details",{imageURI:this.state.imageURI})}} onClose={()=>{navigate("camera")}} imageURI={this.state.imageURI} showHeader={true}/>
+            <FeedForm showDate={true} headerTitle={"Alert Poll"} onSubmit={this.onSave} onClose={()=>{goBack()}} imageURI={this.state.imageURI} showHeader={true}/>
         );
     }
 }

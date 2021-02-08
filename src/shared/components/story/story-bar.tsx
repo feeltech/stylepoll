@@ -2,12 +2,18 @@ import React from "react";
 import { StyleSheet, Text, View, ScrollView, Animated } from "react-native";
 
 import {SCREEN_WIDTH, STORY_LIST} from "../../constants";
-import { ExtraStory } from "../../../modals";
+import {AlertPoll, ExtraStory} from "../../../modals";
 
 import AddStory from "./add-story";
 import StoryPreviewItem from "./story-list";
 
-export default class StoryBar extends React.Component<any, any> {
+
+interface IStoryBarProps {
+  polls:AlertPoll[],
+  currentUserPoll:AlertPoll,
+  profileImage:string
+}
+export default class StoryBar extends React.Component<IStoryBarProps, any> {
   render() {
     const _loadingDeg = new Animated.Value(0);
     const _onAnimateDeg = () => {
@@ -46,10 +52,10 @@ export default class StoryBar extends React.Component<any, any> {
           horizontal={true}
           bounces={false}
         >
-          <AddStory />
-          {STORY_LIST.map((story, index) => {
+          <AddStory poll={this.props.currentUserPoll} profileImage={this.props.profileImage} />
+          {this.props.polls.map((poll, index) => {
             return(
-                <StoryPreviewItem index={index} item={story} key={index}/>
+                <StoryPreviewItem index={index}  key={index} poll={poll}/>
             )
           })}
         </ScrollView>
