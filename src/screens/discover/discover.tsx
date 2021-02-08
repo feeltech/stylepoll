@@ -103,7 +103,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height">
@@ -203,7 +203,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
                     </ScrollView>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </View>
         )
     }
 }
