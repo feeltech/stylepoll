@@ -17,6 +17,8 @@ import {getMoods, getTags} from "../../../services/firebase/firebaseService";
 import {map} from 'lodash'
 import MultiSelect from 'react-native-multiple-select';
 import {PostDoc} from "../../../modals";
+import MyDatePicker from "../date-picker/date-picker";
+import { fontSize } from "../../theme";
 
 interface IFeedFormStates {
     description: string;
@@ -145,7 +147,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     render() {
         console.log("Feed form  ", this.props.imageURI)
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height">
@@ -172,22 +174,22 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                     />
                     }
 
-                    <ScrollView style={{backgroundColor: 'none'}}>
+                    <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.loginForm}>
-                                <Text style={styles.input_label}>ADD A DESCRIPTION</Text>
+                                <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
                                                onChangeText={(text) => {
                                                    this.setState({description: text})
-                                               }} placeholder="Description on the poll"
+                                               }} placeholder="Description on the poll" placeholderTextColor={'black'}
                                                style={styles.input}/>
                                 </View>
-                                <Text style={styles.input_label}>ADD A Mood</Text>
+                                {/* <Text style={styles.input_label}>ADD A Mood</Text> */}
                                 <View style={styles.dropDownWrapper}>
                                     {/*<TextInput autoCapitalize="none" value={this.state.description}*/}
                                     {/*           onChangeText={() => {*/}
-                                    {/*           }} placeholder="example: I feel cool"*/}
+                                    {/*           }} placeholder="example: I feel cool" placeholderTextColor={'black'} */}
                                     {/*           style={styles.input}/>*/}
                                     <MultiSelect
                                         hideTags
@@ -199,6 +201,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         onSelectedItemsChange={this.onMoodSelect}
                                         selectedItems={this.state.selectedMoods}
                                         selectText="Pick Moods"
+                                        fontSize={15}
                                         searchInputPlaceholderText="Search Items..."
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
@@ -245,11 +248,11 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                     </View>
                                 }
 
-                                <Text style={styles.input_label}>ADD TAGS FOR WARDROBE</Text>
+                                {/* <Text style={styles.input_label}>ADD TAGS FOR WARDROBE</Text> */}
                                 <View style={styles.dropDownWrapper}>
                                     {/*<TextInput autoCapitalize="none" value={this.state.description}*/}
                                     {/*           onChangeText={() => {*/}
-                                    {/*           }} placeholder="example: I feel cool"*/}
+                                    {/*           }} placeholder="example: I feel cool" placeholderTextColor={'black'} */}
                                     {/*           style={styles.input}/>*/}
                                     <MultiSelect
                                         hideTags
@@ -261,6 +264,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         onSelectedItemsChange={this.onTagSelect}
                                         selectedItems={this.state.selectedTags}
                                         selectText="Pick Tags"
+                                        fontSize={15}
                                         searchInputPlaceholderText="Search Items..."
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
@@ -278,7 +282,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 </View>
                                 {
                                     this.multiSelectTags &&
-                                    <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+                                    <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10}}>
                                         {
                                             this.state.selectedTags.map(tag => {
                                                 return (
@@ -304,19 +308,20 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         }
                                     </View>
                                 }
-                                <Text style={styles.input_label}>EDIT MAP</Text>
+                                <Text style={styles.input_label}>Edit Map</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.address}
                                                onChangeText={(text) => {
                                                    this.setState({address: text})
                                                }}
                                                placeholder="Your Location"
+                                               placeholderTextColor={'black'}
                                                style={styles.input}/>
                                 </View>
                                 {this.props.showDate &&
                                 <View>
-                                    <Text style={styles.input_label}>WHEN</Text>
-                                    <DatePicker onDateChange={(date) => {
+                                    <Text style={styles.input_label}>When</Text>
+                                    <MyDatePicker onDateChange={(date) => {
                                         this.setState({when: date})
                                     }}/>
                                 </View>
@@ -331,7 +336,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </View>
         );
     }
 }
@@ -340,8 +345,8 @@ export default FeedForm;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#fff",
-        height: '100%'
+        backgroundColor: "#FFF",
+        height: '100%',
     },
     keyboardAvoidingViewContainer: {
         position: "relative",
@@ -377,23 +382,28 @@ const styles = StyleSheet.create({
     centerContainer: {
         // height: SCREEN_HEIGHT - 50 - 40 - STATUS_BAR_HEIGHT,
         width: SCREEN_WIDTH,
+        marginBottom: 0,
         justifyContent: 'center',
         alignItems: 'center'
     },
     input: {
         width: '100%',
         height: '100%',
-        // paddingHorizontal: 15
+        paddingHorizontal: 10
     },
     input_label: {
-        color: '#626060'
+        color: '#626060',
+        fontSize: 15,
     },
     logoWrapper: {
-        marginTop: 20
+        marginTop: 20,
     },
     logo: {
+        display: 'flex',
+        alignSelf:'center',
         height: 300,
         width: 300,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginBottom: 30
     },
 });

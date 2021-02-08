@@ -49,7 +49,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                         </View>
                         <View style={styles.loginForm}>
                             <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none" value={this.state.oldPassword} onChangeText={(text)=>{this.setState({oldPassword:text})}} placeholder="Current Password"
+                                <TextInput autoCapitalize="none" value={this.state.oldPassword} onChangeText={(text)=>{this.setState({oldPassword:text})}} placeholder="Current Password" placeholderTextColor={"black"}
                                            style={styles.input} />
                                 <TouchableOpacity
                                     style={styles.hidePasswordIcon}
@@ -69,7 +69,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                                 <TextInput value={this.state.newPassword}
                                            onChangeText={(text => this.setState({newPassword:text}))}
                                            secureTextEntry={this.state.hidePassword}
-                                           placeholder="Password" style={styles.input} />
+                                           placeholder="Password" placeholderTextColor={"black"} style={styles.input} />
                                 <TouchableOpacity
                                     style={styles.hidePasswordIcon}
                                     onPress={()=>{this.setState({hidePassword:!this.state.hidePassword})}}

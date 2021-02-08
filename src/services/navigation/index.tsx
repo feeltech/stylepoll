@@ -83,13 +83,13 @@ const Navigation = () => {
                     activeBackgroundColor: "#C3C3C3",
                     keyboardHidesTabBar: true,
                     showLabel: false,
-                    style: {marginTop: 0}
+                    style: {marginTop: 0, marginBottom: 0, paddingBottom: 0}
                 }}
             >
                 <Tab.Screen name={SCREENS.HOME} component={HomeScreen}/>
                 <Tab.Screen name={SCREENS.SEARCH} component={Discover}/>
                 <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen}/>
-                {/*<Tab.Screen name={SCREENS.FAVOURITES} component={SearchScreen}/>*/}
+                <Tab.Screen name={SCREENS.FAVOURITES} component={SearchScreen}/>
                 <Tab.Screen name={SCREENS.PROFILE} component={Profile}/>
             </Tab.Navigator>
         );

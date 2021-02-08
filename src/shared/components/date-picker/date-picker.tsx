@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {StyleSheet, TextInput, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import moment from 'moment';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IDatePickerProps{
     onDateChange:(date:any)=>void
@@ -17,33 +18,36 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
         super(props);
         this.state = {
             show:false,
-            date:new Date()
+            date:new Date(),
         }
     }
 
     private onDateChange = (date:Date) => {
         this.setState({
-            date:date
+            date:date,
+            show: false,
         });
         this.props.onDateChange(date);
     }
+
+     onFocus =()=>{
+        this.setState({show:true})
+    }
+
     render(){
         // @ts-ignore
         return (
             <View>
-                <View style={styles.textInputWrapper}>
-                    <TextInput autoCapitalize="none" value={moment(this.state.date).format('MMMM Do YYYY, h:mm:ss a')}
-                               onChangeText={() => {
-                               }} placeholder="Select date and time"
-                               style={styles.input}
-                               onFocus={()=>{this.setState({show:true})}}
-                    />
-                </View>
+                <TouchableOpacity style={styles.textInputWrapper} onPress={this.onFocus}>
+                    <Text style={styles.input}>{moment(this.state.date).format('MMMM Do YYYY, h:mm:ss a')}</Text>
+                </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={this.state.show}
                     mode="datetime"
                     onConfirm={this.onDateChange}
-                    onCancel={()=>{this.setState({show:false})}}
+                    onCancel={()=>{
+                        this.setState({show:false})
+                    }}
                     isDarkModeEnabled={true}
                 />
             </View>
@@ -60,12 +64,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: '#ddd',
         borderWidth: 1,
-        marginVertical: 7.5
+        marginVertical: 7.5,
     },
     input: {
+        paddingHorizontal: 10,
+        paddingVertical:10,
         width: '100%',
-        height: '100%',
-        // paddingHorizontal: 15
     }
 });
 

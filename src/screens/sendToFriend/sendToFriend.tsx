@@ -105,7 +105,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height"
@@ -203,7 +203,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                         }
                     </ScrollView>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </View>
         );
     }
 }

@@ -88,18 +88,18 @@ export default class Register extends React.Component<any, ILoginStates>{
                         <View style={styles.loginForm}>
 
                             <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none" value={this.state.name} onChangeText={(text)=>{this.setState({name:text})}} placeholder="Name"
+                                <TextInput autoCapitalize="none" value={this.state.name} onChangeText={(text)=>{this.setState({name:text})}} placeholder="Name" placeholderTextColor={"black"}
                                            style={styles.input} />
                             </View>
                             <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Email"
+                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Email" placeholderTextColor={"black"}
                                            style={styles.input} />
                             </View>
                             <View style={styles.textInputWrapper}>
                                 <TextInput value={this.state.password}
                                            onChangeText={(text => this.setState({password:text}))}
                                            secureTextEntry={this.state.hidePassword}
-                                           placeholder="Password" style={styles.input} />
+                                           placeholder="Password" placeholderTextColor={"black"} style={styles.input} />
                                 <TouchableOpacity
                                     style={styles.hidePasswordIcon}
                                     onPress={()=>{this.setState({hidePassword:!this.state.hidePassword})}}
@@ -118,7 +118,7 @@ export default class Register extends React.Component<any, ILoginStates>{
                                 <TextInput value={this.state.confirmPassword}
                                            onChangeText={(text => this.setState({confirmPassword:text}))}
                                            secureTextEntry={this.state.hideConfirmPassword}
-                                           placeholder="Confirm Password" style={styles.input} />
+                                           placeholder="Confirm Password" placeholderTextColor={"black"} style={styles.input} />
                                 <TouchableOpacity
                                     style={styles.hidePasswordIcon}
                                     onPress={()=>{this.setState({hideConfirmPassword:!this.state.hideConfirmPassword})}}
