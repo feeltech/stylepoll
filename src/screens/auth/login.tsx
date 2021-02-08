@@ -30,8 +30,8 @@ class Login extends React.Component<any, ILoginStates>{
     constructor(props:any) {
         super(props);
         this.state = {
-            email:'schngmg@gmail.com',
-            password:'qwe',
+            email:'someone@example.com',
+            password:'Asdf123!',
             hidePassword:true,
             allowLogin:true
         }
@@ -76,14 +76,14 @@ class Login extends React.Component<any, ILoginStates>{
                         </View>
                         <View style={styles.loginForm}>
                             <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="email"
+                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Email" placeholderTextColor={"black"}
                                            style={styles.input} />
                             </View>
                             <View style={styles.textInputWrapper}>
                                 <TextInput value={this.state.password}
                                            onChangeText={(text => this.setState({password:text}))}
                                            secureTextEntry={this.state.hidePassword}
-                                           placeholder="Password" style={styles.input} />
+                                           placeholder="Password" style={styles.input} placeholderTextColor={"black"} />
                                 <TouchableOpacity
                                     style={styles.hidePasswordIcon}
                                     onPress={()=>{this.setState({hidePassword:!this.state.hidePassword})}}

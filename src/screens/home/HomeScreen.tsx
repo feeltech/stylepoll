@@ -6,6 +6,7 @@ import {
     ScrollView,
     StyleSheet,
     KeyboardAvoidingView,
+    View
 } from "react-native";
 import {POST_LIST} from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
@@ -97,7 +98,8 @@ const HomeScreen = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        // <SafeAreaView style={styles.container}>
+        <View>
                 <Header
                     statusBarProps={{barStyle: "dark-content"}}
                     barStyle="dark-content"
@@ -118,7 +120,8 @@ const HomeScreen = () => {
                     <StoryBar polls={followingPolls} currentUserPoll={userPolls[0]} profileImage={user  ? user.profileImage : ''}/>
                     <Posts data={POST_LIST} posts={postList}/>
                 </ScrollView>
-        </SafeAreaView>
+                </View>
+        // </SafeAreaView>
     );
 };
 
