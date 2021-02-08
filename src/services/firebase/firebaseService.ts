@@ -376,3 +376,11 @@ export function getUserFeed(userId: string):Promise<PostDoc[]>{
     })
 }
 
+export function reactToPoll(user:User,poll: AlertPoll):Promise<boolean>{
+    return ALERT_POLL_COLLECTIONS.doc(user.userId).collection("userPoll").doc(poll.postId).set(poll).then(res => {
+        return Promise.resolve(true)
+    }).catch(err => {
+        return Promise.resolve(false)
+    })
+}
+
