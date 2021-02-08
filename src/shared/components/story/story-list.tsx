@@ -11,25 +11,28 @@ import * as NavigationService from "react-navigation-helpers";
 import LinearGradient from "react-native-linear-gradient";
 import FastImage from "react-native-fast-image";
 
-import { ExtraStory } from "../../../modals";
+import {AlertPoll, ExtraStory} from "../../../modals";
+import {navigate} from "../../../services/navigation";
 
 export interface StoryPreviewItemProps {
-  item: ExtraStory;
+  item?: ExtraStory;
   index: number;
+  poll:AlertPoll
 }
 const StoryPreviewItem = ({
-  item: { ownUser, storyList },
+    poll,
   index,
 }: StoryPreviewItemProps) => {
   const _loadingDeg = new Animated.Value(0);
   const [seen, setSeen] = useState<boolean>(false);
   // const myUsername = ownUser.username;
-  useEffect(() => {
-    const isSeen: boolean = false
-    setSeen(isSeen);
-  }, [storyList]);
+  // useEffect(() => {
+  //   const isSeen: boolean = false
+  //   setSeen(isSeen);
+  // }, [storyList]);
   const [preloadingImage, setPreloadingImage] = useState<boolean>(false);
   const _onShowStory = () => {
+    navigate("story_view")
     // if (seen) {
     //   return _onCompletedLoadingImage();
     // }
@@ -172,7 +175,7 @@ const StoryPreviewItem = ({
           >
             <FastImage
               style={styles.image}
-              source={{ uri: ownUser?.avatarURL }}
+              source={{ uri: poll.image }}
             />
           </TouchableOpacity>
         </View>
@@ -187,7 +190,7 @@ const StoryPreviewItem = ({
             color: seen ? "#666" : "#000",
           }}
         >
-          {ownUser.username}
+          {poll.user.name}
         </Text>
       </View>
     </View>

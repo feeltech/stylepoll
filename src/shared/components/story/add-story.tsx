@@ -2,8 +2,14 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import * as NavigationService from "react-navigation-helpers";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
+import {AlertPoll} from "../../../modals";
 
-export default class AddStory extends React.Component<any, any> {
+
+interface IAddStoryProps {
+  poll: AlertPoll,
+  profileImage:string
+}
+export default class AddStory extends React.Component<IAddStoryProps, any> {
   render() {
     return (
       <TouchableOpacity
@@ -14,7 +20,7 @@ export default class AddStory extends React.Component<any, any> {
         <Image
           style={styles.avatar}
           source={{
-            uri: "https://qph.fs.quoracdn.net/main-qimg-a95d21e1641bdf53268436be2e3f6121",
+            uri: this.props.profileImage
           }}
         />
         <View style={styles.btnAdd}>

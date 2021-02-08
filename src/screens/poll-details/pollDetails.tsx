@@ -107,8 +107,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                                             marginLeft: 5,
                                             marginRight: 5
                                         }}/>
-                                    <Progress.Bar progress={0.8} width={SCREEN_WIDTH - 50} color={'#82CA5B'} height={50}
-                                                  borderRadius={10}/>
+                                    <Progress.Bar progress={0.8} width={SCREEN_WIDTH - 50} color={'#82CA5B'} height={50} borderRadius={10}/>
                                 </View>
                                 <View style={[styles.textInputWrapper, {flexDirection: "row"}]}>
                                     <Image

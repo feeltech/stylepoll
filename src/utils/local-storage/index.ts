@@ -12,11 +12,11 @@ export const storeLocalStorage = (key: string, data: any) =>
     }
   });
 
-export const fetchLocalStorage = (key: string) =>
+export const fetchLocalStorage = (key: string) :Promise<any> =>
   new Promise(async (resolve, reject) => {
     try {
-      const value = await AsyncStorage.getItem(key, undefined);
-      if (value !== null) {
+      const value = await AsyncStorage.getItem(key);
+        if (value !== null) {
         // value previously stored
         resolve(JSON.parse(value));
       }

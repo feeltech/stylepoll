@@ -38,6 +38,8 @@ export type PostImage = {
   height: number,
   extension: string,
   fullSize: boolean,
+  hashtags?: string[],
+  moods?:string[]
   tags: {
     x: number,
     y: number,
@@ -62,7 +64,7 @@ export type Post = {
   notificationUsers?: string[],
   altText?: string,
   address?: string,
-  hashtags?: string[]
+
 }
 
 export type ExtraStory = {
@@ -74,3 +76,49 @@ export type ExtraPost = Post & {
 }
 
 export type PostList = ExtraPost[]
+
+export type User = {
+  userId?:string,
+  email:string,
+  password?:string,
+  name?:string,
+  profileImage?: string
+}
+
+export type LoggingUser = {
+  email:string,
+  password:string,
+}
+
+export type PostDoc = {
+  userId: string,
+  user:User,
+  image?:string,
+  location:string,
+  isPollPost:boolean,
+  isFeedPost: boolean,
+  description:string,
+  moods:tags[],
+  tags:tags[],
+  pollStartDate: Date | null;
+  friends?:string[],
+  DMList?:string[],
+  postId?:string,
+  createdAt?:Date
+}
+
+export type AlertPoll = PostDoc & {
+  onGoingPoll?:boolean,
+  likes:User[]
+  dislikes:User[]
+}
+
+export type tags = {
+  id:number,
+  name:string
+}
+
+export type WardRobe = {
+  tagName: string,
+  posts:PostDoc[]
+}

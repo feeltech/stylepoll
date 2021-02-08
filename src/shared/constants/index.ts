@@ -2,6 +2,7 @@
 import {getStatusBarHeight} from "react-native-status-bar-height";
 import {Dimensions} from "react-native";
 import {ExtraPost, ExtraStory} from "../../modals";
+import firestore from '@react-native-firebase/firestore'
 
 export const SCREENS = {
     HOME: "home",
@@ -15,7 +16,14 @@ export const SCREENS = {
     SEND_TO_FEED: "send_to_feed",
     FEED_TO_FRIEND:"feed_to_friend",
     POLL_DETAILS:"poll_details",
-    POLL_STATS:"poll_stats"
+    POLL_STATS:"poll_stats",
+    REGISTER:"register",
+    LOGIN:"login",
+    ROOT:'root',
+    POST:'post',
+    STORY_VIEW:'story_view',
+    OTHER_USER_PROFILE:'other_user_profile',
+    WARDROBE_VIEW:'wardrobe_view'
 };
 
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight();
@@ -173,3 +181,13 @@ export const POST_LIST: ExtraPost[] = [{
             }]
         }]
     }]
+
+
+export const USER_COLLECTION = firestore().collection('users');
+export const POST_COLLECTION = firestore().collection('posts');
+export const FOLLOWING_COLLECTION = firestore().collection('following');
+export const FOLLOWERS_COLLECTION = firestore().collection('followers');
+export const FEED_COLLECTIONS = firestore().collection('feeds');
+export const ALERT_POLL_COLLECTIONS = firestore().collection('alert-poll');
+export const MOOD_COLLECTIONS = firestore().collection('moods');
+export const TAG_COLLECTIONS = firestore().collection('tags');

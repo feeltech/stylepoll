@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "431254319371",
+    "project_id": "stylepoll-c5e43",
+    "storage_bucket": "stylepoll-c5e43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431254319371:android:6699991829c3872a1e320e",
+        "android_client_info": {
+          "package_name": "com.stylepoll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431254319371-4a526cdqsvc544tm6ncbvb931kcj7tkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh5RmAOXG5_VdO0aRaZDiLbnM5uW9WFsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431254319371-4a526cdqsvc544tm6ncbvb931kcj7tkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

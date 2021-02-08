@@ -88,7 +88,7 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
         return (
             <View style={styles.container}>
                 <View style={{flex: 10}}>
-                    <ImageBackground source={{uri: this.state.imageURI}} style={styles.image}
+                    <ImageBackground source={{uri: `${this.state.imageURI}`}} style={styles.image}
                                      imageStyle={{borderRadius: 30}}></ImageBackground>
                 </View>
                 <View style={{

@@ -1,4 +1,4 @@
-package com.rntypescriptboilerplate;
+package com.stylepoll;
 
 import com.facebook.react.ReactActivity;
 
