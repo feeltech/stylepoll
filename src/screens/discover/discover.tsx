@@ -14,7 +14,7 @@ import {SCREEN_WIDTH} from "../../shared/constants";
 import Icon, {default as Icons} from "react-native-vector-icons/MaterialCommunityIcons";
 import {currentNavigationRef, getCurrentNavigationRef, navigate} from "../../services/navigation";
 import {PostDoc, User} from "../../modals";
-import {discoverAllUsers, getRandomPosts} from "../../services/firebase/firebaseService";
+import {discoverAllUsers, fetchAllUsers, getRandomPosts} from "../../services/firebase/firebaseService";
 import {isEmpty} from 'lodash';
 import FastImage from "react-native-fast-image";
 import navigation from '@react-navigation/native';
@@ -56,15 +56,19 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                 console.log("Fail to fetch results")
             })
         }else{
-            this.setState({
-                searchResults:[]
+            fetchAllUsers().then(res => {
+                this.setState({
+                    searchResults: res
+                })
+            }).catch(err => {
+
             })
-            return
         }
     }
 
     private onGetRandomPosts(){
         getRandomPosts().then(res => {
+            debugger
             this.setState({randomPosts:res})
         }).catch(err => {
             console.log("get random posts error ", err)
@@ -91,7 +95,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                         {
                             this.state.randomPosts[randomIndex].tags.map(t => (
                                 <View style={{alignSelf: 'flex-start', margin: 10}}>
-                                    <Text style={{color: 'white'}}>#{t}</Text>
+                                    <Text style={{color: 'white'}}>#{t.name}</Text>
                                 </View>
                             ))
                         }
@@ -138,6 +142,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             <TextInput
                                 onChangeText={this.onDiscoverUsers}
                                 autoFocus={false}
+                                onFocus={() => {this.onDiscoverUsers("")}}
                                 style={{
                                     width: SCREEN_WIDTH - 30 - 50,
                                     height: 40,
@@ -161,7 +166,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                                     {
                                         this.state.randomPosts[0].tags.map(t => (
                                             <View style={{alignSelf: 'flex-start', margin: 10}}>
-                                                <Text style={{color: 'white'}}>#{t}</Text>
+                                                <Text style={{color: 'white'}}>#{t.name}</Text>
                                             </View>
                                         ))
                                     }

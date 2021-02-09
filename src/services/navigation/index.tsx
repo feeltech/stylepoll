@@ -111,8 +111,9 @@ const Navigation = () => {
                         headerShown: false,
                     }}
                 >
+                    {!isLoggedIn &&
                     <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
-                    <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
+                    }
                     <Stack.Screen name={SCREENS.ROOT} component={renderTabNavigation}/>
                     {/*<Stack.Screen name={SCREENS.HOME} component={HomeScreen}/>*/}
                     {/*<Stack.Screen name={SCREENS.CAMERA} component={CameraScreen}/>*/}
@@ -128,6 +129,7 @@ const Navigation = () => {
                     <Stack.Screen name={SCREENS.STORY_VIEW} component={StoryView}/>
                     <Stack.Screen name={SCREENS.OTHER_USER_PROFILE} component={OtherUserProfile}/>
                     <Stack.Screen name={SCREENS.WARDROBE_VIEW} component={WardrobeTagView}/>
+                    <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
                 </Stack.Navigator>
                 {/*}*/}
                 {/*{*/}
