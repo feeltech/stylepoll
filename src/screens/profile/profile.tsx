@@ -41,7 +41,9 @@ interface IProfileProps {
     isUserProfile: boolean;
 }
 
-export default class Profile extends React.Component<IProfileProps, IProfileStates> {
+export default class Profile extends React.Component<any, IProfileStates> {
+
+    private focusListener;
 
     constructor(props) {
         super(props);
@@ -60,48 +62,50 @@ export default class Profile extends React.Component<IProfileProps, IProfileStat
 
     componentDidMount() {
 
-        fetchLocalStorage("loggedUser").then(res => {
-            const profileUser = res
-            this.setState({
-                profileUser: profileUser
-            })
-
-            getUserPosts(profileUser.userId).then(res => {
-                this.setState({posts: res})
-            })
-
-            getUserFollowings(profileUser.userId).then(res => {
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            fetchLocalStorage("loggedUser").then(res => {
+                const profileUser = res
                 this.setState({
-                    followings: res
+                    profileUser: profileUser
                 })
-            })
 
-            getUserFollowers(profileUser.userId).then(res => {
-                this.setState({
-                    followers: res
+                getUserPosts(profileUser.userId).then(res => {
+                    this.setState({posts: res})
                 })
-            })
 
-            getUserPolls(profileUser.userId).then(res => {
-                this.setState({
-                    userPolls: res
+                getUserFollowings(profileUser.userId).then(res => {
+                    this.setState({
+                        followings: res
+                    })
                 })
-            })
 
-
-            // isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
-            //     this.setState({
-            //         isFollowingUser: isFollowing,
-            //         user: res
-            //     })
-            // })
-
-            getWardrobe(profileUser.userId).then(res => {
-                this.setState({
-                    wardrobe: res
+                getUserFollowers(profileUser.userId).then(res => {
+                    this.setState({
+                        followers: res
+                    })
                 })
-            })
-        })
+
+                getUserPolls(profileUser.userId).then(res => {
+                    this.setState({
+                        userPolls: res
+                    })
+                })
+
+
+                // isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
+                //     this.setState({
+                //         isFollowingUser: isFollowing,
+                //         user: res
+                //     })
+                // })
+
+                getWardrobe(profileUser.userId).then(res => {
+                    this.setState({
+                        wardrobe: res
+                    })
+                })
+            })        });
+
     }
 
     render() {

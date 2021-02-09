@@ -18,6 +18,7 @@ interface IPostStates {
 }
 
 export default class Post extends React.Component<any, IPostStates> {
+    private focusListener;
 
     constructor(props) {
         super(props);
@@ -38,25 +39,28 @@ export default class Post extends React.Component<any, IPostStates> {
             postId: postId
         })
 
-        getPost(userId,postId).then(res => {
-            this.setState({
-                post:res
-            })
-        }).catch(err => {
-            console.log("Failed to fetch post ",err)
-        })
-
-        fetchLocalStorage("loggedUser").then(res => {
-            if(res){
-                isFollowingUser(res.userId,userId).then(isFollowing => {
-                    this.setState({
-                        user:res,
-                        userIsFollowing:isFollowing
-                    })
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            getPost(userId,postId).then(res => {
+                this.setState({
+                    post:res
                 })
-            }
+            }).catch(err => {
+                console.log("Failed to fetch post ",err)
+            })
 
-        })
+            fetchLocalStorage("loggedUser").then(res => {
+                if(res){
+                    isFollowingUser(res.userId,userId).then(isFollowing => {
+                        this.setState({
+                            user:res,
+                            userIsFollowing:isFollowing
+                        })
+                    })
+                }
+
+            })
+        });
+
     }
 
 

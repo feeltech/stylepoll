@@ -10,10 +10,18 @@ interface IAddStoryProps {
   profileImage:string
 }
 export default class AddStory extends React.Component<IAddStoryProps, any> {
+
+  private onAddPoll = () => {
+    if(this.props.poll.postId) {
+      NavigationService.navigate("poll_details",{poll:this.props.poll})
+    } else {
+      NavigationService.navigate("camera")
+    }
+  }
   render() {
     return (
       <TouchableOpacity
-        onPress={() => NavigationService.navigate("camera")}
+        onPress={this.onAddPoll}
         activeOpacity={0.8}
         style={styles.container}
       >

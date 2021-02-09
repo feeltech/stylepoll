@@ -14,7 +14,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {SCREEN_WIDTH} from "../../shared/constants";
 import {goBack, navigate} from "../../services/navigation";
 import {PostDoc, User} from "../../modals";
-import {createPost, discoverAllUsers, fetchAllUsers} from "../../services/firebase/firebaseService";
+import {
+    createPost,
+    discoverAllUsers,
+    fetchAllUsers,
+    sendPollToFeed,
+    sendPollToFriends
+} from "../../services/firebase/firebaseService";
 import {includes,map,startCase} from 'lodash';
 import {uploadImageAndGetUrl} from "../../utils";
 
@@ -22,7 +28,8 @@ interface ISendToFriendStates{
     postDoc:any;
     selectedFriends:string[],
     imageURI: string,
-    followingFriends:User[]
+    followingFriends:User[],
+    isAlertPoll:boolean
 }
 
 class SendToFriend extends React.Component<any, ISendToFriendStates> {
@@ -33,13 +40,18 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             postDoc: null,
             selectedFriends:[],
             imageURI:'',
-            followingFriends:[]
+            followingFriends:[],
+            isAlertPoll:false
         }
     }
 
     componentDidMount() {
         const postDoc = this.props.route.params && this.props.route.params.postDoc
         const imageURI = this.props.route.params && this.props.route.params.imageURI
+        const isAlertPoll = this.props.route.params && this.props.route.params.isAlertPoll;
+        if(isAlertPoll){
+            this.setState({isAlertPoll:isAlertPoll})
+        }
         this.setState({
             postDoc:postDoc,
             imageURI:imageURI
@@ -59,6 +71,16 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             })
         }).catch(err => {
             console.log(err)
+        })
+    }
+
+    private sendPollToFriend= () => {
+        const postDoc = this.state.postDoc;
+        postDoc.DMList = this.state.selectedFriends;
+        sendPollToFriends(this.state.postDoc).then(res => {
+            navigate("home")
+        }).catch(err => {
+
         })
     }
 
@@ -129,7 +151,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                         rightComponent={
-                            <TouchableOpacity onPress={this.onSave}>
+                            <TouchableOpacity onPress={this.state.isAlertPoll ? this.sendPollToFriend : this.onSave}>
                                 <Text style={{color: "#FFF", fontWeight: "bold"}}>Send</Text>
                             </TouchableOpacity>
                         }

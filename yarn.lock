@@ -6807,6 +6807,11 @@ react-navigation-helpers@^0.2.0:
   resolved "https://registry.yarnpkg.com/react-navigation-helpers/-/react-navigation-helpers-0.2.0.tgz#f6d9df6c4eaf5095a02fc51c43287d8da50eb9a7"
   integrity sha512-3BTjYlLz3zL4SIbNZKeyWzz2g3RKxwqOqxnIyvl8P4p4CiRmQX2kD6gRlgrsBaeLOoSs0sAdJ+0BnYOSUsX97g==
 
+react-promise-tracker@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-promise-tracker/-/react-promise-tracker-2.1.0.tgz#a8ac2ca5322ca60f83fa7a00ad9d99bfbbdb8434"
+  integrity sha512-1LQSGAnFF4o++iPFgeBrMpS+ZHQg8ZGl9Zuf70v+OoLxuOnUeLCP7ugma+InBCUZzPnSLyWTLt/jyW+FAy5ELQ==
+
 react-redux@^7.2.2:
   version "7.2.2"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.2.tgz#03862e803a30b6b9ef8582dadcc810947f74b736"

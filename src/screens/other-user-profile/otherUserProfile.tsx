@@ -43,7 +43,7 @@ interface IProfileProps {
 }
 
 export default class OtherUserProfile extends React.Component<any, IProfileStates> {
-
+    private focusListener;
     constructor(props) {
         super(props);
         this.state = {
@@ -64,43 +64,45 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
         this.setState({
             profileUser: profileUser
         })
-        getUserPosts(profileUser.userId).then(res => {
-            this.setState({posts: res})
-        })
-
-        getUserFollowings(profileUser.userId).then(res => {
-            this.setState({
-                followings: res
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            getUserPosts(profileUser.userId).then(res => {
+                this.setState({posts: res})
             })
-        })
 
-        getUserFollowers(profileUser.userId).then(res => {
-            this.setState({
-                followers: res
-            })
-        })
-
-        getUserPolls(profileUser.userId).then(res => {
-            this.setState({
-                userPolls: res
-            })
-        })
-
-        fetchLocalStorage("loggedUser").then(res => {
-            isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
+            getUserFollowings(profileUser.userId).then(res => {
                 this.setState({
-                    isFollowingUser: isFollowing,
-                    user: res
+                    followings: res
                 })
             })
 
-        })
-
-        getWardrobe(profileUser.userId).then(res => {
-            this.setState({
-                wardrobe:res
+            getUserFollowers(profileUser.userId).then(res => {
+                this.setState({
+                    followers: res
+                })
             })
-        })
+
+            getUserPolls(profileUser.userId).then(res => {
+                this.setState({
+                    userPolls: res
+                })
+            })
+
+            fetchLocalStorage("loggedUser").then(res => {
+                isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
+                    this.setState({
+                        isFollowingUser: isFollowing,
+                        user: res
+                    })
+                })
+
+            })
+
+            getWardrobe(profileUser.userId).then(res => {
+                this.setState({
+                    wardrobe:res
+                })
+            })        });
+
     }
 
     private onFollowHandle = () => {

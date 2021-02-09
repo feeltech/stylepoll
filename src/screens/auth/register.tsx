@@ -77,10 +77,7 @@ export default class Register extends React.Component<any, ILoginStates>{
                                       behavior="height">
                     <View style={styles.centerContainer}>
                         <View style={styles.logoWrapper}>
-                            <Image
-                                resizeMode="contain"
-                                style={styles.logo}
-                                source={require('../../../assets/images/logo.png')} />
+                            <Text style={{fontSize:50,fontFamily:'serif',color:'#318bfb'}}>STYLEPOLL</Text>
                         </View>
                         {/*<View style={{flex:1}}>*/}
                         {/*    <PhotoUploadComponent/>*/}

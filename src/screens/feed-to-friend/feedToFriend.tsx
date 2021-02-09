@@ -45,7 +45,6 @@ class FeedToFriend extends React.Component<any, ISendFeedStates>{
             userId:this.state.user.userId
         }
         navigate("send_to_friend",{postDoc:post,imageURI:this.state.imageURI})
-
     }
 
         render() {

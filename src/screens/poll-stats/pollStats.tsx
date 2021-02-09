@@ -4,11 +4,13 @@ import {
     BarChart,
 } from "react-native-chart-kit";
 import {Header, Icon} from "react-native-elements";
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
+import {sendPollToFeed} from "../../services/firebase/firebaseService";
 
 
 interface IPollStatsStates {
-    imageURI: string
+    imageURI: string,
+    poll:any
 }
 
 class PollStats extends React.Component<any, IPollStatsStates> {
@@ -16,15 +18,43 @@ class PollStats extends React.Component<any, IPollStatsStates> {
     constructor(props: any) {
         super(props);
         this.state = {
-            imageURI: ''
+            imageURI: '',
+            poll:''
         }
     }
 
     componentDidMount() {
-        const imageURL = this.props.route.params && this.props.route.params.imageURI ? this.props.route.params.imageURI : 'https://i.pinimg.com/736x/cd/83/f5/cd83f51c1cf0dc3f1e9f632640fed7b7.jpg';
+        const poll = this.props.route.params && this.props.route.params.poll;
         this.setState({
-            imageURI: imageURL
+            poll: poll
         })
+    }
+
+    private sendToFeed() {
+        sendPollToFeed(this.state.poll.user.userId,this.state.poll).then(res => {
+            navigate("home")
+        }).catch(err => {
+
+        })
+    }
+
+    private onSendPoll = () => {
+        Alert.alert(
+            "Do you want to send to feed",
+            "Choose an option below",
+            [
+                {
+                    text: "OK!",
+                    onPress: () => {this.sendToFeed()},
+                    style: "destructive"
+                },
+                {
+                    text: "Send to a friend",
+                    onPress: () => {navigate("send_to_friend",{imageUri: this.state.imageURI,postDoc: this.state.poll,isAlertPoll:true})},
+                }
+            ],
+            {cancelable: false}
+        );
     }
 
     render() {
@@ -38,7 +68,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             display: "flex",
                             backgroundColor: "#053280",
                         }}
-                        leftComponent={<TouchableOpacity onPress={()=>{navigate("camera")}}>
+                        leftComponent={<TouchableOpacity onPress={()=>{goBack()}}>
                             <Icon
                                 name="close"
                                 color="white"/>
@@ -48,7 +78,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                     />
-                    <ImageBackground source={{uri: this.state.imageURI}} style={styles.image}>
+                    <ImageBackground source={{uri: this.state.poll.image}} style={styles.image}>
                         <View style={styles.graph_container}>
                             <Text style={{color:"#000",fontWeight:'bold',fontSize:20}}>Hey the poll is finished</Text>
                             <Text style={{color:"#000",fontWeight:'bold',fontSize:20}}>this is the result:</Text>
@@ -88,9 +118,9 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             flexDirection: 'row',
                             justifyContent: 'center'
                         }}>
-                            <View style={{height: 50, width: 50, borderRadius: 25, backgroundColor: '#4B7AAD',justifyContent:'center',alignItems:'center'}}>
-                                {/*<Icon name="send" size={24} color={"#FFF"}/>*/}
-                            </View>
+                            <TouchableOpacity onPress={this.onSendPoll} style={{height: 50, width: 50, borderRadius: 25, backgroundColor: '#4B7AAD',justifyContent:'center',alignItems:'center'}}>
+                                <Icon name="send" size={24} color={"#FFF"}/>
+                            </TouchableOpacity>
                         </View>
                     </ImageBackground>
                 </View>
