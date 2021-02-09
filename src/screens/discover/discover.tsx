@@ -68,7 +68,6 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
     private onGetRandomPosts(){
         getRandomPosts().then(res => {
-            debugger
             this.setState({randomPosts:res})
         }).catch(err => {
             console.log("get random posts error ", err)
