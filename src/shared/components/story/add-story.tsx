@@ -13,6 +13,7 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
 
   private onAddPoll = () => {
     if(this.props.poll?.postId) {
+      debugger
       NavigationService.navigate("poll_details",{poll:this.props.poll})
     } else {
       NavigationService.navigate("camera")

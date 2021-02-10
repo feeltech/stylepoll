@@ -406,8 +406,9 @@ export function getUserPolls(userId: string): Promise<AlertPoll[]> {
             const polls: AlertPoll[] = [];
             map(res.docs, (doc) => {
                 if(!doc.data().pollCompleted){
-                    polls.push(doc.data());
-
+                    const p = doc.data()
+                    p.postId = doc.id
+                    polls.push(p);
                 }
             });
             return Promise.resolve(polls);
@@ -431,7 +432,9 @@ export async function getFollowingUserPolls(
                 .get()
             map(alertPolls.docs, async (doc) => {
                 if(!doc.data().pollCompleted) {
-                    polls.push(doc.data());
+                    const p = doc.data()
+                    p.postId = doc.id
+                    polls.push(p);
                 }
             });
         }),
