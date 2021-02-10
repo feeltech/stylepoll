@@ -31,7 +31,9 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
         this.state = {
             imageURI: '',
             timeRemaining: "",
-            poll: null
+            poll: null,
+            pollDuration:0,
+            durationDiff:0
         }
     }
 
@@ -61,21 +63,27 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
         if (this.state.poll) {
             const pollStartTime = this.state.poll?.createdAt.toDate()
             const pollEndTime = this.state.poll?.pollEndDate.toDate();
-            const pollDuration =  Math.trunc((pollEndTime.valueOf() - pollStartTime.valueOf()) / 1000)
             const currentDate = new Date()
+            const pollDuration =  Math.trunc((pollEndTime.valueOf() - pollStartTime.valueOf()) / 1000)
             const durationDiff = Math.trunc((pollEndTime.valueOf() - currentDate.valueOf()) / 1000)
             const hours = Math.trunc(durationDiff / 3600);
             const minuites = Math.trunc((durationDiff - (hours * 3600)) / 60)
-            const seconds = durationDiff - (hours * 3600 + minuites * 60);
+            const seconds = durationDiff - (hours *3600 + minuites *60);
             const remainingTime = `${((hours.toString()).length === 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
-            if(durationDiff < 0){
+
+            if(durationDiff > 0){
                 this.setState({
                     pollDuration:pollDuration,
                     durationDiff:durationDiff,
                     timeRemaining:remainingTime
                 })
+            }else {
+                this.setState({
+                    pollDuration:pollDuration,
+                    durationDiff:durationDiff,
+                    timeRemaining:"00:00:00"
+                })
             }
-
         }
     }
 
@@ -213,8 +221,8 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                                 }}>{this.state.timeRemaining}</Text>
                             </View>
                             <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                                {/*<Progress.Bar progress={this.getProgressBarValues("timeRemaining")} width={SCREEN_WIDTH - 100} color={'#979797'} height={20}*/}
-                                {/*              borderRadius={10}/>*/}
+                                <Progress.Bar progress={this.getProgressBarValues("timeRemaining")} width={SCREEN_WIDTH - 100} color={'#979797'} height={20}
+                                              borderRadius={10}/>
                             </View>
                         </View>
                     </View>

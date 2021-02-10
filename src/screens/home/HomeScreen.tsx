@@ -91,6 +91,7 @@ const HomeScreen = () => {
         <ScrollView
             style={{
               backgroundColor: "none",
+                marginBottom:80
             }}
         >
           <StoryBar

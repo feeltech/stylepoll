@@ -22,6 +22,7 @@ import {
 } from "../../services/firebase/firebaseService";
 import * as Progress from "react-native-progress";
 import moment from "moment";
+import {getProgressBarValue} from "../../utils";
 
 interface IStoryViewStates {
   poll: any;
@@ -29,6 +30,8 @@ interface IStoryViewStates {
   isUserReacted: boolean;
   remainingTime:string;
   pollCompleted:boolean;
+  pollDuration:number,
+  durationDiff:number
 }
 
 export default class StoryView extends React.Component<any, IStoryViewStates> {
@@ -41,7 +44,9 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
       user: "",
       isUserReacted: false,
       remainingTime:'',
-      pollCompleted:false
+      pollCompleted:false,
+      pollDuration:0,
+      durationDiff:0
     };
   }
 
@@ -106,25 +111,31 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
   };
 
   private getRemainingTime = () => {
-    const  currentTimeStamp = moment();
-    const pollEndTime = moment(this.state.poll.createdAt);
-    const diff = currentTimeStamp.diff(pollEndTime,"second");
-    const hours = ((diff / 3600) > 0 ? Math.trunc(diff / 3600) : 0 );
-    let minutes = 0
-    let seconds = 0
-    if (hours > 0) {
-      const remaining = diff - (hours*3600);
-      minutes = Math.trunc(remaining / 60);
-      seconds = remaining - (minutes*60);
-    }else{
-      minutes = Math.trunc(diff / 60);
-      seconds = diff - (minutes*60);
-    }
-    const remainingTime = `${((hours.toString()).length === 2) ? hours : `0${hours}`}:${((minutes.toString()).length === 2) ? minutes : `0${minutes}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
+    if (this.state.poll) {
+      const pollStartTime = this.state.poll?.createdAt.toDate()
+      const pollEndTime = this.state.poll?.pollEndDate.toDate();
+      const currentDate = new Date()
+      const pollDuration =  Math.trunc((pollEndTime.valueOf() - pollStartTime.valueOf()) / 1000)
+      const durationDiff = Math.trunc((pollEndTime.valueOf() - currentDate.valueOf()) / 1000)
+      const hours = Math.trunc(durationDiff / 3600);
+      const minuites = Math.trunc((durationDiff - (hours * 3600)) / 60)
+      const seconds = durationDiff - (hours * 3600 + minuites *60);
+      const remainingTime = `${((hours.toString()).length === 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
 
-    this.setState({
-      remainingTime:remainingTime
-    })
+      if(durationDiff > 0){
+        this.setState({
+          pollDuration:pollDuration,
+          durationDiff:durationDiff,
+          remainingTime:remainingTime
+        })
+      }else {
+        this.setState({
+          pollDuration:pollDuration,
+          durationDiff:durationDiff,
+          remainingTime:"00:00:00"
+        })
+      }
+    }
   }
 
   render() {
@@ -160,7 +171,7 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
             <Text style={{color: "#000", fontWeight: "bold", marginRight: 5}}>{this.state.remainingTime}</Text>
           </View>
           <View style={{flexDirection:'column',justifyContent:'center'}}>
-            <Progress.Bar progress={0.3} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
+            <Progress.Bar progress={getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
                           borderRadius={10}/>
           </View>
         </View>
