@@ -7,6 +7,7 @@ import {Header, Icon} from "react-native-elements";
 import {goBack, navigate} from "../../services/navigation";
 import {sendPollToFeed} from "../../services/firebase/firebaseService";
 import {getProgressBarValue} from "../../utils";
+import moment from 'moment';
 
 
 interface IPollStatsStates {
@@ -114,8 +115,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                     />
                     <ImageBackground source={{uri: this.state.poll.image}} style={styles.image}>
                         <View style={styles.graph_container}>
-                            <Text style={{color: "#000", fontWeight: 'bold', fontSize: 20}}>Hey the poll is
-                                finished</Text>
+                            <Text style={{color: "#000", fontWeight: 'bold', fontSize: 20}}>{moment(moment()).diff(this.state.poll.pollEndDate, 'minutes') < 0 ? 'Hey the poll is finished' :'Your current poll result'}</Text>
                             {
                                 this.getGraphValue("likes") == 0 ?
                                     <View style={{marginTop:2}}>

@@ -100,7 +100,11 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
             }
 
             if(progressName == "timeRemaining"){
-                return getProgressBarValue(this.state.durationDiff,this.state.pollDuration)
+                // time remaining = end time - start time
+                // progress = 1 - time remaining (in fractions)
+                const timeRemaining = getProgressBarValue(this.state.durationDiff,this.state.pollDuration);
+                const progress = 1 - timeRemaining;
+                return progress;
             }
 
             return 0
