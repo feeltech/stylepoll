@@ -52,10 +52,10 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     constructor(props: any) {
         super(props);
         this.state = {
-            description: 'description',
+            description: '',
             mood: '',
             tags: '',
-            address: 'somewhere',
+            address: '',
             when: new Date(),
             imageURL: '',
             moodList: [],
