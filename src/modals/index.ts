@@ -104,11 +104,14 @@ export type PostDoc = {
   friends?:string[],
   DMList?:string[],
   postId?:string,
-  createdAt?:Date
+  createdAt?:Date,
+  onGoingPoll?:boolean,
+  likes?:User[]
+  dislikes?:User[]
 }
 
 export type AlertPoll = PostDoc & {
-  onGoingPoll?:boolean,
+  pollCompleted?:boolean,
   likes:User[]
   dislikes:User[]
 }

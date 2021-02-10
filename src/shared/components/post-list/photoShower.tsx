@@ -17,6 +17,7 @@ import { SCREEN_WIDTH } from "../../constants";
 import ScaleImage from "../scale-image/scaleImage";
 import {map} from  'lodash';
 import * as Progress from 'react-native-progress';
+import {getProgressBarValue} from "../../../utils";
 
 export interface PhotoShowerProps {
   onChangePage?: (page: number) => any;
@@ -60,6 +61,25 @@ const PhotoShower = ({  onChangePage,post }: PhotoShowerProps) => {
       setCurrentPage(currIndex + 1);
     }
   };
+
+const getProgressBarValues = (progressName:string) => {
+    if (post) {
+      const likesLength = post.likes ? post.likes.length : 0;
+      const dislikeLength = post.dislikes ? post.dislikes.length :0;
+      if (progressName == "like") {
+        return getProgressBarValue(likesLength, likesLength + dislikeLength)
+      }
+
+      if (progressName == "dislike") {
+        return getProgressBarValue(dislikeLength, likesLength + dislikeLength)
+      }
+
+      return 0
+    }else{
+      return 0
+    }
+
+  }
   return (
     <View style={styles.container}>
       <ScrollView
@@ -101,7 +121,7 @@ const PhotoShower = ({  onChangePage,post }: PhotoShowerProps) => {
                     {post?.isPollPost &&
                     <View style={{marginBottom:5,flexDirection:'row',marginLeft:5,marginRight:5,opacity:10}}>
                       <View style={{flexDirection:'column',justifyContent:'center'}}>
-                        <Progress.Bar progress={0.8} width={SCREEN_WIDTH-40} color={'#57ff00'} height={5} borderRadius={10}/>
+                        <Progress.Bar progress={getProgressBarValues("like")} width={SCREEN_WIDTH-40} color={'#57ff00'} height={5} borderRadius={10}/>
                       </View>
                       <View style={{flexDirection:'column',marginLeft:6}}>
                         <Text>🥰</Text>

@@ -10,7 +10,7 @@ import {
     View
 } from "react-native";
 import {Header, Icon} from "react-native-elements";
-import {SCREEN_WIDTH} from "../../shared/constants";
+import {SCREEN_WIDTH, SCREEN_WIDTH_NEW} from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
 import WardrobeBar from "../../shared/components/wardrobe/wardrobe-bar";
 import {PostDoc, User, WardRobe} from "../../modals";
@@ -21,9 +21,10 @@ import {
     getUserPosts, getWardrobe,
     isFollowingUser
 } from "../../services/firebase/firebaseService";
-import {fetchLocalStorage} from "../../utils/local-storage";
+import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 import {startCase,map} from 'lodash'
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
+import {trackPromise} from "react-promise-tracker";
 
 interface IProfileStates {
     showWardrobe: boolean;
@@ -44,7 +45,7 @@ interface IProfileProps {
 export default class Profile extends React.Component<any, IProfileStates> {
 
     private focusListener;
-
+    private _isMounted = false
     constructor(props) {
         super(props);
         this.state = {
@@ -61,51 +62,64 @@ export default class Profile extends React.Component<any, IProfileStates> {
     }
 
     componentDidMount() {
-
+        this._isMounted = true
         this.focusListener = this.props.navigation.addListener('focus', () => {
             fetchLocalStorage("loggedUser").then(res => {
-                const profileUser = res
-                this.setState({
-                    profileUser: profileUser
-                })
-
-                getUserPosts(profileUser.userId).then(res => {
-                    this.setState({posts: res})
-                })
-
-                getUserFollowings(profileUser.userId).then(res => {
+                if(this._isMounted){
+                    const profileUser = res
                     this.setState({
-                        followings: res
+                        profileUser: profileUser
                     })
-                })
 
-                getUserFollowers(profileUser.userId).then(res => {
-                    this.setState({
-                        followers: res
+                    trackPromise(getUserPosts(profileUser.userId).then(res => {
+                        this.setState({posts: res})
+                    }))
+
+                    getUserFollowings(profileUser.userId).then(res => {
+                        this.setState({
+                            followings: res
+                        })
                     })
-                })
 
-                getUserPolls(profileUser.userId).then(res => {
-                    this.setState({
-                        userPolls: res
+                    getUserFollowers(profileUser.userId).then(res => {
+                        this.setState({
+                            followers: res
+                        })
                     })
-                })
 
-
-                // isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
-                //     this.setState({
-                //         isFollowingUser: isFollowing,
-                //         user: res
-                //     })
-                // })
-
-                getWardrobe(profileUser.userId).then(res => {
-                    this.setState({
-                        wardrobe: res
+                    getUserPolls(profileUser.userId).then(res => {
+                        this.setState({
+                            userPolls: res
+                        })
                     })
-                })
-            })        });
 
+
+                    // isFollowingUser(res.userId, profileUser.userId).then(isFollowing => {
+                    //     this.setState({
+                    //         isFollowingUser: isFollowing,
+                    //         user: res
+                    //     })
+                    // })
+
+                    getWardrobe(profileUser.userId).then(res => {
+                        this.setState({
+                            wardrobe: res
+                        })
+                    })
+                }
+
+            })
+        });
+
+    }
+    private logout = () => {
+        storeLocalStorage("loggedUser",null).then(()=>{
+            navigate("login")
+        })
+    }
+
+    componentWillMount() {
+        this._isMounted = false
     }
 
     render() {
@@ -119,13 +133,20 @@ export default class Profile extends React.Component<any, IProfileStates> {
                             display: "flex",
                             backgroundColor: "#053280",
                         }}
+                        // leftComponent={<TouchableOpacity onPress={goBack}>
+                        //     <Icon
+                        //         name="chevron-left"
+                        //         color="white"/>
+                        // </TouchableOpacity>}
                         centerComponent={{
                             text: startCase(this.state.profileUser.name),
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
-                        rightComponent={this.props.isUserProfile ? (<TouchableOpacity>
-                            <Text style={{color: "#45b5f3", fontWeight: "bold"}}>Edit</Text>
-                        </TouchableOpacity>) : <View></View>}
+                        rightComponent={<TouchableOpacity onPress={this.logout}>
+                            <Icon
+                                name="logout"
+                                color="white"/>
+                        </TouchableOpacity>}
                     />
                     <View
                         style={{
@@ -166,7 +187,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         margin: 10,
                     }}>
                         <View style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-                            <Text>{this.state.profileUser.name}</Text>
+                            <Text style={{fontWeight:'bold'}}>{startCase(this.state.profileUser.name)}</Text>
                             {/*{this.state.followers.length != 0 &&*/}
                             {/*    <Text>{`Followed by ${this.state.followers[0]}and ${this.state.followers.length-1} others`}</Text>*/}
                             {/*}*/}
@@ -193,8 +214,9 @@ export default class Profile extends React.Component<any, IProfileStates> {
                             }}
                         />
                     </View>
+                    <View style={{borderColor:'#7c7c7c',borderWidth:0.3,marginLeft: 10,marginRight:10,marginBottom:5}}></View>
                     {this.state.showWardrobe && this.state.wardrobe.length != 0 &&
-                    <View style={{flex: 1, margin: 10}}>
+                    <View style={{flex: 1, marginBottom: 10}}>
                         <WardrobeBar posts={this.state.wardrobe}/>
                     </View>
                     }
@@ -203,15 +225,13 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         flex: 5,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
-                        margin: 10,
-                        justifyContent: 'flex-start'
                     }}>
                         {map(this.state.posts, post => {
                                 return (
-                                    <TouchableOpacity style={{flexDirection: 'column', borderColor: 'white', borderWidth: 1}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
+                                    <TouchableOpacity style={{ borderColor: 'white', borderWidth: 1,width: SCREEN_WIDTH_NEW/3, height: SCREEN_WIDTH_NEW/3}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
                                         <Image
                                             source={{uri: post.image}}
-                                            style={{width: 120, height: 120}}
+                                            style={{flex:1,width: undefined, height: undefined}}
                                         />
                                     </TouchableOpacity>
                                 )

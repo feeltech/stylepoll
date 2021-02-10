@@ -11,7 +11,7 @@ import {
     View
 } from "react-native";
 import {Header, Icon} from "react-native-elements";
-import {SCREEN_WIDTH} from "../../shared/constants";
+import {SCREEN_WIDTH, SCREEN_WIDTH_NEW} from "../../shared/constants";
 import {goBack, navigate} from "../../services/navigation";
 import {PostDoc} from "../../modals";
 import {map} from 'lodash'
@@ -64,16 +64,14 @@ export default class WardrobeTagView extends React.Component<any, IWardrobeTagVi
                     <View style={{
                         flex: 5,
                         flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        margin: 10,
-                        justifyContent: 'flex-start'
+                        flexWrap: 'wrap'
                     }}>
                         {map(this.state.posts, post => {
                                 return (
-                                    <TouchableOpacity style={{flexDirection: 'column', borderColor: 'white', borderWidth: 1}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
+                                    <TouchableOpacity style={{ borderColor: 'white', borderWidth: 1,width: SCREEN_WIDTH_NEW/3, height: SCREEN_WIDTH_NEW/3}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
                                         <Image
                                             source={{uri: post.image}}
-                                            style={{width: 120, height: 120}}
+                                            style={{width: undefined, height: undefined,flex:1}}
                                         />
                                     </TouchableOpacity>
                                 )

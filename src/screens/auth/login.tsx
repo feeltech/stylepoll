@@ -20,7 +20,7 @@ import {
 } from "../../shared/constants";
 import { LoggingUser } from "../../modals";
 import { loginUser } from "../../services/firebase/firebaseService";
-import { storeLocalStorage } from "../../utils/local-storage";
+import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 
 import { styles } from "./authStyles";
 
@@ -40,6 +40,15 @@ class Login extends React.Component<any, ILoginStates> {
       hidePassword: true,
       allowLogin: true,
     };
+  }
+
+
+  componentDidMount() {
+    fetchLocalStorage("loggedUser").then(res => {
+      if(res){
+        navigate("home")
+      }
+    })
   }
 
   private onLogin = () => {

@@ -34,7 +34,7 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
         })
     }
 
-    private onSave = (description: string, moods: string[], tags: string[], location: string,pollStartDate?: Date) => {
+    private onSave = (description: string, moods: string[], tags: string[], location: string,pollEndDate?: Date) => {
         uploadImageAndGetUrl(this.state.imageURI).then(res => {
             const post: PostDoc = {
                 description: description,
@@ -45,7 +45,7 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
                 isPollPost: true,
                 image:res,
                 user: this.state.user,
-                pollStartDate: pollStartDate ? pollStartDate : null,
+                pollEndDate: pollEndDate ? pollEndDate : null,
                 userId:this.state.user.userId
             }
             createPost(post).then(res => {

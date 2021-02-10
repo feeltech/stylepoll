@@ -4,11 +4,15 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {isReadyRef, navigationRef} from "react-navigation-helpers";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import Spinner from 'react-native-loading-spinner-overlay';
+import { usePromiseTracker } from "react-promise-tracker"
+
+// const { promiseInProgress } = usePromiseTracker();
 
 /**
  * ? Local Imports
  */
-import {View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 import {SCREEN_HEIGHT, SCREENS, STATUS_BAR_HEIGHT} from "../../shared/constants";
 // ? Screens
@@ -40,13 +44,14 @@ const Navigation = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     React.useEffect(() => {
         return () => (isReadyRef.current = false);
+        fetchLocalStorage("loggedUser").then(res => {
+            console.log("res", res)
+            setIsLoggedIn(true)
+        }).catch(err => {
+            console.log("no key")
+        })
     }, []);
-    fetchLocalStorage("loggedUser").then(res => {
-        console.log("res", res)
-        setIsLoggedIn(true)
-    }).catch(err => {
-        console.log("no key")
-    })
+
 
     const renderTabNavigation = () => {
         return (
@@ -104,6 +109,19 @@ const Navigation = () => {
         >
 
             <View style={{flex: 12}}>
+
+                {/*{*/}
+                {/*    promiseInProgress &&*/}
+                {/*    <View style={[styles.container, styles.horizontal]}>*/}
+                {/*        <Text>*/}
+                {/*            <Spinner*/}
+                {/*                visible={true}*/}
+                {/*                textContent={""}*/}
+                {/*                textStyle={{color:'#FFF',fontSize:10}}*/}
+                {/*            />*/}
+                {/*        </Text>*/}
+                {/*    </View>*/}
+                {/*}*/}
                 {/*{*/}
                 {/*    isLoggedIn &&*/}
                 <Stack.Navigator
@@ -111,9 +129,8 @@ const Navigation = () => {
                         headerShown: false,
                     }}
                 >
-                    {!isLoggedIn &&
+
                     <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
-                    }
                     <Stack.Screen name={SCREENS.ROOT} component={renderTabNavigation}/>
                     {/*<Stack.Screen name={SCREENS.HOME} component={HomeScreen}/>*/}
                     {/*<Stack.Screen name={SCREENS.CAMERA} component={CameraScreen}/>*/}
@@ -161,3 +178,16 @@ export function getCurrentNavigationRef(){
 }
 
 export default Navigation;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
+    }
+});
+

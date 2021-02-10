@@ -24,59 +24,35 @@ import {
 import { fetchLocalStorage } from "../../utils/local-storage";
 import { AlertPoll, ExtraPost, PostDoc, PostList } from "../../modals";
 
+interface IHomeScreenStates{
+  user: any,
+  postList:PostDoc[],
+  followingPolls:AlertPoll[],
+  userPolls:AlertPoll[]
+}
+
+
 const HomeScreen = () => {
-  const _scrollRef = useRef<ScrollView>(null);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const [user, setUser] = useState<any>();
   const [userPolls, setUserPolls] = useState<AlertPoll[]>([]);
   const [followingPolls, setFollowingPolls] = useState<AlertPoll[]>([]);
   const [postList, setPostList] = useState<PostDoc[]>([]);
-  const ref = useRef<{
-    scrollHeight: number;
-    preOffsetY: number;
-    currentCommentId: number;
-    commentContents: {
-      id: number;
-      content: string;
-    }[];
-  }>({
-    scrollHeight: 0,
-    preOffsetY: 0,
-    commentContents: [],
-    currentCommentId: 0,
-  });
-  const _onScroll = ({
-    nativeEvent: {
-      contentOffset: { y },
-      contentSize: { height },
-    },
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (
-      y / height > 0.45 &&
-      y > ref.current.preOffsetY &&
-      !loadingMore &&
-      !refreshing
-    ) {
-      setLoadingMore(false);
-    }
-    ref.current.preOffsetY = y;
-  };
+
 
   useFocusEffect(
-    React.useCallback(() => {
-      fetchLocalStorage("loggedUser").then((res: any) => {
-        fetchFeed(res);
-        fetchAlertPoll(res);
-        fetchFollowingAlertPoll(res);
-        setUser(res);
-      });
-      if (user) {
-      }
-      return () => {
-        setPostList([]);
-      };
-    }, []),
+      React.useCallback(() => {
+        fetchLocalStorage("loggedUser").then((res: any) => {
+          fetchFeed(res);
+          fetchAlertPoll(res);
+          fetchFollowingAlertPoll(res);
+          setUser(res);
+        });
+        if (user) {
+        }
+        return () => {
+          setPostList([]);
+        };
+      }, []),
   );
   const fetchFeed = (user) => {
     getUserPosts(user.userId).then((res) => {
@@ -98,38 +74,40 @@ const HomeScreen = () => {
 
 
   return (
-    // <SafeAreaView style={styles.container}>
-    <View>
-      <Header
-        statusBarProps={{ barStyle: "dark-content" }}
-        barStyle="dark-content"
-        containerStyle={{
-          display: "flex",
-          backgroundColor: "#053280",
-        }}
-        centerComponent={{
-          text: "STYLEPOLL",
-          style: { color: "#FFF", fontWeight: "bold" },
-        }}
-      />
-      <ScrollView
-        style={{
-          backgroundColor: "none",
-        }}
-      >
-        <StoryBar
-          polls={followingPolls}
-          currentUserPoll={userPolls[0]}
-          profileImage={user ? user.profileImage : ""}
+      // <SafeAreaView style={styles.container}>
+      <View>
+        <Header
+            statusBarProps={{ barStyle: "dark-content" }}
+            barStyle="dark-content"
+            containerStyle={{
+              display: "flex",
+              backgroundColor: "#053280",
+            }}
+            centerComponent={{
+              text: "STYLEPOLL",
+              style: { color: "#FFF", fontWeight: "bold" },
+            }}
         />
-        <Posts data={POST_LIST} posts={postList} />
-      </ScrollView>
-    </View>
-    // </SafeAreaView>
+        <ScrollView
+            style={{
+              backgroundColor: "none",
+            }}
+        >
+          <StoryBar
+              polls={followingPolls}
+              currentUserPoll={userPolls[0]}
+              profileImage={user ? user.profileImage : ""}
+          />
+          <Posts data={POST_LIST} posts={postList} />
+        </ScrollView>
+      </View>
+      // </SafeAreaView>
   );
 };
 
 export default HomeScreen;
+
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",

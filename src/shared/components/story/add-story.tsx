@@ -12,12 +12,13 @@ interface IAddStoryProps {
 export default class AddStory extends React.Component<IAddStoryProps, any> {
 
   private onAddPoll = () => {
-    if(this.props.poll.postId) {
+    if(this.props.poll?.postId) {
       NavigationService.navigate("poll_details",{poll:this.props.poll})
     } else {
       NavigationService.navigate("camera")
     }
   }
+
   render() {
     return (
       <TouchableOpacity
@@ -31,19 +32,23 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
             uri: this.props.profileImage
           }}
         />
-        <View style={styles.btnAdd}>
-          <Icons name="plus" size={16} color="#fff" />
-        </View>
+        { this.props.poll == null &&
+          <View style={styles.btnAdd}>
+            <Icons name="plus" size={16} color="#fff" />
+          </View>
+        }
         <View style={styles.username}>
+          {this.props.poll == null &&
           <Text
-            numberOfLines={1}
-            style={{
-              fontSize: 12,
-              color: "#000",
-            }}
+              numberOfLines={1}
+              style={{
+                fontSize: 12,
+                color: "#000",
+              }}
           >
             Start Poll
           </Text>
+          }
         </View>
       </TouchableOpacity>
     );

@@ -10,7 +10,7 @@ import {
     View
 } from "react-native";
 import {Header, Icon} from "react-native-elements";
-import {SCREEN_WIDTH} from "../../shared/constants";
+import {SCREEN_WIDTH, SCREEN_WIDTH_NEW} from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
 import {
     followUser,
@@ -23,7 +23,7 @@ import {
 import {PostDoc, User, WardRobe} from "../../modals";
 import {startCase,map} from 'lodash';
 import {fetchLocalStorage} from "../../utils/local-storage";
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
 import WardrobeBar from "../../shared/components/wardrobe/wardrobe-bar";
 
 interface IProfileStates {
@@ -132,6 +132,11 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                             display: "flex",
                             backgroundColor: "#053280",
                         }}
+                        leftComponent={<TouchableOpacity onPress={goBack}>
+                            <Icon
+                                name="chevron-left"
+                                color="white"/>
+                        </TouchableOpacity>}
                         centerComponent={{
                             text: startCase(this.state.profileUser.name),
                             style: {color: "#FFF", fontWeight: "bold"},
@@ -217,6 +222,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={{borderColor:'black',borderWidth:1}}></View>
                     {this.state.showWardrobe && this.state.wardrobe.length != 0 &&
                     <View style={{flex: 1, margin: 10}}>
                         <WardrobeBar posts={this.state.wardrobe}/>
@@ -226,16 +232,14 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                     <View style={{
                         flex: 5,
                         flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        margin: 10,
-                        justifyContent: 'flex-start'
+                        flexWrap: 'wrap'
                     }}>
                         {map(this.state.posts, post => {
                             return (
-                                <TouchableOpacity style={{flexDirection: 'column', borderColor: 'white', borderWidth: 1}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
+                                <TouchableOpacity style={{borderColor: 'white', borderWidth: 1,width: SCREEN_WIDTH_NEW/3, height: SCREEN_WIDTH_NEW/3}} onPress={ ()=>{navigate("post",{postId: post.postId,userId: post.user.userId})}}>
                                     <Image
                                         source={{uri: post.image}}
-                                        style={{width: 120, height: 120}}
+                                        style={{flex:1,height:undefined,width:undefined}}
                                     />
                                 </TouchableOpacity>
                             )
