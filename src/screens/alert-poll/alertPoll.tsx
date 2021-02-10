@@ -49,7 +49,7 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
                 userId:this.state.user.userId
             }
             createPost(post).then(res => {
-                navigate("camera")
+                navigate("home")
             }).catch(err => {
                 console.log(err)
             })

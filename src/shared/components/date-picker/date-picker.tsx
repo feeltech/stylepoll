@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IDatePickerProps{
     onDateChange:(date:any)=>void
+    date:Date
 }
 
 interface IDatePickerStates{
@@ -39,7 +40,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
         return (
             <View>
                 <TouchableOpacity style={styles.textInputWrapper} onPress={this.onFocus}>
-                    <Text style={styles.input}>{moment(this.state.date).format('MMMM Do YYYY, h:mm:ss a')}</Text>
+                    <Text style={styles.input}>{moment(this.props.date).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={this.state.show}
@@ -49,6 +50,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
                         this.setState({show:false})
                     }}
                     isDarkModeEnabled={true}
+                    date={this.props.date}
                 />
             </View>
 

@@ -150,8 +150,6 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             <TextInput
                                 onChangeText={this.onDiscoverUsers}
                                 autoFocus={false}
-                                onFocus={() => {this.onDiscoverUsers("")}}
-                                onBlur={()=>{this.setState({searchResults:[]})}}
                                 style={{
                                     width: SCREEN_WIDTH - 30 - 50,
                                     height: 40,

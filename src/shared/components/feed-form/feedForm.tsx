@@ -19,6 +19,7 @@ import MultiSelect from 'react-native-multiple-select';
 import {PostDoc} from "../../../modals";
 import MyDatePicker from "../date-picker/date-picker";
 import { fontSize } from "../../theme";
+import moment from 'moment'
 
 interface IFeedFormStates {
     description: string;
@@ -127,7 +128,12 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         const moods: string[] = [];
         map(this.state.selectedTags, t => tags.push(this.state.tagList[t]))
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
-        this.props.onSubmit(this.state.description, moods, tags, this.state.address, this.state.pollStartDate)
+        const diff = moment( this.state.when).diff(new Date(),"minutes")
+        let endDate = this.state.when
+        if(diff < 10) {
+           endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
+        }
+        this.props.onSubmit(this.state.description, moods, tags, this.state.address, endDate)
     }
 
     private onMoodRemove = (moodIndex) => {
@@ -144,8 +150,20 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         })
     }
 
+    private handleDateChange = (date:Date) => {
+        const diff = moment(date).diff(new Date(),"minutes")
+        if(diff < 10) {
+            this.setState({
+                when:new Date(moment( date).add(10,"minutes").toISOString())
+            })
+        }else{
+            this.setState({
+                when:date
+            })
+        }
+    }
+
     render() {
-        console.log("Feed form  ", this.props.imageURI)
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView
@@ -321,9 +339,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 {this.props.showDate &&
                                 <View>
                                     <Text style={styles.input_label}>When</Text>
-                                    <MyDatePicker onDateChange={(date) => {
-                                        this.setState({when: date})
-                                    }}/>
+                                    <MyDatePicker onDateChange={this.handleDateChange} date={new Date(moment( new Date()).add(10,"minutes").toISOString())}/>
                                 </View>
                                 }
                                 <View style={styles.logoWrapper}>

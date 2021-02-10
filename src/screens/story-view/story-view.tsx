@@ -171,7 +171,7 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
             <Text style={{color: "#000", fontWeight: "bold", marginRight: 5}}>{this.state.remainingTime}</Text>
           </View>
           <View style={{flexDirection:'column',justifyContent:'center'}}>
-            <Progress.Bar progress={getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
+            <Progress.Bar progress={1- getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
                           borderRadius={10}/>
           </View>
         </View>

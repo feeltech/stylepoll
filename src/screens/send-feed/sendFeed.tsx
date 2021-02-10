@@ -51,7 +51,7 @@ class SendFeed extends React.Component<any, ISendFeedStates> {
                     }
                     createPost(post).then(res => {
                         documentID = res.id
-                        navigate("camera")
+                        navigate("home")
                     }).then(err => {
                         console.log(err)
                     })
