@@ -15,7 +15,7 @@ import Icon, {default as Icons} from "react-native-vector-icons/MaterialCommunit
 import {currentNavigationRef, getCurrentNavigationRef, navigate} from "../../services/navigation";
 import {PostDoc, User} from "../../modals";
 import {discoverAllUsers, fetchAllUsers, getRandomPosts} from "../../services/firebase/firebaseService";
-import {isEmpty,map} from 'lodash';
+import {isEmpty, map} from 'lodash';
 import FastImage from "react-native-fast-image";
 import {fetchLocalStorage} from "../../utils/local-storage";
 
@@ -23,18 +23,19 @@ import {fetchLocalStorage} from "../../utils/local-storage";
 interface IDiscoverStates {
     searchResults: User[],
     randomPosts: PostDoc[],
-    user:string
+    user: string
 }
 
 export default class Discover extends React.Component<any, IDiscoverStates> {
 
     private focusListener;
+
     constructor(props) {
         super(props);
         this.state = {
-            searchResults:[],
-            randomPosts:[],
-            user:''
+            searchResults: [],
+            randomPosts: [],
+            user: ''
         }
     }
 
@@ -45,7 +46,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
         fetchLocalStorage("loggedUser").then(res => {
             this.setState({
-                user:res
+                user: res
             })
         })
     }
@@ -63,54 +64,57 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
             }).catch(err => {
                 console.log("Fail to fetch results")
             })
-        }else{
-            fetchAllUsers().then(res => {
-                this.setState({
-                    searchResults: res
-                })
-            }).catch(err => {
-
+        } else {
+            this.setState({
+                searchResults: []
             })
         }
     }
 
-    private onGetRandomPosts(){
+    private onGetRandomPosts() {
         getRandomPosts(this.state.user.userId).then(res => {
-            this.setState({randomPosts:res})
+            this.setState({randomPosts: res})
         }).catch(err => {
             console.log("get random posts error ", err)
         })
     }
 
     private getRandomPostIndex = () => {
-        return Math.floor(Math.random() * Math.floor(this.state.randomPosts.length-1))
+        return Math.floor(Math.random() * Math.floor(this.state.randomPosts.length - 1))
     }
 
     // @ts-ignore
-    private renderRandomPosts(){
-      return  map(this.state.randomPosts,post => {
-          return (
-              <TouchableOpacity style={{flexDirection: 'row',flexWrap:'wrap',height:SCREEN_WIDTH_NEW/2,width:SCREEN_WIDTH_NEW/2}} onPress={() => {
-                  navigate("post",{postId: post.postId,userId: post.userId})
-              }}>
-                  <ImageBackground
-                      source={{uri: post.image}}
-                      style={{flex:1, width: undefined, height:undefined}}
-                  >
-                      <View style={{flex: 5}}/>
-                      <View style={{flexDirection:'row',flexWrap:'wrap',backgroundColor:'black',opacity:0.3}}>
-                          {
-                              post.tags.map(t => (
-                                  <View style={{alignSelf: 'flex-start', marginRight: 5,flexDirection: 'column'}}>
-                                      <Text style={{color: 'white',fontSize:10,fontWeight:'bold'}}>#{t.name}</Text>
-                                  </View>
-                              ))
-                          }
-                      </View>
-                  </ImageBackground>
-              </TouchableOpacity>
-          )
-      })
+    private renderRandomPosts() {
+        const posts = this.state.randomPosts.length > 1 ? this.state.randomPosts.slice(1, this.state.randomPosts.length - 1) : []
+        return map(posts, post => {
+            return (
+                <TouchableOpacity style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    height: SCREEN_WIDTH_NEW / 2,
+                    width: SCREEN_WIDTH_NEW / 2
+                }} onPress={() => {
+                    navigate("post", {postId: post.postId, userId: post.userId})
+                }}>
+                    <ImageBackground
+                        source={{uri: post.image}}
+                        style={{flex: 1, width: undefined, height: undefined}}
+                    >
+                        <View style={{flex: 5}}/>
+                        <View style={{flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'black', opacity: 0.3}}>
+                            {
+                                post.tags.map(t => (
+                                    <View style={{alignSelf: 'flex-start', marginRight: 5, flexDirection: 'column'}}>
+                                        <Text
+                                            style={{color: 'white', fontSize: 10, fontWeight: 'bold'}}>#{t.name}</Text>
+                                    </View>
+                                ))
+                            }
+                        </View>
+                    </ImageBackground>
+                </TouchableOpacity>
+            )
+        })
     }
 
     render() {
@@ -160,31 +164,39 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                         </View>
                     </View>
                     <ScrollView style={{backgroundColor: 'none', marginBottom: 80}}>
-                        {this.state.searchResults.length === 0  && this.state.randomPosts.length !== 0 &&
+                        {this.state.searchResults.length === 0 && this.state.randomPosts.length !== 0 &&
                         <>
 
-                        <TouchableOpacity style={{display: 'flex', flex: 1, flexDirection: 'row'}} onPress={() => {
-                                navigate("post",{postId: this.state.randomPosts[0].postId,userId: this.state.randomPosts[0].userId})
+                            <TouchableOpacity style={{display: 'flex', flex: 1, flexDirection: 'row'}} onPress={() => {
+                                navigate("post", {
+                                    postId: this.state.randomPosts[0].postId,
+                                    userId: this.state.randomPosts[0].userId
+                                })
                             }}>
                                 <ImageBackground
                                     source={{uri: this.state.randomPosts[0].image}}
                                     style={{width: '100%', height: 300}}
                                 >
                                     <View style={{flex: 5}}></View>
-                                    <View style={{flexDirection:'row',flexWrap:'wrap',backgroundColor:'black',opacity:0.3}}>
-                                    {
-                                        this.state.randomPosts[0].tags.map(t => (
-                                            <View style={{alignSelf: 'flex-start', margin: 10}}>
-                                                <Text style={{color: 'white',fontWeight:'bold'}}>#{t.name}</Text>
-                                            </View>
-                                        ))
-                                    }
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        backgroundColor: 'black',
+                                        opacity: 0.3
+                                    }}>
+                                        {
+                                            this.state.randomPosts[0].tags.map(t => (
+                                                <View style={{alignSelf: 'flex-start', margin: 10}}>
+                                                    <Text style={{color: 'white', fontWeight: 'bold'}}>#{t.name}</Text>
+                                                </View>
+                                            ))
+                                        }
                                     </View>
                                 </ImageBackground>
                             </TouchableOpacity>
-                            <View style={{flex: 1, flexDirection: 'row', flexWrap:'wrap'}}>
+                            <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
                                 {
-                                    this.renderRandomPosts()
+                                    this.state.randomPosts.length > 1 && this.renderRandomPosts()
                                 }
                             </View>
                         </>
@@ -193,7 +205,9 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             this.state.searchResults.length != 0 && this.state.searchResults.map(result => (
                                 <View style={styles.postHeader}>
                                     <TouchableOpacity
-                                        onPress={()=>{navigate("other_user_profile",{user:result})}}
+                                        onPress={() => {
+                                            navigate("other_user_profile", {user: result})
+                                        }}
                                         style={styles.infoWrapper}>
                                         <FastImage style={styles.avatar}
                                                    source={{uri: result.profileImage}}/>

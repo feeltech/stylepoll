@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Image,
+    Image, ImageBackground,
     KeyboardAvoidingView,
     SafeAreaView,
     ScrollView,
@@ -153,7 +153,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                             {/*    style={styles.image}*/}
                             {/*    source={{ uri: "https://www.google.com/imgres?imgurl=https%3A%2F%2Fassets-global.website-files.com%2F5ec7dad2e6f6295a9e2a23dd%2F5edfa7c6f978e75372dc332e_profilephoto1.jpeg&imgrefurl=https%3A%2F%2Fwww.upwork.com%2Fresources%2Fhow-to-guide-perfect-profile-picture&tbnid=saynDxIJys_PZM&vet=12ahUKEwjdgcaurI7uAhURaSsKHfvDA8oQMygAegUIARDFAQ..i&docid=_lgUfa9iUIcUwM&w=242&h=241&q=sample%20profile%20images&hl=en&client=firefox-b-d&ved=2ahUKEwjdgcaurI7uAhURaSsKHfvDA8oQMygAegUIARDFAQ" }}*/}
                             {/*/>*/}
-                            {this.props.poll && this.props.poll.likes && this.getReactUsers().map(user => {
+                            {this.state.poll  && this.getReactUsers().map(user => {
                                 return (
                                     <Image
                                         source={{uri: user.profileImage}}
@@ -168,7 +168,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                             })}
                         </View>
                         <TouchableOpacity onPress={() => {
-                            navigate("poll_stats", {poll: this.state.poll})
+                            navigate("poll_stats", {poll: this.state.poll,pollCompleted:this.state.timeRemaining === "00:00:00"})
                         }}>
                             <View style={[{flexDirection: "row", margin: 5}]}>
                                 <View style={{flexDirection: 'column', justifyContent: 'center'}}>
@@ -231,7 +231,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                         </View>
                     </View>
                     <View style={styles.logoWrapper}>
-                        <Image
+                        <ImageBackground
                             resizeMode="cover"
                             style={styles.logo}
                             source={{uri: this.state.poll?.image}}/>
@@ -275,9 +275,9 @@ const styles = StyleSheet.create({
         height: "100%",
     },
     logoWrapper: {
-        backgroundColor: 'red',
         flex: 1,
-        marginTop: 20
+        marginTop: 20,
+        padding:10
     },
     logo: {
         height: 300,

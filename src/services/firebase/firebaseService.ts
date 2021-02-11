@@ -15,21 +15,20 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
-import {trackPromise} from 'react-promise-tracker'
 
 export function registerUser(user: User): Promise<User> {
-    return trackPromise(USER_COLLECTION.add(user)
+    return USER_COLLECTION.add(user)
         .then((res) => {
             user.userId = res.id;
             return Promise.resolve(user);
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function loginUser(user: User): Promise<User> {
-    return trackPromise(USER_COLLECTION.where("email", "==", user.email)
+    return USER_COLLECTION.where("email", "==", user.email)
         .get()
         .then((res) => {
             const data = res.docs[0].data();
@@ -43,32 +42,32 @@ export function loginUser(user: User): Promise<User> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function getMoods(): Promise<any> {
-    return trackPromise(MOOD_COLLECTIONS.get()
+    return MOOD_COLLECTIONS.get()
         .then((res) => {
             return Promise.resolve(res.docs);
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function getTags(): Promise<any> {
-    return trackPromise(TAG_COLLECTIONS.get()
+    return TAG_COLLECTIONS.get()
         .then((res) => {
             return Promise.resolve(res.docs);
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
-export function createPost(post: PostDoc| AlertPoll): Promise<any> {
+export function createPost(post: PostDoc | AlertPoll): Promise<any> {
     post.createdAt = new Date();
-    return trackPromise(POST_COLLECTION.doc(post.userId)
+    return POST_COLLECTION.doc(post.userId)
         .collection("userPosts")
         .add(post)
         .then((res) => {
@@ -78,7 +77,7 @@ export function createPost(post: PostDoc| AlertPoll): Promise<any> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function fetchFeedPosts(email: string): Promise<any> {
@@ -114,7 +113,7 @@ export function fetchFeedPosts(email: string): Promise<any> {
 }
 
 export function fetchAllUsers(): Promise<User[]> {
-    return trackPromise(USER_COLLECTION.get()
+    return USER_COLLECTION.get()
         .then((res) => {
             const userDocs = res.docs;
             const users: User[] = [];
@@ -132,11 +131,11 @@ export function fetchAllUsers(): Promise<User[]> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function discoverAllUsers(search: string): Promise<User[]> {
-    return trackPromise(fetchAllUsers()
+    return fetchAllUsers()
         .then((res) => {
             let users: User[] = res;
             users = filter(users, (user) => includes(user.name, search));
@@ -144,15 +143,15 @@ export function discoverAllUsers(search: string): Promise<User[]> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function isFollowingUser(
     loggedInUserId: string,
     followingProfileId: string,
 ): Promise<boolean> {
-    return trackPromise(FOLLOWERS_COLLECTION.doc(loggedInUserId)
-        .collection("userFollowers")
+    return FOLLOWING_COLLECTION.doc(loggedInUserId)
+        .collection("userFollowing")
         .doc(followingProfileId)
         .get()
         .then((res) => {
@@ -160,27 +159,27 @@ export function isFollowingUser(
         })
         .catch((err) => {
             return Promise.reject(false);
-        }));
+        });
 }
 
 export function followUser(
     loggedInUserId: string,
     followingProfileId: string,
 ): Promise<boolean> {
-    const following = trackPromise(FOLLOWING_COLLECTION.doc(loggedInUserId)
+    const following = FOLLOWING_COLLECTION.doc(loggedInUserId)
         .collection("userFollowing")
         .doc(followingProfileId)
         .set({})
         .then(() => {
             return Promise.resolve(true);
-        }));
-    const followers = trackPromise(FOLLOWERS_COLLECTION.doc(followingProfileId)
+        });
+    const followers = FOLLOWERS_COLLECTION.doc(followingProfileId)
         .collection("userFollowers")
         .doc(loggedInUserId)
         .set({})
         .then(() => {
             return Promise.resolve(true);
-        }));
+        });
 
     return Promise.all([followers, following])
         .then((res) => {
@@ -195,7 +194,7 @@ export function unFollowUser(
     loggedInUserId: string,
     followingProfileId: string,
 ): Promise<boolean> {
-    const following = trackPromise(FOLLOWING_COLLECTION.doc(loggedInUserId)
+    const following = FOLLOWING_COLLECTION.doc(loggedInUserId)
         .collection("userFollowing")
         .doc(followingProfileId)
         .get()
@@ -203,8 +202,8 @@ export function unFollowUser(
             if (res.exists) {
                 res.ref.delete();
             }
-        }));
-    const followers =trackPromise( FOLLOWERS_COLLECTION.doc(followingProfileId)
+        });
+    const followers = FOLLOWERS_COLLECTION.doc(followingProfileId)
         .collection("userFollowers")
         .doc(loggedInUserId)
         .get()
@@ -212,7 +211,7 @@ export function unFollowUser(
             if (res.exists) {
                 res.ref.delete();
             }
-        }));
+        });
 
     return Promise.all([followers, following])
         .then((res) => {
@@ -224,7 +223,7 @@ export function unFollowUser(
 }
 
 export function getUserFollowings(userID: string): Promise<User[]> {
-    return trackPromise(FOLLOWING_COLLECTION.doc(userID)
+    return FOLLOWING_COLLECTION.doc(userID)
         .collection("userFollowing")
         .get()
         .then((res) => {
@@ -236,6 +235,7 @@ export function getUserFollowings(userID: string): Promise<User[]> {
                     userId: doc.id,
                     email: userData.email,
                     name: userData.name,
+                    profileImage:userData.profileImage
                 };
                 users.push(user);
             });
@@ -243,11 +243,11 @@ export function getUserFollowings(userID: string): Promise<User[]> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export function getUserFollowers(userID: string): Promise<User[]> {
-    return trackPromise(FOLLOWERS_COLLECTION.doc(userID)
+    return FOLLOWERS_COLLECTION.doc(userID)
         .collection("userFollowers")
         .get()
         .then((res) => {
@@ -266,20 +266,21 @@ export function getUserFollowers(userID: string): Promise<User[]> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 export async function onCreatePost(post: PostDoc) {
     if (post.isFeedPost) {
-        await trackPromise(FEED_COLLECTIONS.doc(post.userId)
+        await FEED_COLLECTIONS.doc(post.userId)
             .collection("userFeed")
-            .add(post)
-            .then((res) => {
-                console.log("Feed created");
-            })
-            .catch((err) => {
-                console.log("Feed create error ", err);
-            }));
+            .add(post);
+
+        const userFollowers = await getUserFollowers(post.userId);
+        await Promise.all(map(userFollowers, async (userId) => {
+            await FEED_COLLECTIONS.doc(userId)
+                .collection("userFeed")
+                .add(post);
+        }));
     }
 
     if (post.DMList?.length != 0) {
@@ -297,6 +298,7 @@ export async function onCreatePost(post: PostDoc) {
     }
 
     if (post.isPollPost) {
+        post.pollCompleted = false
         ALERT_POLL_COLLECTIONS.doc(post.userId)
             .collection("userPolls")
             .add(post)
@@ -327,15 +329,17 @@ export async function getRandomPosts(userId): Promise<PostDoc[]> {
     const posts: PostDoc[] = [];
     let postDocs;
     await Promise.all(
-        map(users,async user => {
-            if(user.userId !== userId){
-                postDocs = await trackPromise(POST_COLLECTION.doc(user.userId)
+        map(users, async user => {
+            if (user.userId !== userId) {
+                postDocs = await POST_COLLECTION.doc(user.userId)
                     .collection("userPosts")
-                    .get())
+                    .get()
                 map(postDocs.docs, (doc) => {
                     const post: PostDoc = doc.data();
                     post.postId = doc.id;
-                    posts.push(doc.data());
+                    if(post.userId !== userId){
+                        posts.push(doc.data());
+                    }
                 })
             }
         })
@@ -343,10 +347,10 @@ export async function getRandomPosts(userId): Promise<PostDoc[]> {
     return Promise.resolve(posts)
 }
 
-export async function getUserPosts(userId: string): Promise<PostDoc[]> {
+export async function getUserFeed(userId: string): Promise<PostDoc[]> {
     const posts: PostDoc[] = [];
-    await POST_COLLECTION.doc(userId)
-        .collection("userPosts")
+    await FEED_COLLECTIONS.doc(userId)
+        .collection("userFeed")
         .get()
         .then((res) => {
             map(res.docs, (doc) => {
@@ -362,23 +366,23 @@ export async function getUserPosts(userId: string): Promise<PostDoc[]> {
     const followingDoc = await FOLLOWING_COLLECTION.doc(userId)
         .collection("userFollowing")
         .get();
-
-    await Promise.all(
-        map(followingDoc.docs, async (user: any) => {
+    await Promise.all(map(followingDoc.docs, async (user: any) => {
             const userFeeds = await FEED_COLLECTIONS.doc(user.id)
                 .collection("userFeed")
                 .get();
-            map(userFeeds.docs, async (doc) => {
-                posts.push(doc.data());
+             map(userFeeds.docs, async (doc) => {
+                if (doc.data().pollCompleted) {
+                    posts.push(doc.data());
+                }
             });
-        }),
-    );
+        })
+    )
 
     return Promise.resolve(posts)
 }
 
 export function getPost(userId: string, postId): Promise<PostDoc> {
-    return trackPromise(POST_COLLECTION.doc(userId)
+    return POST_COLLECTION.doc(userId)
         .collection("userPosts")
         .doc(postId)
         .get()
@@ -388,7 +392,7 @@ export function getPost(userId: string, postId): Promise<PostDoc> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
 }
 
 function sortPostsByDate(a, b): number {
@@ -405,7 +409,7 @@ export function getUserPolls(userId: string): Promise<AlertPoll[]> {
         .then((res) => {
             const polls: AlertPoll[] = [];
             map(res.docs, (doc) => {
-                if(!doc.data().pollCompleted){
+                if (!doc.data().pollCompleted) {
                     const p = doc.data()
                     p.postId = doc.id
                     polls.push(p);
@@ -431,7 +435,7 @@ export async function getFollowingUserPolls(
                 .collection("userPolls")
                 .get()
             map(alertPolls.docs, async (doc) => {
-                if(!doc.data().pollCompleted) {
+                if (!doc.data().pollCompleted) {
                     const p = doc.data()
                     p.postId = doc.id
                     polls.push(p);
@@ -453,6 +457,22 @@ export function getWardrobe(userId: string): Promise<WardRobe[]> {
         .catch((err) => {
             return Promise.reject(err);
         });
+}
+
+
+export async function getUserPosts(userId): Promise<PostDoc[]> {
+    const postList: PostDoc[] = []
+    try {
+        const userDocs = await POST_COLLECTION.doc(userId).collection("userPosts").get();
+        map(userDocs, doc => {
+            const post: PostDoc = doc.data();
+            post.postId = doc.id;
+            postList.push(post);
+        })
+        return Promise.resolve(postList)
+    } catch (e) {
+        return Promise.resolve(e)
+    }
 }
 
 function getWardrobeTags(posts: PostDoc[]): string[] {
@@ -484,29 +504,9 @@ function getWardrobePosts(posts: PostDoc[], tags: string[]): WardRobe[] {
     return wardrobeList;
 }
 
-export function getUserFeed(userId: string): Promise<PostDoc[]> {
-    let posts: PostDoc[] = [];
-    const userPost = getUserPosts(userId).then((res) => {
-        posts = posts.concat(res);
-    });
-    const followingPosts = trackPromise(FOLLOWING_COLLECTION.doc(userId)
-        .collection("userFollowing")
-        .get()
-        .then((res) => {
-            const followings = res.docs;
-            return map(followings, (user: any) => {
-                getUserPosts(userId).then((res) => {
-                    posts = posts.concat(res);
-                });
-            });
-        }));
-    return Promise.all([userPost, followingPosts]).then((res) => {
-        return Promise.resolve(posts);
-    });
-}
 
 export function reactToPoll(user: User, poll: AlertPoll): Promise<boolean> {
-    return trackPromise(ALERT_POLL_COLLECTIONS.doc(poll.user.userId)
+    return ALERT_POLL_COLLECTIONS.doc(poll.user.userId)
         .collection("userPolls")
         .doc(poll.postId)
         .set(poll)
@@ -515,7 +515,7 @@ export function reactToPoll(user: User, poll: AlertPoll): Promise<boolean> {
         })
         .catch((err) => {
             return Promise.resolve(false);
-        }));
+        });
 }
 
 export async function hasReactedToPoll(
@@ -523,10 +523,10 @@ export async function hasReactedToPoll(
     userId: string,
 ): Promise<boolean> {
     let hasReacted = false
-    const docs = await trackPromise(ALERT_POLL_COLLECTIONS.doc(poll.user.userId)
+    const docs = await ALERT_POLL_COLLECTIONS.doc(poll.user.userId)
         .collection("userPolls")
         .doc(poll.postId)
-        .get());
+        .get();
 
     const pollData = docs.data();
 
@@ -551,14 +551,14 @@ export async function hasReactedToPoll(
 export async function sendPollToFeed(userId: string, poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(userId).collection("userPolls").doc(poll.postId).set(poll)
-    await trackPromise(FEED_COLLECTIONS.doc(userId).collection("userFeed").add(poll))
+    await FEED_COLLECTIONS.doc(userId).collection("userFeed").add(poll)
 }
 
 export async function sendPollToFriends(poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(poll.user.userId).collection("userPolls").doc(poll.postId).set(poll)
     await map(poll.DMList, async (userId) => {
-        await trackPromise(FEED_COLLECTIONS.doc(userId)
+        await FEED_COLLECTIONS.doc(userId)
             .collection("userFeed")
             .add(poll)
             .then((res) => {
@@ -566,6 +566,25 @@ export async function sendPollToFriends(poll: AlertPoll) {
             })
             .catch((err) => {
                 console.log("Send to friend feed error ", err);
-            }));
+            });
     });
+}
+
+export async function getFollowingUsers(userId: string):Promise<User[]>{
+    const users:User[] = []
+   await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get().then(async res => {
+       const userDocs = res.docs;
+       await  Promise.all(map(userDocs, async (doc) => {
+           const userDoc = await USER_COLLECTION.doc(doc.id).get();
+           const userData: any = userDoc.data();
+           const user: User = {
+               userId: doc.id,
+               email: userData.email,
+               name: userData.name,
+               profileImage: userData.profileImage
+           };
+           users.push(user);
+       }));
+   })
+    return Promise.resolve(users)
 }

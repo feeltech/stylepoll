@@ -108,10 +108,10 @@ export type PostDoc = {
   onGoingPoll?:boolean,
   likes?:User[]
   dislikes?:User[]
+  pollCompleted?:boolean,
 }
 
 export type AlertPoll = PostDoc & {
-  pollCompleted?:boolean,
   likes:User[]
   dislikes:User[]
 }

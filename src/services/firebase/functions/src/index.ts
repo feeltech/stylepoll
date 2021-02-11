@@ -21,7 +21,7 @@ exports.onFollowUser = functions.firestore
             .collection('userFeed');
         const followedUserPostsSnapshot = await followedUserPostsRef.get();
         followedUserPostsSnapshot.forEach((doc: any) => {
-            if (doc.exists) {
+            if (doc.exists && doc.data().pollCompleted) {
                 userFeedRef.doc(doc.id).set(doc.data());
             }
         });
@@ -52,7 +52,7 @@ exports.onUploadPosts = functions.firestore
     .document('/posts/{userId}/userPosts/{postId}').onCreate(async (snapshot, context) => {
         const userId = context.params.userId;
         const postId = context.params.postId;
-
+        functions.logger.log("Snapshot ",snapshot.data() )
 
         const userFollowersRef = admin
             .firestore()

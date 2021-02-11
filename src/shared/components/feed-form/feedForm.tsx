@@ -200,7 +200,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                     <TextInput autoCapitalize="none" value={this.state.description}
                                                onChangeText={(text) => {
                                                    this.setState({description: text})
-                                               }} placeholder="Description on the poll" placeholderTextColor={'black'}
+                                               }} placeholder="Description on the poll" placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {/* <Text style={styles.input_label}>ADD A Mood</Text> */}
@@ -333,7 +333,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                                    this.setState({address: text})
                                                }}
                                                placeholder="Your Location"
-                                               placeholderTextColor={'black'}
+                                               placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {this.props.showDate &&

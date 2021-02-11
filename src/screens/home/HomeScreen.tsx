@@ -16,10 +16,10 @@ import { POST_LIST } from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
 import Posts from "../../shared/components/post-list/postList";
 import {
-  fetchFeedPosts,
-  getFollowingUserPolls,
-  getUserPolls,
-  getUserPosts,
+    fetchFeedPosts,
+    getFollowingUserPolls, getUserFeed,
+    getUserPolls,
+    getUserPosts,
 } from "../../services/firebase/firebaseService";
 import { fetchLocalStorage } from "../../utils/local-storage";
 import { AlertPoll, ExtraPost, PostDoc, PostList } from "../../modals";
@@ -55,7 +55,7 @@ const HomeScreen = () => {
       }, []),
   );
   const fetchFeed = (user) => {
-    getUserPosts(user.userId).then((res) => {
+      getUserFeed(user.userId).then((res) => {
       setPostList(res);
     });
   };

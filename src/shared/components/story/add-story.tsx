@@ -13,7 +13,6 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
 
   private onAddPoll = () => {
     if(this.props.poll?.postId) {
-      debugger
       NavigationService.navigate("poll_details",{poll:this.props.poll})
     } else {
       NavigationService.navigate("camera")
@@ -39,7 +38,7 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
           </View>
         }
         <View style={styles.username}>
-          {this.props.poll == null &&
+          {this.props.poll == null ?
           <Text
               numberOfLines={1}
               style={{
@@ -48,7 +47,16 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
               }}
           >
             Start Poll
-          </Text>
+          </Text> :
+              <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 12,
+                    color: "#000",
+                  }}
+              >
+                Your Poll
+              </Text>
           }
         </View>
       </TouchableOpacity>

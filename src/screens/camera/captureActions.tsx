@@ -1,7 +1,8 @@
 import React from "react";
 import {Alert, ImageBackground, StyleSheet, TouchableOpacity, View} from "react-native";
 import Share from 'react-native-share';
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
+import {Icon} from "react-native-elements";
 
 
 interface ICaptureActionStatus {
@@ -87,9 +88,18 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
     render() {
         return (
             <View style={styles.container}>
+                <View style={{flex:1}}></View>
                 <View style={{flex: 10}}>
                     <ImageBackground source={{uri: `${this.state.imageURI}`}} style={styles.image}
-                                     imageStyle={{borderRadius: 30}}></ImageBackground>
+                                     imageStyle={{borderRadius: 30}}>
+                        <View style={{
+                            flex: 1,
+                            flexDirection: "row",padding:20}}>
+                            <TouchableOpacity onPress={()=>{goBack()}}>
+                                <Icon name={"close"} size={30} color={"white"}/>
+                            </TouchableOpacity>
+                        </View>
+                    </ImageBackground>
                 </View>
                 <View style={{
                     flex: 1,

@@ -17,19 +17,21 @@ import {PostDoc, User} from "../../modals";
 import {
     createPost,
     discoverAllUsers,
-    fetchAllUsers,
+    fetchAllUsers, getFollowingUsers,
     sendPollToFeed,
     sendPollToFriends
 } from "../../services/firebase/firebaseService";
 import {includes,map,startCase} from 'lodash';
 import {uploadImageAndGetUrl} from "../../utils";
+import {fetchLocalStorage} from "../../utils/local-storage";
 
 interface ISendToFriendStates{
     postDoc:any;
     selectedFriends:string[],
     imageURI: string,
     followingFriends:User[],
-    isAlertPoll:boolean
+    isAlertPoll:boolean,
+    user:any
 }
 
 class SendToFriend extends React.Component<any, ISendToFriendStates> {
@@ -41,7 +43,8 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             selectedFriends:[],
             imageURI:'',
             followingFriends:[],
-            isAlertPoll:false
+            isAlertPoll:false,
+            user:""
         }
     }
 
@@ -52,11 +55,14 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
         if(isAlertPoll){
             this.setState({isAlertPoll:isAlertPoll})
         }
+        fetchLocalStorage("loggedUser").then(res => {
+            this.setState({user:res})
+            this.getFollowingUsers(res);
+        })
         this.setState({
             postDoc:postDoc,
             imageURI:imageURI
         })
-        this.getFollowingUsers(null);
     }
 
     private onSave = () => {
@@ -65,7 +71,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
         uploadImageAndGetUrl(this.state.imageURI).then(res => {
             postDoc.image = res
             createPost(postDoc).then(res => {
-                navigate("camera")
+                navigate("home")
             }).catch(err => {
                 console.log(err)
             })
@@ -105,23 +111,12 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
     }
 
     private getFollowingUsers = (search:string | null) =>{
-        if(search){
-            discoverAllUsers(search).then(res => {
-                this.setState({
-                    followingFriends:res
-                })
-            }).catch(err => {
-                console.log(err)
+        getFollowingUsers(this.state.user.userId).then(res => {
+            this.setState({
+                followingFriends:res
             })
-        }else{
-            fetchAllUsers().then(res => {
-                this.setState({
-                    followingFriends:res
-                })
-            }).catch(err => {
-                console.log(err)
-            })
-        }
+        }).catch(err => {
+        })
     }
 
 
