@@ -7,6 +7,7 @@ import PhotoShower from "./photoShower";
 import CirclePagination from "../circle-pagination/circlePagination";
 import {startCase} from 'lodash';
 import {SCREEN_HEIGHT} from "../../constants";
+import {navigate} from "../../../services/navigation";
 export interface PostItemProps {
     item?: ExtraPost,
     setPost?: React.Dispatch<React.SetStateAction<ExtraPost>>
@@ -24,6 +25,7 @@ const PostItem = ({ setPost, item,post }: PostItemProps) => {
         <View style={styles.container}>
             <View style={styles.postHeader}>
                 <TouchableOpacity
+                    onPress={()=>{navigate("other_user_profile", {user: post?.user})}}
                     style={styles.infoWrapper}>
                     <FastImage style={styles.avatar}
                                source={{ uri:post?.user?.profileImage}} />

@@ -84,7 +84,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
     // @ts-ignore
     private renderRandomPosts() {
-        const posts = this.state.randomPosts.length > 1 ? this.state.randomPosts.slice(1, this.state.randomPosts.length - 1) : []
+        const posts = this.state.randomPosts.length >= 1 ? this.state.randomPosts.slice(1, 2) : []
         return map(posts, post => {
             return (
                 <TouchableOpacity style={{

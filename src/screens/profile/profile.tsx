@@ -182,16 +182,23 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         </View>
                     </View>
                     <View style={{
-                        flex: 0,
+                        flex: 1,
                         flexDirection: 'row',
                         margin: 10,
+                        justifyContent: 'space-between'
                     }}>
-                        <View style={{flexDirection: 'column', alignItems: 'flex-start'}}>
-                            <Text style={{fontWeight:'bold'}}>{startCase(this.state.profileUser.name)}</Text>
+                        <View style={{flex:1,flexDirection: 'column', alignItems: 'flex-start',justifyContent:'center'}}>
+                            <Text style={{fontWeight:'bold',fontSize:15}}>{startCase(this.state.profileUser.name)}</Text>
                             {/*{this.state.followers.length != 0 &&*/}
                             {/*    <Text>{`Followed by ${this.state.followers[0]}and ${this.state.followers.length-1} others`}</Text>*/}
                             {/*}*/}
                         </View>
+                        <TouchableOpacity style={{flex:0,flexDirection: 'column', alignItems: 'center',justifyContent:'center',borderWidth:2,borderColor:'#004494',height:30}}>
+                            <Text style={{fontWeight:'bold',color:'#0b62d7',padding:30}}>Edit Profile</Text>
+                            {/*{this.state.followers.length != 0 &&*/}
+                            {/*    <Text>{`Followed by ${this.state.followers[0]}and ${this.state.followers.length-1} others`}</Text>*/}
+                            {/*}*/}
+                        </TouchableOpacity>
                     </View>
                     <View style={{
                         flex: 0,

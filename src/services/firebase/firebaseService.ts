@@ -15,20 +15,21 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
+import {trackPromise} from "react-promise-tracker";
 
 export function registerUser(user: User): Promise<User> {
-    return USER_COLLECTION.add(user)
+    return trackPromise(USER_COLLECTION.add(user)
         .then((res) => {
             user.userId = res.id;
             return Promise.resolve(user);
         })
         .catch((err) => {
             return Promise.reject(err);
-        });
+        }));
 }
 
 export function loginUser(user: User): Promise<User> {
-    return USER_COLLECTION.where("email", "==", user.email)
+    return trackPromise(USER_COLLECTION.where("email", "==", user.email)
         .get()
         .then((res) => {
             const data = res.docs[0].data();
@@ -42,7 +43,7 @@ export function loginUser(user: User): Promise<User> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        });
+        }));
 }
 
 export function getMoods(): Promise<any> {
@@ -52,17 +53,17 @@ export function getMoods(): Promise<any> {
         })
         .catch((err) => {
             return Promise.reject(err);
-        });
+        })
 }
 
 export function getTags(): Promise<any> {
     return TAG_COLLECTIONS.get()
         .then((res) => {
-            return Promise.resolve(res.docs);
+            return Promise.resolve(res.docs)
         })
         .catch((err) => {
-            return Promise.reject(err);
-        });
+            return Promise.reject(err)
+        })
 }
 
 export function createPost(post: PostDoc | AlertPoll): Promise<any> {
@@ -336,7 +337,9 @@ export async function getRandomPosts(userId): Promise<PostDoc[]> {
                 map(postDocs.docs, (doc) => {
                     const post: PostDoc = doc.data();
                     post.postId = doc.id;
-                    if (post.userId !== userId) {
+                    if(post.isPollPost && post.pollCompleted){
+                        posts.push(doc.data());
+                    }else if(!post.isPollPost) {
                         posts.push(doc.data());
                     }
                 })
@@ -362,21 +365,22 @@ export async function getUserFeed(userId: string): Promise<PostDoc[]> {
         .catch((err) => {
             return Promise.reject(err);
         });
-    const followingDoc = await FOLLOWING_COLLECTION.doc(userId)
-        .collection("userFollowing")
-        .get();
-    await Promise.all(map(followingDoc.docs, async (user: any) => {
-            const userFeeds = await FEED_COLLECTIONS.doc(user.id)
-                .collection("userFeed")
-                .get();
-            map(userFeeds.docs, async (doc) => {
-                if (doc.data().pollCompleted) {
-                    posts.push(doc.data());
-                }
-            });
-        })
-    )
-
+    // const followingDoc = await FOLLOWING_COLLECTION.doc(userId)
+    //     .collection("userFollowing")
+    //     .get();
+    // await Promise.all(map(followingDoc.docs, async (user: any) => {
+    //         const userFeeds = await FEED_COLLECTIONS.doc(user.id)
+    //             .collection("userFeed")
+    //             .get();
+    //         map(userFeeds.docs, async (doc) => {
+    //             if (doc.data().isPollPost && doc.data().pollCompleted) {
+    //                 posts.push(doc.data());
+    //             }else if (!doc.data().isPollPost){
+    //                 posts.push(doc.data());
+    //             }
+    //         });
+    //     })
+    // )
     return Promise.resolve(posts)
 }
 
@@ -494,9 +498,11 @@ function getWardrobePosts(posts: PostDoc[], tags: string[]): WardRobe[] {
             posts: [],
         };
         map(posts, (post) => {
-            if (!includes(post.tags, tag)) {
-                wardrobe.posts.push(post);
-            }
+            map(post.tags , t => {
+                if(t.name === tag){
+                    wardrobe.posts.push(post)
+                }
+            })
         });
         wardrobeList.push(wardrobe);
     });
@@ -551,6 +557,7 @@ export async function sendPollToFeed(userId: string, poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(userId).collection("userPolls").doc(poll.postId).set(poll)
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").add(poll)
+    // await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
 }
 
 export async function sendPollToFriends(poll: AlertPoll) {

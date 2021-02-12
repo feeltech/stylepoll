@@ -173,7 +173,7 @@ const WardrobePreviewItem = ({
           >
             <FastImage
               style={styles.image}
-              source={{ uri: wardrobe.posts[0].image }}
+              source={{ uri: wardrobe.posts[0] ? wardrobe.posts[0].image : '' }}
             />
           </TouchableOpacity>
         </View>
