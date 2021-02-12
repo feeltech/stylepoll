@@ -131,7 +131,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
-                            backgroundColor: "#053280",
+                            backgroundColor: "#0C0D34",
                         }}
                         // leftComponent={<TouchableOpacity onPress={goBack}>
                         //     <Icon

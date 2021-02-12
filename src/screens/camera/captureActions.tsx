@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, ImageBackground, StyleSheet, TouchableOpacity, View} from "react-native";
+import {Alert, Image, ImageBackground, StyleSheet, TouchableOpacity, View} from "react-native";
 import Share from 'react-native-share';
 import {goBack, navigate} from "../../services/navigation";
 import {Icon} from "react-native-elements";
@@ -105,19 +105,20 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
                     flex: 1,
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    alignItems:'center',
                     marginTop: 15,
                     marginLeft:20,
                     marginRight:20,
                     marginBottom: 5
                 }}>
                     <TouchableOpacity onPress={this.yellowButtonActions}>
-                        <View style={{width: 35, height: 35, borderRadius: 35 / 2, backgroundColor: "#F67728"}}/>
+                       <Image source={require('../../../assets/images/feed.png')}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.redButtonActions}>
-                        <View style={{width: 35, height: 35, borderRadius: 35 / 2, backgroundColor: "#D81B46"}}/>
+                        <Image source={require('../../../assets/images/poll.png')}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.blueButtonActions}>
-                        <View style={{width: 35, height: 35, borderRadius: 35 / 2, backgroundColor: "#3299FE"}}/>
+                        <Image source={require('../../../assets/images/share-post.png')}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: "#000000"
+        backgroundColor: "#0C0D34"
     },
     image: {
         flex: 1,

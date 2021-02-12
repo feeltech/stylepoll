@@ -126,7 +126,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
-                            backgroundColor: "#053280",
+                            backgroundColor: "#0C0D34",
                         }}
                         leftComponent={<TouchableOpacity onPress={() => {
                             goBack()

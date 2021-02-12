@@ -12,7 +12,7 @@ import { usePromiseTracker } from "react-promise-tracker"
 /**
  * ? Local Imports
  */
-import {StyleSheet, Text, View} from "react-native";
+import {Image, StyleSheet, Text, View} from "react-native";
 
 import {SCREEN_HEIGHT, SCREENS, STATUS_BAR_HEIGHT} from "../../shared/constants";
 // ? Screens
@@ -67,7 +67,7 @@ const Navigation = () => {
                         } else if (route.name === SCREENS.CAMERA) {
                             iconName = "camera";
                         } else if (route.name === SCREENS.FAVOURITES) {
-                            iconName = "heart";
+                            iconName = "bell";
                         } else if (route.name === SCREENS.PROFILE) {
                             iconName = "user";
                         }
@@ -75,6 +75,7 @@ const Navigation = () => {
                         // You can return any component that you like here!
                         return (
                             <Icon name={iconName} type="Feather" size={size} color={color}/>
+                            // <Image source={require(`../../../assets/${iconName}`)}/>
                         );
                     },
                 })}
@@ -82,7 +83,7 @@ const Navigation = () => {
                     // activeTintColor: "tomato",
                     // inactiveTintColor: "gray",
                     tabStyle: {
-                        backgroundColor: "#053280",
+                        backgroundColor: "#0C0D34",
                     },
                     // inactiveBackgroundColor: "none",
                     activeBackgroundColor: "#C3C3C3",

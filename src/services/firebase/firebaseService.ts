@@ -358,7 +358,11 @@ export async function getUserFeed(userId: string): Promise<PostDoc[]> {
             map(res.docs, (doc) => {
                 const post: PostDoc = doc.data();
                 post.postId = doc.id;
-                posts.push(post);
+                if (doc.data().isPollPost && doc.data().pollCompleted) {
+                    posts.push(doc.data());
+                } else if (!doc.data().isPollPost) {
+                    posts.push(doc.data());
+                }
             });
             return Promise.resolve(posts);
         })

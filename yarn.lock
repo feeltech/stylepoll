@@ -1028,6 +1028,11 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@primer/octicons-react@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@primer/octicons-react/-/octicons-react-12.0.0.tgz#4b42a361636e4834cb55d241995086e1c1908cd3"
+  integrity sha512-L1u2kjhAEMoOeNOZqQSc4xGE7/Cl6kjhuiIKrJOmNa6M86Zy+/pv1zFlvFnWzxu2FhPTlZWC4LLazTYf5spceA==
+
 "@react-native-community/art@^1.1.2":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.2.0.tgz#386d95393f6042d9006f9d4bc6063fb898794460"
@@ -6057,6 +6062,13 @@ object.values@^1.1.1:
     es-abstract "^1.18.0-next.1"
     has "^1.0.3"
 
+octicons@^7.0.1:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/octicons/-/octicons-7.4.0.tgz#0be0082ed75b81e680800ef978bf47078b670091"
+  integrity sha512-j53BDX+FpJ4DQwENARbk9hHkwG/Oaq5NPUMNzYdGxRA/R5M6BbPVQEakUVMNKLzvzPue/gEEUTtSj6utFse5QQ==
+  dependencies:
+    object-assign "^4.1.1"
+
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -6813,6 +6825,13 @@ react-navigation-helpers@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/react-navigation-helpers/-/react-navigation-helpers-0.2.0.tgz#f6d9df6c4eaf5095a02fc51c43287d8da50eb9a7"
   integrity sha512-3BTjYlLz3zL4SIbNZKeyWzz2g3RKxwqOqxnIyvl8P4p4CiRmQX2kD6gRlgrsBaeLOoSs0sAdJ+0BnYOSUsX97g==
+
+react-octicons-svg@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-octicons-svg/-/react-octicons-svg-2.0.0.tgz#897e3c018a45bbb1e1ea362a467d7505b13ff225"
+  integrity sha512-neuPJz96pUkmNrpnL3fiusy3EIxwbqf/fWvSiNtlFLaVZQ+XFkcfD84IYYrN+LiDsmEd4uiEpAmVBWOJqBHFhw==
+  dependencies:
+    octicons "^7.0.1"
 
 react-promise-tracker@^2.1.0:
   version "2.1.0"

@@ -41,9 +41,7 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
             includeBase64:true
         };
         launchImageLibrary(options, (response) => {
-            if (response.base64 != null) {
-                this.props.onCapture(response.base64);
-            }
+            this.props.onCapture(response.base64);
         });
 
     }
