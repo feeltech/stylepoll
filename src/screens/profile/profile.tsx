@@ -71,9 +71,9 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         profileUser: profileUser
                     })
 
-                    trackPromise(getUserPosts(profileUser.userId).then(res => {
+                    getUserPosts(profileUser.userId).then(res => {
                         this.setState({posts: res})
-                    }))
+                    })
 
                     getUserFollowings(profileUser.userId).then(res => {
                         this.setState({

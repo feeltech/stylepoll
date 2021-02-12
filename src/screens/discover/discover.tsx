@@ -41,14 +41,13 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
-            this.onGetRandomPosts()
-        });
-
-        fetchLocalStorage("loggedUser").then(res => {
-            this.setState({
-                user: res
+            fetchLocalStorage("loggedUser").then(res => {
+                this.onGetRandomPosts(res)
+                this.setState({
+                    user: res
+                })
             })
-        })
+        });
     }
 
     componentWillUnmount() {
@@ -71,8 +70,8 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
         }
     }
 
-    private onGetRandomPosts() {
-        getRandomPosts(this.state.user.userId).then(res => {
+    private onGetRandomPosts(user) {
+        getRandomPosts(user.userId).then(res => {
             this.setState({randomPosts: res})
         }).catch(err => {
             console.log("get random posts error ", err)
@@ -163,7 +162,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             />
                         </View>
                     </View>
-                    <ScrollView style={{backgroundColor: 'none', marginBottom: 80}}>
+                    <ScrollView style={{backgroundColor: 'none', marginBottom: 100}}>
                         {this.state.searchResults.length === 0 && this.state.randomPosts.length !== 0 &&
                         <>
 

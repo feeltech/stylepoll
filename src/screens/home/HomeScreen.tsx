@@ -19,7 +19,6 @@ import {
     fetchFeedPosts,
     getFollowingUserPolls, getUserFeed,
     getUserPolls,
-    getUserPosts,
 } from "../../services/firebase/firebaseService";
 import { fetchLocalStorage } from "../../utils/local-storage";
 import { AlertPoll, ExtraPost, PostDoc, PostList } from "../../modals";

@@ -1,7 +1,8 @@
 import React from "react";
 import {RNCamera} from "react-native-camera";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-dynamic-vector-icons";
+import {launchImageLibrary} from "react-native-image-picker";
 
 interface ICameraStates {
     cameraView: any;
@@ -30,6 +31,23 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
         }
     };
 
+    private accessGallery = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+            mediaType:'photo',
+            includeBase64:true
+        };
+        launchImageLibrary(options, (response) => {
+            if (response.base64 != null) {
+                this.props.onCapture(response.base64);
+            }
+        });
+
+    }
+
     private changeViewMode = () => {
         const viewMode = this.state.cameraView === RNCamera.Constants.Type.back ? RNCamera.Constants.Type.front : RNCamera.Constants.Type.back;
         this.setState({
@@ -46,19 +64,40 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
                 style={styles.preview}
                 type={this.state.cameraView}
             >
-                <View style={{flexDirection: "row"}}>
+                <View style={{flex:1,flexDirection:'row'}}>
                     <TouchableOpacity
                         onPress={this.changeViewMode.bind(this)}
-                        style={styles.change_mode}>
+                        style={{  flex:1,
+                            alignItems: "flex-end",
+                            justifyContent:"flex-start",
+                            paddingTop:30,
+                            paddingRight:20
+                            }}>
                         <Icon name={"refresh-cw"} type="Feather" size={30} color={"#FFFFFF"}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 1, flexDirection: "row"}}>
-                    <TouchableOpacity
-                        onPress={this.takePicture.bind(this)}
-                        style={styles.capture}>
-                        <Icon name={"circle"} type="Feather" size={70} color={"#FFFFFF"}/>
-                    </TouchableOpacity>
+                    <View style={{flex:1,flexDirection:'column'}}>
+                        <TouchableOpacity
+                            onPress={this.accessGallery.bind(this)}
+                            style={{flex:1,
+                                alignItems: "flex-start",
+                                justifyContent:"flex-end",
+                            padding:20}}>
+                            <Icon name={"image"} type="Feather" size={30} color={"#FFFFFF"}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flex:1,flexDirection:'column'}}>
+                        <TouchableOpacity
+                            onPress={this.takePicture.bind(this)}
+                            style={{flex:1,
+                                alignItems: "center",
+                                justifyContent:"flex-end",
+                            marginBottom:10}}>
+                            <Icon name={"circle"} type="Feather" size={50} color={"#FFFFFF"}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flex:1}}></View>
                 </View>
             </RNCamera>
         );
@@ -75,6 +114,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        ...Platform.select({
+            android: {
+                marginTop: 44
+            },
+            ios: {
+                marginTop: 22
+            },
+        })
     },
     capture: {
         flex:1,

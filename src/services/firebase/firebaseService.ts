@@ -235,7 +235,7 @@ export function getUserFollowings(userID: string): Promise<User[]> {
                     userId: doc.id,
                     email: userData.email,
                     name: userData.name,
-                    profileImage:userData.profileImage
+                    profileImage: userData.profileImage
                 };
                 users.push(user);
             });
@@ -276,13 +276,12 @@ export async function onCreatePost(post: PostDoc) {
             .add(post);
 
         const userFollowers = await getUserFollowers(post.userId);
-        await Promise.all(map(userFollowers, async (userId) => {
-            await FEED_COLLECTIONS.doc(userId)
+        await Promise.all(map(userFollowers, async (user) => {
+            await FEED_COLLECTIONS.doc(user.userId)
                 .collection("userFeed")
-                .add(post);
+                .add(post)
         }));
     }
-
     if (post.DMList?.length != 0) {
         map(post.DMList, (userId) => {
             FEED_COLLECTIONS.doc(userId)
@@ -337,7 +336,7 @@ export async function getRandomPosts(userId): Promise<PostDoc[]> {
                 map(postDocs.docs, (doc) => {
                     const post: PostDoc = doc.data();
                     post.postId = doc.id;
-                    if(post.userId !== userId){
+                    if (post.userId !== userId) {
                         posts.push(doc.data());
                     }
                 })
@@ -370,7 +369,7 @@ export async function getUserFeed(userId: string): Promise<PostDoc[]> {
             const userFeeds = await FEED_COLLECTIONS.doc(user.id)
                 .collection("userFeed")
                 .get();
-             map(userFeeds.docs, async (doc) => {
+            map(userFeeds.docs, async (doc) => {
                 if (doc.data().pollCompleted) {
                     posts.push(doc.data());
                 }
@@ -464,7 +463,7 @@ export async function getUserPosts(userId): Promise<PostDoc[]> {
     const postList: PostDoc[] = []
     try {
         const userDocs = await POST_COLLECTION.doc(userId).collection("userPosts").get();
-        map(userDocs, doc => {
+        map(userDocs.docs, doc => {
             const post: PostDoc = doc.data();
             post.postId = doc.id;
             postList.push(post);
@@ -570,21 +569,21 @@ export async function sendPollToFriends(poll: AlertPoll) {
     });
 }
 
-export async function getFollowingUsers(userId: string):Promise<User[]>{
-    const users:User[] = []
-   await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get().then(async res => {
-       const userDocs = res.docs;
-       await  Promise.all(map(userDocs, async (doc) => {
-           const userDoc = await USER_COLLECTION.doc(doc.id).get();
-           const userData: any = userDoc.data();
-           const user: User = {
-               userId: doc.id,
-               email: userData.email,
-               name: userData.name,
-               profileImage: userData.profileImage
-           };
-           users.push(user);
-       }));
-   })
+export async function getFollowingUsers(userId: string): Promise<User[]> {
+    const users: User[] = []
+    await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get().then(async res => {
+        const userDocs = res.docs;
+        await Promise.all(map(userDocs, async (doc) => {
+            const userDoc = await USER_COLLECTION.doc(doc.id).get();
+            const userData: any = userDoc.data();
+            const user: User = {
+                userId: doc.id,
+                email: userData.email,
+                name: userData.name,
+                profileImage: userData.profileImage
+            };
+            users.push(user);
+        }));
+    })
     return Promise.resolve(users)
 }
