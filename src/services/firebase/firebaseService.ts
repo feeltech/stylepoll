@@ -16,6 +16,7 @@ import {
     USER_COLLECTION,
 } from "../../shared/constants";
 import {trackPromise} from "react-promise-tracker";
+import post from "../../screens/post/post";
 
 export function registerUser(user: User): Promise<User> {
     return trackPromise(USER_COLLECTION.add(user)
@@ -337,9 +338,7 @@ export async function getRandomPosts(userId): Promise<PostDoc[]> {
                 map(postDocs.docs, (doc) => {
                     const post: PostDoc = doc.data();
                     post.postId = doc.id;
-                    if(post.isPollPost && post.pollCompleted){
-                        posts.push(doc.data());
-                    }else if(!post.isPollPost) {
+                    if((post.isPollPost && post.pollCompleted) || post.isFeedPost){
                         posts.push(doc.data());
                     }
                 })

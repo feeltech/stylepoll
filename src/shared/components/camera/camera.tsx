@@ -19,9 +19,7 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
             cameraView: RNCamera.Constants.Type.back,
         };
     }
-
     private cameraRef;
-
     private takePicture = () => {
         if (this.cameraRef) {
             const options = {quality: 0.5, base64: true};
@@ -41,7 +39,9 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
             includeBase64:true
         };
         launchImageLibrary(options, (response) => {
-            this.props.onCapture(response.base64);
+            if(!response.didCancel){
+                this.props.onCapture(response.base64);
+            }
         });
 
     }
