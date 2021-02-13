@@ -222,7 +222,6 @@ export async function onUnFollowUser(loggedInUser:string,followingUser:string){
     await Promise.all(map(userPosts.docs,async doc => {
         const post = doc.data();
         if(post.userId === followingUser){
-            debugger
             await FEED_COLLECTIONS.doc(loggedInUser).collection("userFeed").doc(doc.id).delete()
         }
     }))
