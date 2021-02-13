@@ -174,7 +174,7 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
             </TouchableOpacity>
           }
           centerComponent={{
-            text: `${startCase(this.state.user.name)}'s Alert poll`,
+            text: this.state.poll.user?`${startCase( this.state.poll.user.name)}'s Alert poll` :'Alert poll',
             style: { color: "#000", fontWeight: "bold" },
           }}
         />

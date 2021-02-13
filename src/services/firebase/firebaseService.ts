@@ -164,64 +164,68 @@ export function isFollowingUser(
         });
 }
 
-export function followUser(
+export async function followUser(
     loggedInUserId: string,
     followingProfileId: string,
 ): Promise<boolean> {
-    const following = FOLLOWING_COLLECTION.doc(loggedInUserId)
-        .collection("userFollowing")
-        .doc(followingProfileId)
-        .set({})
-        .then(() => {
-            return Promise.resolve(true);
-        });
-    const followers = FOLLOWERS_COLLECTION.doc(followingProfileId)
-        .collection("userFollowers")
-        .doc(loggedInUserId)
-        .set({})
-        .then(() => {
-            return Promise.resolve(true);
-        });
-
-    return Promise.all([followers, following])
-        .then((res) => {
-            return Promise.resolve(true);
-        })
-        .catch((err) => {
-            return Promise.resolve(true);
-        });
+    try {
+        await FOLLOWING_COLLECTION.doc(loggedInUserId)
+            .collection("userFollowing")
+            .doc(followingProfileId)
+            .set({})
+        const followers = await FOLLOWERS_COLLECTION.doc(followingProfileId)
+            .collection("userFollowers")
+            .doc(loggedInUserId)
+            .set({})
+        onFollowUser(loggedInUserId,followingProfileId)
+        return Promise.resolve(true);
+    }catch (e) {
+        return Promise.reject(false);
+    }
 }
 
-export function unFollowUser(
+export async function onFollowUser(loggedInUser:string,followingUser:string){
+    const userPosts = await POST_COLLECTION.doc(followingUser).collection("userPosts").get()
+    await Promise.all(map(userPosts.docs,async doc => {
+        const post = doc.data();
+        post.postId = doc.id;
+        if ((post.isPollPost && post.pollCompleted) || post.isFeedPost) {
+            await FEED_COLLECTIONS.doc(loggedInUser).collection("userFeed").add(post)
+        }
+    }))
+}
+
+export async function unFollowUser(
     loggedInUserId: string,
     followingProfileId: string,
 ): Promise<boolean> {
-    const following = FOLLOWING_COLLECTION.doc(loggedInUserId)
-        .collection("userFollowing")
-        .doc(followingProfileId)
-        .get()
-        .then((res) => {
-            if (res.exists) {
-                res.ref.delete();
-            }
-        });
-    const followers = FOLLOWERS_COLLECTION.doc(followingProfileId)
-        .collection("userFollowers")
-        .doc(loggedInUserId)
-        .get()
-        .then((res) => {
-            if (res.exists) {
-                res.ref.delete();
-            }
-        });
 
-    return Promise.all([followers, following])
-        .then((res) => {
-            return Promise.resolve(true);
-        })
-        .catch((err) => {
-            return Promise.resolve(true);
-        });
+    try {
+        await FOLLOWING_COLLECTION.doc(loggedInUserId)
+            .collection("userFollowing")
+            .doc(followingProfileId)
+            .delete()
+        await FOLLOWERS_COLLECTION.doc(followingProfileId)
+            .collection("userFollowers")
+            .doc(loggedInUserId)
+            .delete()
+        onUnFollowUser(loggedInUserId, followingProfileId)
+        return Promise.resolve(true)
+    }catch (e){
+        return Promise.reject(false)
+    }
+
+}
+
+export async function onUnFollowUser(loggedInUser:string,followingUser:string){
+    const userPosts = await FEED_COLLECTIONS.doc(loggedInUser).collection("userFeed").get()
+    await Promise.all(map(userPosts.docs,async doc => {
+        const post = doc.data();
+        if(post.userId === followingUser){
+            debugger
+            await FEED_COLLECTIONS.doc(loggedInUser).collection("userFeed").doc(doc.id).delete()
+        }
+    }))
 }
 
 export function getUserFollowings(userID: string): Promise<User[]> {
@@ -357,9 +361,7 @@ export async function getUserFeed(userId: string): Promise<PostDoc[]> {
             map(res.docs, (doc) => {
                 const post: PostDoc = doc.data();
                 post.postId = doc.id;
-                if (doc.data().isPollPost && doc.data().pollCompleted) {
-                    posts.push(doc.data());
-                } else if (!doc.data().isPollPost) {
+                if ((post.isPollPost && post.pollCompleted) || post.isFeedPost || (post.DMList && post.DMList.length > 0)) {
                     posts.push(doc.data());
                 }
             });
@@ -560,7 +562,7 @@ export async function sendPollToFeed(userId: string, poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(userId).collection("userPolls").doc(poll.postId).set(poll)
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").add(poll)
-    // await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
+    await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
 }
 
 export async function sendPollToFriends(poll: AlertPoll) {
