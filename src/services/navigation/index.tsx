@@ -62,21 +62,21 @@ const Navigation = () => {
                         let iconName = "";
 
                         if (route.name === SCREENS.HOME) {
-                            iconName = "home";
+                            iconName = require('../../../assets/images/home.png');
                         } else if (route.name === SCREENS.SEARCH) {
-                            iconName = "search";
+                            iconName = require('../../../assets/images/search.png');
                         } else if (route.name === SCREENS.CAMERA) {
-                            iconName = "camera";
+                            iconName = require('../../../assets/images/camera.png');
                         } else if (route.name === SCREENS.FAVOURITES) {
-                            iconName = "bell";
+                            iconName = require('../../../assets/images/notification.png');
                         } else if (route.name === SCREENS.PROFILE) {
-                            iconName = "user";
+                            iconName = require('../../../assets/images/profile.png');
                         }
 
                         // You can return any component that you like here!
                         return (
-                            <Icon name={iconName} type="Feather" size={size} color={color}/>
-                            // <Image source={require(`../../../assets/${iconName}`)}/>
+                            // <Icon name={iconName} type="Feather" size={size} color={color}/>
+                            <Image source={iconName}/>
                         );
                     },
                 })}
