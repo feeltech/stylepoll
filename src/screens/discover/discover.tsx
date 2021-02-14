@@ -54,22 +54,6 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
         this.focusListener();
     }
 
-    private onDiscoverUsers = (text: string) => {
-        if (!isEmpty(text)) {
-            discoverAllUsers(text).then(res => {
-                this.setState({
-                    searchResults: res
-                })
-            }).catch(err => {
-                console.log("Fail to fetch results")
-            })
-        } else {
-            this.setState({
-                searchResults: []
-            })
-        }
-    }
-
     private onGetRandomPosts(user) {
         getRandomPosts(user.userId).then(res => {
             this.setState({randomPosts: res})
@@ -78,13 +62,9 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
         })
     }
 
-    private getRandomPostIndex = () => {
-        return Math.floor(Math.random() * Math.floor(this.state.randomPosts.length - 1))
-    }
-
     // @ts-ignore
     private renderRandomPosts() {
-        const posts = this.state.randomPosts.length >= 1 ? this.state.randomPosts.slice(1, 2) : []
+        const posts = this.state.randomPosts.length >= 1 ? this.state.randomPosts.slice(1, this.state.randomPosts.length - 1) : []
         return map(posts, post => {
             return (
                 <TouchableOpacity style={{
@@ -151,19 +131,19 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                                 <Icon name="magnify" size={24} color={"#ddd"}/>
                             </View>
                             <TextInput
-                                onChangeText={this.onDiscoverUsers}
                                 autoFocus={false}
                                 style={{
                                     width: SCREEN_WIDTH - 30 - 50,
                                     height: 40,
                                     fontSize: 16
                                 }}
+                                onFocus={()=>{navigate("search-discover",{user:this.state.user})}}
                                 placeholder={"Search"}
                             />
                         </View>
                     </View>
                     <ScrollView style={{backgroundColor: 'none', marginBottom: 100}}>
-                        {this.state.searchResults.length === 0 && this.state.randomPosts.length !== 0 &&
+                        {this.state.randomPosts.length !== 0 &&
                         <>
 
                             <TouchableOpacity style={{display: 'flex', flex: 1, flexDirection: 'row'}} onPress={() => {
@@ -200,34 +180,6 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             </View>
                         </>
                         }
-                        {
-                            this.state.searchResults.length != 0 && this.state.searchResults.map(result => (
-                                <View style={styles.postHeader}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            navigate("other_user_profile", {user: result})
-                                        }}
-                                        style={styles.infoWrapper}>
-                                        <FastImage style={styles.avatar}
-                                                   source={{uri: result.profileImage}}/>
-                                        <Text style={{
-                                            fontWeight: '600'
-                                        }}>{result.name}</Text>
-                                    </TouchableOpacity>
-                                    {/*<TouchableOpacity>*/}
-                                    {/*    <Icons name="dots-vertical" size={24} />*/}
-                                    {/*</TouchableOpacity>*/}
-                                </View>
-                            ))
-                        }
-
-
-                        {/*{*/}
-                        {/*    this.state.searchResults.length !=0 &&*/}
-                        {/*    this.state.searchResults.map(user => ())*/}
-                        {/*}*/}
-
-
                     </ScrollView>
                 </KeyboardAvoidingView>
             </View>

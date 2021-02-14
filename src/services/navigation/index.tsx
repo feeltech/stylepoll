@@ -36,6 +36,7 @@ import Posts from "../../screens/post/post";
 import StoryView from "../../screens/story-view/story-view";
 import OtherUserProfile from "../../screens/other-user-profile/otherUserProfile";
 import WardrobeTagView from "../../screens/wardrobe-tag-view/wardrobe-tag-view";
+import DiscoverSearch from "../../screens/discover/search";
 // ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -147,6 +148,7 @@ const Navigation = () => {
                     <Stack.Screen name={SCREENS.STORY_VIEW} component={StoryView}/>
                     <Stack.Screen name={SCREENS.OTHER_USER_PROFILE} component={OtherUserProfile}/>
                     <Stack.Screen name={SCREENS.WARDROBE_VIEW} component={WardrobeTagView}/>
+                    <Stack.Screen name={SCREENS.SEARCH_DISCOVER} component={DiscoverSearch}/>
                     <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
                 </Stack.Navigator>
                 {/*}*/}

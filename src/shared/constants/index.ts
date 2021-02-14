@@ -23,7 +23,9 @@ export const SCREENS = {
     POST:'post',
     STORY_VIEW:'story_view',
     OTHER_USER_PROFILE:'other_user_profile',
-    WARDROBE_VIEW:'wardrobe_view'
+    WARDROBE_VIEW:'wardrobe_view',
+    SEARCH_DISCOVER:'search-discover',
+    SEARCH_FRIENDS: 'search-friends'
 };
 
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight();
