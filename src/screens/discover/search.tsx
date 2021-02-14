@@ -12,7 +12,7 @@ import {
 import {Header} from "react-native-elements";
 import {SCREEN_WIDTH} from "../../shared/constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {navigate} from "../../services/navigation";
+import {goBack, navigate} from "../../services/navigation";
 import FastImage from "react-native-fast-image";
 import {discoverAllUsers, fetchAllUsers} from "../../services/firebase/firebaseService";
 import {isEmpty, map} from 'lodash';
@@ -25,14 +25,14 @@ interface IDiscoverSearchStates {
     allUsers: User[]
 }
 
-class DiscoverSearch extends React.Component<any, IDiscoverSearchStates>{
+class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
 
     constructor(props) {
         super(props);
         this.state = {
             searchResults: [],
             user: '',
-            allUsers :[]
+            allUsers: []
         }
     }
 
@@ -43,8 +43,8 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates>{
         })
         fetchAllUsers().then(res => {
             this.setState({
-                allUsers:res,
-                searchResults:res
+                allUsers: res,
+                searchResults: res
             })
         })
     }
@@ -52,19 +52,19 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates>{
 
     private onDiscoverUsers = (text: string) => {
         if (isEmpty(text)) {
-           this.setState({
-               searchResults:this.state.allUsers
-           })
+            this.setState({
+                searchResults: this.state.allUsers
+            })
         } else {
             const allUsers = this.state.allUsers;
             const searchResults: User[] = []
-            map(allUsers,user => {
-                if(user.name.search(text) >= 0) {
+            map(allUsers, user => {
+                if (user.name.search(text) >= 0) {
                     searchResults.push(user)
                 }
             })
             this.setState({
-                searchResults:searchResults
+                searchResults: searchResults
             })
         }
     }
@@ -82,6 +82,12 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates>{
                             display: "flex",
                             backgroundColor: "#0C0D34",
                         }}
+                        leftComponent={<TouchableOpacity onPress={goBack}>
+                            <Icon
+                                name="chevron-left"
+                                color="#FFF"
+                            size={20}/>
+                        </TouchableOpacity>}
                         centerComponent={{
                             text: 'Search',
                             style: {color: "#FFF", fontWeight: "bold"},
