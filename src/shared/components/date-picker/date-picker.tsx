@@ -3,6 +3,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {StyleSheet, Text, View} from "react-native";
 import moment from 'moment';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDarkMode } from 'react-native-dark-mode'
 
 interface IDatePickerProps{
     onDateChange:(date:any)=>void
@@ -36,6 +37,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
     }
 
     render(){
+        const isDarkMode = useDarkMode()
         // @ts-ignore
         return (
             <View>
@@ -49,7 +51,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
                     onCancel={()=>{
                         this.setState({show:false})
                     }}
-                    isDarkModeEnabled={false}
+                    isDarkModeEnabled={isDarkMode ? true : false}
                     date={this.props.date}
                 />
             </View>
