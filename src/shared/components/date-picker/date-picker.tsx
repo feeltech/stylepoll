@@ -37,7 +37,6 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
     }
 
     render(){
-        const isDarkMode = useDarkMode()
         // @ts-ignore
         return (
             <View>
