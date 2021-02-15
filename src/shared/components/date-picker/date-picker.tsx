@@ -49,7 +49,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
                     onCancel={()=>{
                         this.setState({show:false})
                     }}
-                    isDarkModeEnabled={true}
+                    isDarkModeEnabled={false}
                     date={this.props.date}
                 />
             </View>

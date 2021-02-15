@@ -21,8 +21,12 @@ exports.onFollowUser = functions.firestore
             .collection('userFeed');
         const followedUserPostsSnapshot = await followedUserPostsRef.get();
         followedUserPostsSnapshot.forEach((doc: any) => {
-            if (doc.exists && doc.data().pollCompleted) {
-                userFeedRef.doc(doc.id).set(doc.data());
+            if(doc.exists) {
+                const post = doc.data();
+                post.postId = doc.id;
+                if ((post.isPollPost && post.pollCompleted) || post.isFeedPost) {
+                    userFeedRef.add(post);
+                }
             }
         });
     });
@@ -37,10 +41,10 @@ exports.onUnFollowUser = functions.firestore
             .firestore()
             .collection('feeds')
             .doc(followerId)
-            .collection('userFeed').where('authorId', '==', userId);
+            .collection('userFeed').doc(userId)
 
         const userPostsSnapshot = await userFeedRef.get();
-        userPostsSnapshot.forEach((doc:any) => {
+        userPostsSnapshot.forEach((doc: any) => {
             if (doc.exists) {
                 doc.ref.delete();
             }
@@ -48,26 +52,26 @@ exports.onUnFollowUser = functions.firestore
     });
 
 
-exports.onUploadPosts = functions.firestore
-    .document('/posts/{userId}/userPosts/{postId}').onCreate(async (snapshot, context) => {
-        const userId = context.params.userId;
-        const postId = context.params.postId;
-        functions.logger.log("Snapshot ",snapshot.data() )
+// exports.onUploadPosts = functions.firestore
+//     .document('/posts/{userId}/userPosts/{postId}').onCreate(async (snapshot, context) => {
+//         const userId = context.params.userId;
+//         const postId = context.params.postId;
+//         functions.logger.log("Snapshot ", snapshot.data())
 
-        const userFollowersRef = admin
-            .firestore()
-            .collection('followers')
-            .doc(userId)
-            .collection('userFollowers');
-        const userFollowersSnapshot = await userFollowersRef.get();
+//         const userFollowersRef = admin
+//             .firestore()
+//             .collection('followers')
+//             .doc(userId)
+//             .collection('userFollowers');
+//         const userFollowersSnapshot = await userFollowersRef.get();
 
-        userFollowersSnapshot.forEach((doc:any) => {
-            admin
-                .firestore()
-                .collection('feeds')
-                .doc(doc.id)
-                .collection('userFeed')
-                .doc(postId)
-                .set(snapshot.data());
-        });
-    });
+//         userFollowersSnapshot.forEach((doc: any) => {
+//             admin
+//                 .firestore()
+//                 .collection('feeds')
+//                 .doc(doc.id)
+//                 .collection('userFeed')
+//                 .doc(postId)
+//                 .set(snapshot.data());
+//         });
+//     });

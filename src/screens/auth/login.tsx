@@ -36,8 +36,8 @@ class Login extends React.Component<any, ILoginStates> {
   constructor(props: any) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
+      email: "sachin@mail.com",
+      password: "aaa",
       hidePassword: true,
       allowLogin: true,
     };
@@ -149,54 +149,54 @@ class Login extends React.Component<any, ILoginStates> {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={styles.otherOptionsWrapper}>
-                  <TouchableOpacity
-                      onPress={() => navigate("ForgotPassword")}
-                      style={styles.forgotPassword}
-                      activeOpacity={1}
-                  >
-                    <Text
-                        style={{
-                          textAlign: "center",
-                          fontSize: 12,
-                          fontWeight: "600",
-                        }}
-                    >
-                      <Text
-                          style={{
-                            fontWeight: "500",
-                            color: "#333",
-                          }}
-                      >
-                        Did your forget your login information?
-                      </Text>{" "}
-                      Get helping to login.
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={styles.divideLine}>
-                    <View style={styles.ORtextWrapper}>
-                      <Text
-                          style={{
-                            color: "#333",
-                            fontWeight: "600",
-                          }}
-                      >
-                        OR
-                      </Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity style={styles.btnLoginWithFacebook}>
-                    <Icon name="facebook" color="#318bfb" size={20} />
-                    <Text
-                        style={{
-                          color: "#318bfb",
-                          fontWeight: "bold",
-                        }}
-                    >
-                      Login with Facebook
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                {/*<View style={styles.otherOptionsWrapper}>*/}
+                {/*  /!*<TouchableOpacity*!/*/}
+                {/*  /!*    onPress={() => navigate("ForgotPassword")}*!/*/}
+                {/*  /!*    style={styles.forgotPassword}*!/*/}
+                {/*  /!*    activeOpacity={1}*!/*/}
+                {/*  /!*>*!/*/}
+                {/*  /!*  <Text*!/*/}
+                {/*  /!*      style={{*!/*/}
+                {/*  /!*        textAlign: "center",*!/*/}
+                {/*  /!*        fontSize: 12,*!/*/}
+                {/*  /!*        fontWeight: "600",*!/*/}
+                {/*  /!*      }}*!/*/}
+                {/*  /!*  >*!/*/}
+                {/*  /!*    <Text*!/*/}
+                {/*  /!*        style={{*!/*/}
+                {/*  /!*          fontWeight: "500",*!/*/}
+                {/*  /!*          color: "#333",*!/*/}
+                {/*  /!*        }}*!/*/}
+                {/*  /!*    >*!/*/}
+                {/*  /!*      Did your forget your login information?*!/*/}
+                {/*  /!*    </Text>{" "}*!/*/}
+                {/*  /!*    Get helping to login.*!/*/}
+                {/*  /!*  </Text>*!/*/}
+                {/*  /!*</TouchableOpacity>*!/*/}
+                {/*  /!*<View style={styles.divideLine}>*!/*/}
+                {/*  /!*  <View style={styles.ORtextWrapper}>*!/*/}
+                {/*  /!*    <Text*!/*/}
+                {/*  /!*        style={{*!/*/}
+                {/*  /!*          color: "#333",*!/*/}
+                {/*  /!*          fontWeight: "600",*!/*/}
+                {/*  /!*        }}*!/*/}
+                {/*  /!*    >*!/*/}
+                {/*  /!*      OR*!/*/}
+                {/*  /!*    </Text>*!/*/}
+                {/*  /!*  </View>*!/*/}
+                {/*  /!*</View>*!/*/}
+                {/*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*/}
+                {/*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*/}
+                {/*  /!*  <Text*!/*/}
+                {/*  /!*      style={{*!/*/}
+                {/*  /!*        color: "#318bfb",*!/*/}
+                {/*  /!*        fontWeight: "bold",*!/*/}
+                {/*  /!*      }}*!/*/}
+                {/*  /!*  >*!/*/}
+                {/*  /!*    Login with Facebook*!/*/}
+                {/*  /!*  </Text>*!/*/}
+                {/*  /!*</TouchableOpacity>*!/*/}
+                {/*</View>*/}
               </View>
               <TouchableOpacity
                   onPress={() => {

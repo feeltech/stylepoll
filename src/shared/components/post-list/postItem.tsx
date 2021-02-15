@@ -29,9 +29,16 @@ const PostItem = ({ setPost, item,post }: PostItemProps) => {
                     style={styles.infoWrapper}>
                     <FastImage style={styles.avatar}
                                source={{ uri:post?.user?.profileImage}} />
-                    <Text style={{
-                        fontWeight: '600'
-                    }}>{startCase(post?.user?.name) }</Text>
+                               <View style={{flex:1,flexDirection:'column'}}>
+                                   <Text style={{
+                                       fontWeight: '600'
+                                   }}>{startCase(post?.user?.name) }</Text>
+                                   <Text style={{
+                                       fontSize:10,
+                                       fontWeight: '600'
+                                   }}>{startCase(post?.location) }</Text>
+                               </View>
+
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Icons name="dots-vertical" size={24} />
@@ -65,19 +72,19 @@ const PostItem = ({ setPost, item,post }: PostItemProps) => {
                         maxPage={item.source?.length || 0}
                         currentPage={currentPage}
                     />}
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        // onPress={_onToggleBookmark}
-                    >
-                        <Image
-                            style={{
-                                height: 24,
-                                width: 24
-                            }}
-                            source={
-                                true ? require('../../../../assets/icons/bookmarked.png')
-                                    : require('../../../../assets/icons/bookmark.png')} />
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity*/}
+                    {/*    activeOpacity={0.7}*/}
+                    {/*    // onPress={_onToggleBookmark}*/}
+                    {/*>*/}
+                    {/*    <Image*/}
+                    {/*        style={{*/}
+                    {/*            height: 24,*/}
+                    {/*            width: 24*/}
+                    {/*        }}*/}
+                    {/*        source={*/}
+                    {/*            true ? require('../../../../assets/icons/bookmarked.png')*/}
+                    {/*                : require('../../../../assets/icons/bookmark.png')} />*/}
+                    {/*</TouchableOpacity>*/}
                 </View>
                 {item?.likes && item.likes.length !== 0 && <Text style={{
                     fontWeight: "bold",

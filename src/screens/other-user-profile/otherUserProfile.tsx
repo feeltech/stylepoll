@@ -123,7 +123,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <ScrollView style={{backgroundColor: 'none'}}>
                     <Header
                         statusBarProps={{barStyle: "dark-content"}}
@@ -256,7 +256,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                         </View>
                         }
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         )
     }
 }

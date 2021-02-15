@@ -145,21 +145,21 @@ export default class Register extends React.Component<any, ILoginStates>{
                             </TouchableOpacity>
                         </View>
                         <View style={styles.otherOptionsWrapper}>
-                            <View style={styles.divideLine}>
-                                <View style={styles.ORtextWrapper}>
-                                    <Text style={{
-                                        color: '#333',
-                                        fontWeight: '600'
-                                    }}>OR</Text>
-                                </View>
-                            </View>
-                            <TouchableOpacity style={styles.btnLoginWithFacebook}>
-                                <Icon name="facebook" color="#318bfb" size={20} />
-                                <Text style={{
-                                    color: '#318bfb',
-                                    fontWeight: 'bold'
-                                }}>Register with Facebook</Text>
-                            </TouchableOpacity>
+                            {/*<View style={styles.divideLine}>*/}
+                            {/*    <View style={styles.ORtextWrapper}>*/}
+                            {/*        <Text style={{*/}
+                            {/*            color: '#333',*/}
+                            {/*            fontWeight: '600'*/}
+                            {/*        }}>OR</Text>*/}
+                            {/*    </View>*/}
+                            {/*</View>*/}
+                            {/*<TouchableOpacity style={styles.btnLoginWithFacebook}>*/}
+                            {/*    <Icon name="facebook" color="#318bfb" size={20} />*/}
+                            {/*    <Text style={{*/}
+                            {/*        color: '#318bfb',*/}
+                            {/*        fontWeight: 'bold'*/}
+                            {/*    }}>Register with Facebook</Text>*/}
+                            {/*</TouchableOpacity>*/}
                         </View>
                     </View>
                     <TouchableOpacity

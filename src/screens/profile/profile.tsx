@@ -125,29 +125,29 @@ export default class Profile extends React.Component<any, IProfileStates> {
     render() {
         return (
             <View style={styles.container}>
+                <Header
+                    statusBarProps={{barStyle: "dark-content"}}
+                    barStyle="dark-content"
+                    containerStyle={{
+                        display: "flex",
+                        backgroundColor: "#0C0D34",
+                    }}
+                    // leftComponent={<TouchableOpacity onPress={goBack}>
+                    //     <Icon
+                    //         name="chevron-left"
+                    //         color="white"/>
+                    // </TouchableOpacity>}
+                    centerComponent={{
+                        text: startCase(this.state.profileUser.name),
+                        style: {color: "#FFF", fontWeight: "bold"},
+                    }}
+                    rightComponent={<TouchableOpacity onPress={this.logout}>
+                        <Icon
+                            name="logout"
+                            color="white"/>
+                    </TouchableOpacity>}
+                />
                 <ScrollView style={{backgroundColor: 'none'}}>
-                    <Header
-                        statusBarProps={{barStyle: "dark-content"}}
-                        barStyle="dark-content"
-                        containerStyle={{
-                            display: "flex",
-                            backgroundColor: "#0C0D34",
-                        }}
-                        // leftComponent={<TouchableOpacity onPress={goBack}>
-                        //     <Icon
-                        //         name="chevron-left"
-                        //         color="white"/>
-                        // </TouchableOpacity>}
-                        centerComponent={{
-                            text: startCase(this.state.profileUser.name),
-                            style: {color: "#FFF", fontWeight: "bold"},
-                        }}
-                        rightComponent={<TouchableOpacity onPress={this.logout}>
-                            <Icon
-                                name="logout"
-                                color="white"/>
-                        </TouchableOpacity>}
-                    />
                     <View
                         style={{
                             flex: 1,

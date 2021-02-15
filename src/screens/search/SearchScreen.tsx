@@ -10,7 +10,7 @@ export default class SearchScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text h1> Coming Soon.. </Text>
+        {/*<Text h1> Coming Soon.. </Text>*/}
       </View>
     );
   }
