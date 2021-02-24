@@ -200,7 +200,7 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
           style={styles.image}
         >
           <View style={{ flex: 10 }} />
-          {!this.state.isUserReacted && !this.state.pollCompleted && (
+          {(!this.state.isUserReacted || this.state.remainingTime !== "00:00:00") && (
             <View
               style={{
                 flex: 1,
@@ -259,7 +259,7 @@ export default class StoryView extends React.Component<any, IStoryViewStates> {
               </TouchableOpacity>
             </View>
           )}
-          {this.state.isUserReacted &&
+          {(this.state.isUserReacted || this.state.remainingTime === "00:00:00") &&
           <View style={{padding:10,flexDirection:'row'}}>
             <View style={{flexDirection:'column',justifyContent:'center'}}>
               <Progress.Bar progress={this.getProgressBarValues("like")} width={SCREEN_WIDTH-40} color={'#57ff00'} height={5} borderRadius={10}/>

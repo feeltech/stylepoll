@@ -15,7 +15,7 @@ import {navigate} from "../../services/navigation";
 import {styles} from "./authStyles";
 import {User} from "../../modals";
 import {registerUser} from "../../services/firebase/firebaseService";
-import PhotoUploadComponent from "../../shared/components/photo-upload/photoUpload";
+import {isEmpty} from 'lodash';
 
 interface ILoginStates {
     name:string,
@@ -24,7 +24,8 @@ interface ILoginStates {
     confirmPassword:string,
     hidePassword:boolean,
     hideConfirmPassword:boolean,
-    allowRegister:boolean
+    allowRegister:boolean,
+    error:string|null
 }
 
 export default class Register extends React.Component<any, ILoginStates>{
@@ -38,21 +39,36 @@ export default class Register extends React.Component<any, ILoginStates>{
             password:'',
             hidePassword:true,
             allowRegister:true,
-            hideConfirmPassword:true
+            hideConfirmPassword:true,
+            error:null
         }
     }
 
     private onRegister = () => {
+        if(isEmpty(this.state.name) || isEmpty(this.state.email) || isEmpty(this.state.password) || isEmpty(this.state.confirmPassword)){
+            this.setState({
+                error:'Fill in all the fields!'
+            })
+            return
+        }
+
+        if(this.state.password !== this.state.confirmPassword){
+            this.setState({
+                error:'Passwords do not match!'
+            })
+        }
         const user: User = {
             name:this.state.name.toLowerCase(),
             email:this.state.email.toLowerCase(),
             password:this.state.password
         }
-
         registerUser(user).then(res => {
             this.resetStates()
             navigate("login")
         }).catch(err => {
+            this.setState({
+                error:err
+            })
             console.log("Register user error ", err)
         })
     }
@@ -130,6 +146,12 @@ export default class Register extends React.Component<any, ILoginStates>{
                                     }
                                 </TouchableOpacity>
                             </View>
+                            {
+                                this.state.error &&
+                                <View style={styles.textInputErrorWrapper}>
+                                    <Text style={{color: 'red', fontSize: 13}}>{this.state.error}</Text>
+                                </View>
+                            }
                             <TouchableOpacity
                                 onPress={this.onRegister}
                                 disabled={!this.state.allowRegister}

@@ -43,6 +43,12 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         marginVertical: 7.5
     },
+    textInputErrorWrapper: {
+        position: 'relative',
+        width: '100%',
+        height: 22,
+        marginVertical: 7.5
+    },
     hidePasswordIcon: {
         position: 'absolute',
         height: 30,

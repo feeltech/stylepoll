@@ -19,6 +19,7 @@ export const SCREENS = {
     POLL_STATS:"poll_stats",
     REGISTER:"register",
     LOGIN:"login",
+    RESET_PASSWORD:"reset_password",
     ROOT:'root',
     POST:'post',
     STORY_VIEW:'story_view',

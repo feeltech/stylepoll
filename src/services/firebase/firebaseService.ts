@@ -15,36 +15,66 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
-import {trackPromise} from "react-promise-tracker";
-import post from "../../screens/post/post";
 
-export function registerUser(user: User): Promise<User> {
-    return trackPromise(USER_COLLECTION.add(user)
-        .then((res) => {
-            user.userId = res.id;
-            return Promise.resolve(user);
-        })
-        .catch((err) => {
-            return Promise.reject(err);
-        }));
+export async function registerUser(user: User): Promise<User> {
+    const isUserExist = await USER_COLLECTION.where("email", "==", user.email).get();
+    if(isUserExist.size === 0){
+        return USER_COLLECTION.add(user)
+            .then((res) => {
+                user.userId = res.id;
+                return Promise.resolve(user);
+            })
+            .catch((err) => {
+                return Promise.reject("Failed to register!");
+            });
+    }else{
+        return Promise.reject("Email Already Registered!");
+    }
+
 }
 
 export function loginUser(user: User): Promise<User> {
-    return trackPromise(USER_COLLECTION.where("email", "==", user.email)
+    return USER_COLLECTION.where("email", "==", user.email)
         .get()
         .then((res) => {
-            const data = res.docs[0].data();
-            if (data && data.password === user.password) {
-                user.userId = res.docs[0].id;
-                user.name = data.name;
-                user.profileImage = data.profileImage;
-                return Promise.resolve(user);
+            if(res.docs.length !=0){
+                const data = res.docs[0].data();
+                if (data && data.password === user.password) {
+                    user.userId = res.docs[0].id;
+                    user.name = data.name;
+                    user.profileImage = data.profileImage;
+                    return Promise.resolve(user);
+                }
+            }else{
+                return Promise.reject("Invalid credentials");
             }
             return Promise.reject("Invalid credentials");
         })
         .catch((err) => {
             return Promise.reject(err);
-        }));
+        });
+}
+
+export async function resetPassword(email:string,oldPassword:string,newPassword:string):Promise<any>{
+    try {
+        const userDoc =  await USER_COLLECTION.where("email", "==", email).get();
+        if(userDoc.docs.length !=0) {
+            const data = userDoc.docs[0].data();
+            if (data.password === oldPassword) {
+                const updatedUser = data;
+                updatedUser.password = newPassword;
+                await USER_COLLECTION.doc(data.userId).set(updatedUser);
+                return Promise.resolve("")
+            } else {
+                return Promise.reject("Incorrect Password!")
+            }
+        }else{
+            return Promise.reject("Email not registered!")
+        }
+    }catch (e) {
+        return Promise.reject(e)
+    }
+
 }
 
 export function getMoods(): Promise<any> {
