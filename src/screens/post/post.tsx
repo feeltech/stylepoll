@@ -52,9 +52,11 @@ export default class Post extends React.Component<any, IPostStates> {
                 if(res){
                     isFollowingUser(res.userId,userId).then(isFollowing => {
                         this.setState({
-                            user:res,
                             userIsFollowing:isFollowing
                         })
+                    })
+                    this.setState({
+                        user:res,
                     })
                 }
 
@@ -117,8 +119,11 @@ export default class Post extends React.Component<any, IPostStates> {
                         </TouchableOpacity>}
                     />
                     <View>
+                        {this.state.post && 
                         <PostItem
-                            key={1} item={POST_LIST[0]} post={this.state.post}/>
+                            key={1} item={POST_LIST[0]} post={this.state.post} user={this.state.user}/>
+                        }
+                        
                     </View>
                 </ScrollView>
             </SafeAreaView>

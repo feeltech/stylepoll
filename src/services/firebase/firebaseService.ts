@@ -3,7 +3,7 @@ import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
 import moment from "moment";
 import {err} from "react-native-svg/lib/typescript/xml";
 
-import {AlertPoll, LoggingUser, PostDoc, User, WardRobe} from "../../modals";
+import {AlertPoll, LoggingUser, Post, PostDoc, User, WardRobe} from "../../modals";
 import {navigate} from "../navigation";
 import {
     ALERT_POLL_COLLECTIONS,
@@ -15,6 +15,7 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
+
 
 export async function registerUser(user: User): Promise<User> {
     const isUserExist = await USER_COLLECTION.where("email", "==", user.email).get();
@@ -99,6 +100,7 @@ export function getTags(): Promise<any> {
 
 export function createPost(post: PostDoc | AlertPoll): Promise<any> {
     post.createdAt = new Date();
+    post.postLikes = []
     return POST_COLLECTION.doc(post.userId)
         .collection("userPosts")
         .add(post)
@@ -307,14 +309,14 @@ export function getUserFollowers(userID: string): Promise<User[]> {
 export async function onCreatePost(post: PostDoc) {
     if (post.isFeedPost) {
         await FEED_COLLECTIONS.doc(post.userId)
-            .collection("userFeed")
-            .add(post);
+            .collection("userFeed").doc(post.postId)
+            .set(post);
 
         const userFollowers = await getUserFollowers(post.userId);
         await Promise.all(map(userFollowers, async (user) => {
             await FEED_COLLECTIONS.doc(user.userId)
-                .collection("followingUserFeed")
-                .add(post)
+                .collection("followingUserFeed").doc(post.postId)
+                .set(post)
         }));
     }
     if (post.DMList?.length != 0) {
@@ -396,7 +398,7 @@ export async function getUserFeed(userId: string): Promise<PostDoc[]> {
             const post: PostDoc = doc.data();
             post.postId = doc.id;
             if ((post.isPollPost && post.pollCompleted) || post.isFeedPost || (post.DMList && post.DMList.length > 0)) {
-                posts.push(doc.data());
+                posts.push(post);
             }
         }));
 
@@ -414,6 +416,7 @@ export function getPost(userId: string, postId): Promise<PostDoc> {
         .get()
         .then((res) => {
             const post: PostDoc = res.data();
+            post.postId = res.id
             return Promise.resolve(post);
         })
         .catch((err) => {
@@ -622,4 +625,19 @@ export async function getFollowingUsers(userId: string): Promise<User[]> {
         }));
     })
     return Promise.resolve(users)
+}
+
+export async function likeUnlikePost(reactingUserId: string, post:PostDoc): Promise<any>{
+    await FEED_COLLECTIONS.doc(post.userId).collection("userFeed").doc(post.postId).set(post)
+    await POST_COLLECTION.doc(post.userId).collection("userPosts").doc(post.postId).set(post)
+    if (post.postId){
+        onLikeUnlikePost(post.postId,post)
+    }
+}
+
+export async function onLikeUnlikePost(postId: string, post:PostDoc){
+    const userFollowers = await FOLLOWERS_COLLECTION.doc(post.userId).collection("userFollowers").get()
+    await Promise.all(map(userFollowers.docs,async doc=>{
+        await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).set(post)
+    }))
 }

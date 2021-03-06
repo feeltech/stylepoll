@@ -1,51 +1,93 @@
 import React, {useEffect, useState} from "react";
-import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { default as Icon, default as Icons } from 'react-native-vector-icons/MaterialCommunityIcons'
+import {default as Icon, default as Icons} from 'react-native-vector-icons/MaterialCommunityIcons'
 import {ExtraPost, PostDoc} from "../../../modals";
 import PhotoShower from "./photoShower";
 import CirclePagination from "../circle-pagination/circlePagination";
-import {startCase} from 'lodash';
-import {SCREEN_HEIGHT} from "../../constants";
+import {startCase, includes,isEmpty} from 'lodash';
 import {navigate} from "../../../services/navigation";
+import {likeUnlikePost} from "../../../services/firebase/firebaseService";
+
 export interface PostItemProps {
     item?: ExtraPost,
     setPost?: React.Dispatch<React.SetStateAction<ExtraPost>>
-    post?:PostDoc
+    post: PostDoc
+    user:any
 }
 
-const PostItem = ({ setPost, item,post }: PostItemProps) => {
+const PostItem = ({setPost, item, post,user}: PostItemProps) => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const _animBookmarkNotification = React.useMemo(() => new Animated.Value(0), [])
-    const isLiked = true
+    const [isLiked, setIsLiked] = useState<boolean>(false)
+    const [postLikes, setPostLikes] = useState<string[] | undefined>([])
+    useEffect(() => {
+            setPostLikes(post?.postLikes)
+            setIsLiked(includes(post?.postLikes, user.userId))
+    }, [])
+
     const _onChangePageHandler = (page: number) => {
         setCurrentPage(page)
+    }
+
+    const onReaction = () => {
+        const p = post;
+        if (post && isEmpty(post.postLikes)) {
+            const pl = []
+            // @ts-ignore
+            pl.push(user.userId);
+            p.postLikes = pl
+            setPostLikes(pl)
+
+        }else{
+            if(postLikes?.includes(user.userId)){
+                let pl = postLikes;
+                if(pl?.length === 1) {
+                    pl = []
+                }else{
+                    pl?.splice(postLikes?.indexOf(user.userId),1)
+                }
+                setPostLikes(pl)
+                p.postLikes =  pl
+            }else{
+                const pl = postLikes;
+                pl?.push(user.userId)
+                setPostLikes(pl)
+                p.postLikes = pl
+            }
+        }
+        setIsLiked(!isLiked)
+        likeUnlikePost(user.userId, p).then(res => {
+            console.log("reaction success")
+        })
     }
     return (
         <View style={styles.container}>
             <View style={styles.postHeader}>
                 <TouchableOpacity
-                    onPress={()=>{navigate("other_user_profile", {user: post?.user})}}
+                    onPress={() => {
+                        navigate("other_user_profile", {user: post?.user})
+                    }}
                     style={styles.infoWrapper}>
                     <FastImage style={styles.avatar}
-                               source={{ uri:post?.user?.profileImage}} />
-                               <View style={{flex:1,flexDirection:'column'}}>
-                                   <Text style={{
-                                       fontWeight: '600'
-                                   }}>{startCase(post?.user?.name) }</Text>
-                                   <Text style={{
-                                       fontSize:10,
-                                       fontWeight: '600'
-                                   }}>{startCase(post?.location) }</Text>
-                               </View>
+                               source={{uri: post?.user?.profileImage}}/>
+                    <View style={{flex: 1, flexDirection: 'column'}}>
+                        <Text style={{
+                            fontWeight: '600'
+                        }}>{startCase(post?.user?.name)}</Text>
+                        <Text style={{
+                            fontSize: 10,
+                            fontWeight: '600'
+                        }}>{startCase(post?.location)}</Text>
+                    </View>
 
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Icons name="dots-vertical" size={24} />
+                    <Icons name="dots-vertical" size={24}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
-                <PhotoShower onChangePage={_onChangePageHandler} post={post} />
+                <PhotoShower onChangePage={_onChangePageHandler} post={post}/>
                 <Animated.View style={{
                     ...styles.bookmarkAddionNotification,
                     transform: [{
@@ -58,15 +100,21 @@ const PostItem = ({ setPost, item,post }: PostItemProps) => {
                 <View style={styles.reactions}>
                     <View style={styles.lReactions}>
                         <TouchableOpacity
-                            // onPress={_toggleLikePost}
+                            onPress={onReaction}
                         >
                             <Icons name={isLiked
                                 ? "heart" : "heart-outline"}
                                    size={24}
                                    color={
                                        isLiked ? 'red' : '#000'
-                                   } />
+                                   }/>
                         </TouchableOpacity>
+                        {postLikes && postLikes.length !== 0 && <Text style={{
+                            fontSize: 15
+                            // marginVertical: 5,
+                        }}>{postLikes.length >= 1000 ?
+                            (Math.round(postLikes.length / 1000) + 'k')
+                            : postLikes.length} {postLikes.length < 2 ? 'like' : 'likes'}</Text>}
                     </View>
                     {item?.source && item.source.length > 1 && <CirclePagination
                         maxPage={item.source?.length || 0}
@@ -86,22 +134,16 @@ const PostItem = ({ setPost, item,post }: PostItemProps) => {
                     {/*                : require('../../../../assets/icons/bookmark.png')} />*/}
                     {/*</TouchableOpacity>*/}
                 </View>
-                {item?.likes && item.likes.length !== 0 && <Text style={{
-                    fontWeight: "bold",
-                    marginVertical: 5,
-                }}>{item.likes.length >= 1000 ?
-                    (Math.round(item.likes.length / 1000) + 'k')
-                    : item.likes.length} {item.likes.length < 2 ? 'like' : 'likes'}</Text>}
+
             </View>
-        </View >
+        </View>
     )
 }
 
 export default React.memo(PostItem)
 
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
     postHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -118,7 +160,7 @@ const styles = StyleSheet.create({
     },
     body: {
         overflow: 'visible',
-        height:'auto'
+        height: 'auto'
     },
     bookmarkAddionNotification: {
         position: 'absolute',

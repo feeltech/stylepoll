@@ -106,9 +106,10 @@ export type PostDoc = {
   postId?:string,
   createdAt?:Date,
   onGoingPoll?:boolean,
-  likes?:User[]
+  likes?:string[]
   dislikes?:User[]
   pollCompleted?:boolean,
+  postLikes?:string[]
 }
 
 export type AlertPoll = PostDoc & {

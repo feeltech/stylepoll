@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import PostItem from './postItem'
 import {ExtraPost, PostDoc, PostList} from "../../../modals";
+import {fetchLocalStorage} from "../../../utils/local-storage";
 
 export interface PostListProps {
     data: PostList,
@@ -11,6 +12,7 @@ export interface PostListProps {
 
 export interface PostListStates {
     postList : PostList,
+    user:any
 }
 
 class Posts extends React.Component<PostListProps, PostListStates>{
@@ -19,7 +21,13 @@ class Posts extends React.Component<PostListProps, PostListStates>{
         super(props);
         this.state = {
             postList:[],
+            user:null
         }
+    }
+    componentDidMount() {
+        fetchLocalStorage("loggedUser").then(res => {
+            this.setState({user:res})
+        })
     }
 
 
@@ -28,7 +36,7 @@ class Posts extends React.Component<PostListProps, PostListStates>{
             <View style={styles.container}>
                 {this.props.posts.map((post, index) => (
                     <PostItem
-                        key={index} post={post}/>
+                        key={index} post={post} user={this.state.user}/>
                 ))}
             </View>
         )
