@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  View,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    KeyboardAvoidingView,
+    View, Text,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { map, isEqual } from "lodash";
@@ -16,12 +16,13 @@ import { POST_LIST } from "../../shared/constants";
 import StoryBar from "../../shared/components/story/story-bar";
 import Posts from "../../shared/components/post-list/postList";
 import {
+    deletePost,
     fetchFeedPosts,
     getFollowingUserPolls, getUserFeed,
     getUserPolls,
 } from "../../services/firebase/firebaseService";
 import { fetchLocalStorage } from "../../utils/local-storage";
-import { AlertPoll, ExtraPost, PostDoc, PostList } from "../../modals";
+import {AlertPoll, ExtraPost, PostDoc, PostList, StoryItem} from "../../modals";
 
 interface IHomeScreenStates{
   user: any,
@@ -34,7 +35,7 @@ interface IHomeScreenStates{
 const HomeScreen = () => {
   const [user, setUser] = useState<any>();
   const [userPolls, setUserPolls] = useState<AlertPoll[]>([]);
-  const [followingPolls, setFollowingPolls] = useState<AlertPoll[]>([]);
+  const [followingPolls, setFollowingPolls] = useState<StoryItem[]>([]);
   const [postList, setPostList] = useState<PostDoc[]>([]);
 
 
@@ -71,6 +72,12 @@ const HomeScreen = () => {
     });
   };
 
+  const onDeletePost = (postId: string) => {
+      deletePost(postId,user.userId).then(res => {
+          fetchFeed(user);
+      })
+  }
+
 
   return (
       // <SafeAreaView style={styles.container}>
@@ -98,7 +105,8 @@ const HomeScreen = () => {
               currentUserPoll={userPolls[0]}
               profileImage={user ? user.profileImage : ""}
           />
-          <Posts data={POST_LIST} posts={postList} />
+          <Posts data={POST_LIST} posts={postList} onDeleteItem={onDeletePost} />
+
         </ScrollView>
       </View>
       // </SafeAreaView>

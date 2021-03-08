@@ -339,7 +339,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 {this.props.showDate &&
                                 <View>
                                     <Text style={styles.input_label}>When</Text>
-                                    <MyDatePicker onDateChange={this.handleDateChange} date={new Date(moment( new Date()).add(10,"minutes").toISOString())}/>
+                                    <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when}/>
                                 </View>
                                 }
                                 <View style={styles.logoWrapper}>

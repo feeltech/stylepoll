@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import PostItem from './postItem'
 import {ExtraPost, PostDoc, PostList} from "../../../modals";
 import {fetchLocalStorage} from "../../../utils/local-storage";
+import {deletePost} from "../../../services/firebase/firebaseService";
 
 export interface PostListProps {
     data: PostList,
-    posts:PostDoc[]
+    posts:PostDoc[],
+    onDeleteItem:(postId: string) => void;
 
 }
 
@@ -30,14 +32,24 @@ class Posts extends React.Component<PostListProps, PostListStates>{
         })
     }
 
+    private onDeletePost = (postId: string) => {
+        this.props.onDeleteItem(postId)
+    }
+
 
     render() {
         return (
             <View style={styles.container}>
                 {this.props.posts.map((post, index) => (
                     <PostItem
-                        key={index} post={post} user={this.state.user}/>
+                        key={index} post={post} user={this.state.user} onDeleteItem={this.onDeletePost}/>
                 ))}
+                {
+                    this.props.posts.length === 0 &&
+                    <View style={{flex:5,justifyContent:'center',alignItems:'flex-end',flexDirection: 'row'}}>
+                        <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>No Posts Yet</Text>
+                    </View>
+                }
             </View>
         )
     }
@@ -45,5 +57,8 @@ class Posts extends React.Component<PostListProps, PostListStates>{
 export default React.memo(Posts)
 
 const styles = StyleSheet.create({
-    container: {}
+    container: {
+        display:'flex',
+        flex:1
+    }
 })

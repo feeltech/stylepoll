@@ -3,7 +3,7 @@ import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
 import moment from "moment";
 import {err} from "react-native-svg/lib/typescript/xml";
 
-import {AlertPoll, LoggingUser, Post, PostDoc, User, WardRobe} from "../../modals";
+import {AlertPoll, LoggingUser, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
 import {navigate} from "../navigation";
 import {
     ALERT_POLL_COLLECTIONS,
@@ -453,13 +453,18 @@ export function getUserPolls(userId: string): Promise<AlertPoll[]> {
 
 export async function getFollowingUserPolls(
     userId: string,
-): Promise<AlertPoll[]> {
-    const polls: AlertPoll[] = [];
+): Promise<StoryItem[]> {
+    const storyItems: StoryItem[] = [];
     const followingDoc = await FOLLOWING_COLLECTION.doc(userId)
         .collection("userFollowing")
         .get();
     await Promise.all(
         map(followingDoc.docs, async (user: any) => {
+            let storyItem:StoryItem = {
+                userName:'',
+                userId:user.id,
+                polls:[]
+            }
             const alertPolls = await ALERT_POLL_COLLECTIONS.doc(user.id)
                 .collection("userPolls")
                 .get()
@@ -467,12 +472,16 @@ export async function getFollowingUserPolls(
                 if (!doc.data().pollCompleted) {
                     const p = doc.data()
                     p.postId = doc.id
-                    polls.push(p);
+                    storyItem.userName = p.user.name
+                    storyItem.polls.push(p);
                 }
             });
+            if(alertPolls.docs.length>0){
+                storyItems.push(storyItem);
+            }
         }),
     );
-    return Promise.resolve(polls);
+    return Promise.resolve(storyItems);
 }
 
 export function getWardrobe(userId: string): Promise<WardRobe[]> {
@@ -639,5 +648,17 @@ export async function onLikeUnlikePost(postId: string, post:PostDoc){
     const userFollowers = await FOLLOWERS_COLLECTION.doc(post.userId).collection("userFollowers").get()
     await Promise.all(map(userFollowers.docs,async doc=>{
         await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).set(post)
+    }))
+}
+
+export async function deletePost(postId:string,userId:string){
+    await POST_COLLECTION.doc(userId).collection("userPosts").doc(postId).delete()
+    await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(postId).delete()
+}
+
+export async function onDeletePost(postId:string,userId:string){
+    const userFollowers = await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get()
+    await Promise.all(map(userFollowers.docs,async doc=>{
+        await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).delete()
     }))
 }

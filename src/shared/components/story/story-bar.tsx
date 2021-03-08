@@ -2,14 +2,15 @@ import React from "react";
 import { StyleSheet, Text, View, ScrollView, Animated } from "react-native";
 
 import {SCREEN_WIDTH, STORY_LIST} from "../../constants";
-import {AlertPoll, ExtraStory} from "../../../modals";
+import {AlertPoll, ExtraStory, StoryItem} from "../../../modals";
 
 import AddStory from "./add-story";
 import StoryPreviewItem from "./story-list";
+import Carausal from "../carausal/carausal";
 
 
 interface IStoryBarProps {
-  polls:AlertPoll[],
+  polls:StoryItem[],
   currentUserPoll:AlertPoll,
   profileImage:string
 }

@@ -7,20 +7,24 @@ import PhotoShower from "./photoShower";
 import CirclePagination from "../circle-pagination/circlePagination";
 import {startCase, includes,isEmpty} from 'lodash';
 import {navigate} from "../../../services/navigation";
-import {likeUnlikePost} from "../../../services/firebase/firebaseService";
+import {deletePost, likeUnlikePost, onDeletePost} from "../../../services/firebase/firebaseService";
+import {MenuOption} from "react-native-popup-menu";
+import PostOption from "./postOption";
 
 export interface PostItemProps {
     item?: ExtraPost,
     setPost?: React.Dispatch<React.SetStateAction<ExtraPost>>
     post: PostDoc
     user:any
+    onDeleteItem:(postId: string) => void;
 }
 
-const PostItem = ({setPost, item, post,user}: PostItemProps) => {
+const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const _animBookmarkNotification = React.useMemo(() => new Animated.Value(0), [])
     const [isLiked, setIsLiked] = useState<boolean>(false)
     const [postLikes, setPostLikes] = useState<string[] | undefined>([])
+    const [showOptions, setShowOptions] = useState<boolean>(false)
     useEffect(() => {
             setPostLikes(post?.postLikes)
             setIsLiked(includes(post?.postLikes, user.userId))
@@ -61,6 +65,16 @@ const PostItem = ({setPost, item, post,user}: PostItemProps) => {
             console.log("reaction success")
         })
     }
+    const onPostOption = (eventName:string, index:number|undefined,post:PostDoc) => {
+        if (eventName !== 'itemSelected') return
+        if (index === 0){
+
+        } else{
+            if(post.postId){
+                onDeleteItem(post.postId)
+            }
+        }
+    }
     return (
         <View style={styles.container}>
             <View style={styles.postHeader}>
@@ -71,7 +85,7 @@ const PostItem = ({setPost, item, post,user}: PostItemProps) => {
                     style={styles.infoWrapper}>
                     <FastImage style={styles.avatar}
                                source={{uri: post?.user?.profileImage}}/>
-                    <View style={{flex: 1, flexDirection: 'column'}}>
+                    <View style={{flex: 0, flexDirection: 'column'}}>
                         <Text style={{
                             fontWeight: '600'
                         }}>{startCase(post?.user?.name)}</Text>
@@ -80,11 +94,8 @@ const PostItem = ({setPost, item, post,user}: PostItemProps) => {
                             fontWeight: '600'
                         }}>{startCase(post?.location)}</Text>
                     </View>
-
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Icons name="dots-vertical" size={24}/>
-                </TouchableOpacity>
+                    <PostOption  onPress={(eventName:string,index:number|undefined)=>{onPostOption(eventName,index,post)}} actions={post.userId === user.userId ? ['Report', 'Delete'] : ['Report']}/>
             </View>
             <View style={styles.body}>
                 <PhotoShower onChangePage={_onChangePageHandler} post={post}/>

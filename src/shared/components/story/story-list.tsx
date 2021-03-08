@@ -11,13 +11,13 @@ import * as NavigationService from "react-navigation-helpers";
 import LinearGradient from "react-native-linear-gradient";
 import FastImage from "react-native-fast-image";
 
-import {AlertPoll, ExtraStory} from "../../../modals";
+import {AlertPoll, ExtraStory, StoryItem} from "../../../modals";
 import {navigate} from "../../../services/navigation";
 
 export interface StoryPreviewItemProps {
   item?: ExtraStory;
   index: number;
-  poll:AlertPoll
+  poll:StoryItem
 }
 const StoryPreviewItem = ({
     poll,
@@ -31,8 +31,8 @@ const StoryPreviewItem = ({
   //   setSeen(isSeen);
   // }, [storyList]);
   const [preloadingImage, setPreloadingImage] = useState<boolean>(false);
-  const _onShowStory = (poll:AlertPoll) => {
-    navigate("story_view",{poll:poll})
+  const _onShowStory = (poll:StoryItem) => {
+    navigate("story_view",{polls:poll})
     // if (seen) {
     //   return _onCompletedLoadingImage();
     // }
@@ -175,7 +175,7 @@ const StoryPreviewItem = ({
           >
             <FastImage
               style={styles.image}
-              source={{ uri: poll.image }}
+              source={{ uri: poll.polls[0].image }}
             />
           </TouchableOpacity>
         </View>
@@ -190,7 +190,7 @@ const StoryPreviewItem = ({
             color: seen ? "#666" : "#000",
           }}
         >
-          {poll.user.name}
+          {poll.userName}
         </Text>
       </View>
     </View>

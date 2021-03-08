@@ -104,7 +104,8 @@ export type PostDoc = {
   friends?:string[],
   DMList?:string[],
   postId?:string,
-  createdAt?:Date,
+  createdAt?:any,
+  pollEndDate?:any
   onGoingPoll?:boolean,
   likes?:string[]
   dislikes?:User[]
@@ -114,7 +115,14 @@ export type PostDoc = {
 
 export type AlertPoll = PostDoc & {
   likes:User[]
-  dislikes:User[]
+  dislikes:User[],
+  userReacted?:boolean,
+}
+
+export type StoryItem = {
+  userName:string,
+  userId:string,
+  polls:AlertPoll[]
 }
 
 export type tags = {
