@@ -7,7 +7,8 @@ import { Appearance } from 'react-native'
 
 interface IDatePickerProps{
     onDateChange:(date:any)=>void
-    date:Date
+    date:Date,
+    disabled:boolean
 }
 
 interface IDatePickerStates{
@@ -40,7 +41,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
         // @ts-ignore
         return (
             <View>
-                <TouchableOpacity style={styles.textInputWrapper} onPress={this.onFocus}>
+                <TouchableOpacity style={this.props.disabled ? [styles.textInputWrapper,{backgroundColor:'#7e7d7d'}] : styles.textInputWrapper} onPress={this.onFocus} disabled={this.props.disabled}>
                     <Text style={styles.input}>{moment(this.props.date).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
@@ -52,6 +53,7 @@ export default class MyDatePicker extends Component<IDatePickerProps,IDatePicker
                     }}
                     isDarkModeEnabled={Appearance.getColorScheme() === 'dark' ? true : false}
                     date={this.props.date}
+
                 />
             </View>
 

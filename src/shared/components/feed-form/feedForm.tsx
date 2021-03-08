@@ -4,7 +4,7 @@ import {
     KeyboardAvoidingView,
     SafeAreaView,
     ScrollView,
-    StyleSheet, Text,
+    StyleSheet, Switch, Text,
     TextInput,
     TouchableOpacity,
     View,
@@ -32,7 +32,8 @@ interface IFeedFormStates {
     tagList: string[],
     selectedMoods: string[],
     selectedTags: string[],
-    pollStartDate: Date
+    pollStartDate: Date,
+    isDynamicTime:boolean
 }
 
 interface IFeedFormProps {
@@ -56,13 +57,14 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             mood: '',
             tags: '',
             address: '',
-            when: new Date(),
+            when: new Date(moment( new Date()).add(2,"minutes").toISOString()),
             imageURL: '',
             moodList: [],
             tagList: [],
             selectedMoods: [],
             selectedTags: [],
-            pollStartDate: new Date()
+            pollStartDate: new Date(),
+            isDynamicTime:false
         }
     }
 
@@ -130,9 +132,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
         const diff = moment( this.state.when).diff(new Date(),"minutes")
         let endDate = this.state.when
-        if(diff < 10) {
-           endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
-        }
+        // if(diff < 10) {
+        //    endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
+        // }
         this.props.onSubmit(this.state.description, moods, tags, this.state.address, endDate)
     }
 
@@ -151,16 +153,24 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     }
 
     private handleDateChange = (date:Date) => {
-        const diff = moment(date).diff(new Date(),"minutes")
-        if(diff < 10) {
-            this.setState({
-                when:new Date(moment( date).add(10,"minutes").toISOString())
-            })
-        }else{
             this.setState({
                 when:date
             })
+    }
+
+    private onTimeSwitch = () => {
+        if(this.state.isDynamicTime) {
+            this.setState({
+                when:new Date(moment( this.state.when).add(2,"minutes").toISOString())
+            })
+        }else{
+            this.setState({
+                when: new Date().toISOString()
+            })
         }
+        this.setState({
+            isDynamicTime:!this.state.isDynamicTime
+        })
     }
 
     render() {
@@ -195,6 +205,25 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                     <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.loginForm}>
+                                <View style={{
+                                    flex: 0,
+                                    flexDirection: 'row',
+                                    marginBottom: 10,
+                                    justifyContent: 'space-between'
+                                }}>
+                                    <View style={{flex: 1, flexDirection: 'column'}}>
+                                        <Text style={styles.input_label}>Set your Poll Time</Text>
+                                    </View>
+                                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
+                                    </View>
+                                    <View
+                                        style={{
+                                            borderBottomColor: 'black',
+                                            borderBottomWidth: 1,
+                                        }}
+                                    />
+                                </View>
                                 <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
@@ -339,7 +368,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 {this.props.showDate &&
                                 <View>
                                     <Text style={styles.input_label}>When</Text>
-                                    <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when}/>
+                                    <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when} disabled={!this.state.isDynamicTime}/>
                                 </View>
                                 }
                                 <View style={styles.logoWrapper}>
