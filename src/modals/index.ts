@@ -82,7 +82,8 @@ export type User = {
   email:string,
   password?:string,
   name?:string,
-  profileImage?: string
+  profileImage?: string,
+  deviceId?:string
 }
 
 export type LoggingUser = {
@@ -111,6 +112,12 @@ export type PostDoc = {
   dislikes?:User[]
   pollCompleted?:boolean,
   postLikes?:string[]
+}
+
+export type Notification  = {
+  deviceToken : string,
+  message: string,
+  meta?: any
 }
 
 export type AlertPoll = PostDoc & {

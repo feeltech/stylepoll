@@ -6,6 +6,8 @@ import {startCase} from 'lodash';
 import {navigate} from "../../../services/navigation";
 import {updateUser} from "../../../services/firebase/firebaseService";
 import {storeLocalStorage} from "../../../utils/local-storage";
+import {uploadImageAndGetUrl} from "../../../utils";
+import Loader from "../../../shared/components/loader/loader";
 
 interface IEditProfileProps {
     showEditProfile: boolean,
@@ -17,7 +19,8 @@ interface IEditProfileProps {
 }
 
 interface IEditProfileStates {
-    name: string
+    name: string;
+    isLoading:boolean
 }
 
 class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates> {
@@ -25,19 +28,25 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
     constructor(props) {
         super(props);
         this.state = {
-            name: ''
+            name: '',
+            isLoading:false
         }
     }
 
     private onEditProfile = () => {
         let user = this.props.user;
-        user.image = this.props.image;
-        user.name = this.state.name;
-        updateUser(user.userId,user).then(res => {
-            storeLocalStorage("loggedUser",user).then(res => {
-                this.props.onClose()
+        this.setState({isLoading:true})
+        uploadImageAndGetUrl(this.props.image).then(res => {
+            user.profileImage = res;
+            user.name = this.state.name;
+            updateUser(user.userId,user).then(r => {
+                storeLocalStorage("loggedUser",user).then(s => {
+                    this.setState({isLoading:false})
+                    this.props.onClose()
+                })
             })
         })
+
     }
 
     render() {
@@ -83,6 +92,7 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
 
                     </DialogContent>
                 </Dialog>
+                <Loader show={this.state.isLoading}/>
             </View>
 
         )

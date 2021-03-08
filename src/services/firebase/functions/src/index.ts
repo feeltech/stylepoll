@@ -9,7 +9,7 @@ exports.sendAlertPollNotification = functions.firestore.document('/notifications
     const notification = snapshot.data()
     functions.logger.log("Snapshot ", snapshot.data())
     await admin.messaging().sendToDevice(
-        notification.tokens,
+        [notification.deviceToken],
         {
             data: {
                 owner: JSON.stringify(notification),

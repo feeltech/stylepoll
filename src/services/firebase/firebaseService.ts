@@ -2,7 +2,7 @@ import firestore from "@react-native-firebase/firestore";
 import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
 import messaging from "@react-native-firebase/messaging";
 
-import {AlertPoll, LoggingUser, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
+import {AlertPoll, LoggingUser, Notification, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
 import {
     ALERT_POLL_COLLECTIONS,
     FEED_COLLECTIONS,
@@ -17,7 +17,7 @@ import {
 
 export async function registerUser(user: User): Promise<User> {
     const isUserExist = await USER_COLLECTION.where("email", "==", user.email).get();
-    if(isUserExist.size === 0){
+    if (isUserExist.size === 0) {
         return USER_COLLECTION.add(user)
             .then((res) => {
                 user.userId = res.id;
@@ -26,7 +26,7 @@ export async function registerUser(user: User): Promise<User> {
             .catch((err) => {
                 return Promise.reject("Failed to register!");
             });
-    }else{
+    } else {
         return Promise.reject("Email Already Registered!");
     }
 
@@ -36,7 +36,7 @@ export function loginUser(user: User): Promise<User> {
     return USER_COLLECTION.where("email", "==", user.email)
         .get()
         .then((res) => {
-            if(res.docs.length !=0){
+            if (res.docs.length != 0) {
                 const data = res.docs[0].data();
                 if (data && data.password === user.password) {
                     user.userId = res.docs[0].id;
@@ -44,7 +44,7 @@ export function loginUser(user: User): Promise<User> {
                     user.profileImage = data.profileImage;
                     return Promise.resolve(user);
                 }
-            }else{
+            } else {
                 return Promise.reject("Invalid credentials");
             }
             return Promise.reject("Invalid credentials");
@@ -54,10 +54,10 @@ export function loginUser(user: User): Promise<User> {
         });
 }
 
-export async function resetPassword(email:string,oldPassword:string,newPassword:string):Promise<any>{
+export async function resetPassword(email: string, oldPassword: string, newPassword: string): Promise<any> {
     try {
-        const userDoc =  await USER_COLLECTION.where("email", "==", email).get();
-        if(userDoc.docs.length !=0) {
+        const userDoc = await USER_COLLECTION.where("email", "==", email).get();
+        if (userDoc.docs.length != 0) {
             const data = userDoc.docs[0].data();
             if (data.password === oldPassword) {
                 const updatedUser = data;
@@ -67,10 +67,10 @@ export async function resetPassword(email:string,oldPassword:string,newPassword:
             } else {
                 return Promise.reject("Incorrect Password!")
             }
-        }else{
+        } else {
             return Promise.reject("Email not registered!")
         }
-    }catch (e) {
+    } catch (e) {
         return Promise.reject(e)
     }
 
@@ -223,6 +223,7 @@ export async function onFollowUser(loggedInUser: string, followingUser: string) 
             await FEED_COLLECTIONS.doc(loggedInUser).collection("followingUserFeed").add(post)
         }
     }))
+    await sendFollowNotification(followingUser,loggedInUser)
 }
 
 export async function unFollowUser(
@@ -337,6 +338,7 @@ export async function onCreatePost(post: PostDoc) {
             .collection("userPolls")
             .add(post)
             .then((res) => {
+                sendAlertPollNotification(post.userId)
                 console.log("Poll created");
             })
             .catch((err) => {
@@ -458,10 +460,10 @@ export async function getFollowingUserPolls(
         .get();
     await Promise.all(
         map(followingDoc.docs, async (user: any) => {
-            let storyItem:StoryItem = {
-                userName:'',
-                userId:user.id,
-                polls:[]
+            let storyItem: StoryItem = {
+                userName: '',
+                userId: user.id,
+                polls: []
             }
             const alertPolls = await ALERT_POLL_COLLECTIONS.doc(user.id)
                 .collection("userPolls")
@@ -474,7 +476,7 @@ export async function getFollowingUserPolls(
                     storyItem.polls.push(p);
                 }
             });
-            if(alertPolls.docs.length>0){
+            if (alertPolls.docs.length > 0) {
                 storyItems.push(storyItem);
             }
         }),
@@ -531,11 +533,11 @@ function getWardrobePosts(posts: PostDoc[], tags: string[]): WardRobe[] {
             posts: [],
         };
         map(posts, (post) => {
-                map(post.tags, t => {
-                    if (t.name === tag) {
-                        wardrobe.posts.push(post)
-                    }
-                })
+            map(post.tags, t => {
+                if (t.name === tag) {
+                    wardrobe.posts.push(post)
+                }
+            })
         });
         wardrobeList.push(wardrobe);
     });
@@ -634,34 +636,34 @@ export async function getFollowingUsers(userId: string): Promise<User[]> {
     return Promise.resolve(users)
 }
 
-export async function likeUnlikePost(reactingUserId: string, post:PostDoc): Promise<any>{
+export async function likeUnlikePost(reactingUserId: string, post: PostDoc): Promise<any> {
     await FEED_COLLECTIONS.doc(post.userId).collection("userFeed").doc(post.postId).set(post)
     await POST_COLLECTION.doc(post.userId).collection("userPosts").doc(post.postId).set(post)
-    if (post.postId){
-        onLikeUnlikePost(post.postId,post)
+    if (post.postId) {
+        onLikeUnlikePost(post.postId, post)
     }
 }
 
-export async function onLikeUnlikePost(postId: string, post:PostDoc){
+export async function onLikeUnlikePost(postId: string, post: PostDoc) {
     const userFollowers = await FOLLOWERS_COLLECTION.doc(post.userId).collection("userFollowers").get()
-    await Promise.all(map(userFollowers.docs,async doc=>{
+    await Promise.all(map(userFollowers.docs, async doc => {
         await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).set(post)
     }))
 }
 
-export async function deletePost(postId:string,userId:string){
+export async function deletePost(postId: string, userId: string) {
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(postId).delete()
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(postId).delete()
 }
 
-export async function onDeletePost(postId:string,userId:string){
+export async function onDeletePost(postId: string, userId: string) {
     const userFollowers = await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get()
-    await Promise.all(map(userFollowers.docs,async doc=>{
+    await Promise.all(map(userFollowers.docs, async doc => {
         await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).delete()
     }))
 }
 
-export async function updateDeviceId(userId:string,deviceId:any){
+export async function updateDeviceId(userId: string, deviceId: any) {
     const userDoc = await USER_COLLECTION.doc(userId).get()
     const user = userDoc.data();
     if (user) {
@@ -671,10 +673,63 @@ export async function updateDeviceId(userId:string,deviceId:any){
 
 }
 
-export async function updateUser(userId: string,user:any){
+export async function updateUser(userId: string, user: any) {
     await USER_COLLECTION.doc(userId).set(user);
+    onUpdateUser(userId,user)
 }
 
-// export async function sendFollowNotification(notifierId: string, notifyingId: string, data){
-//     await NOTIFICATION_COLLECTIONS.doc(notifierId).set()
-// }
+export async function onUpdateUser(userId: string, user: any) {
+    const postDocs = await POST_COLLECTION.doc(userId).collection("userPosts").get();
+    await Promise.all((map(postDocs.docs, async doc => {
+        let p = doc.data();
+        p.user = user;
+        await POST_COLLECTION.doc(userId).collection("userPosts").doc(doc.id).set(p)
+    })))
+
+    const userFollowers = await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get()
+    await Promise.all(map(userFollowers.docs,async follower => {
+        const feeds = await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").where("userId", "==",userId).get();
+        if(!feeds.empty){
+            await Promise.all(map(feeds.docs,async feed => {
+                const p = feed.data();
+                p.user = user;
+                await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").doc(feed.id).set(p)
+            }))
+        }
+    }))
+}
+
+export async function sendFollowNotification(notificationReceiverId: string,notificationSenderId: string){
+    const notificationReceiverDoc = await USER_COLLECTION.doc(notificationReceiverId).get();
+    const notificationSenderDoc = await USER_COLLECTION.doc(notificationSenderId).get();
+        const notificationReceiver = notificationReceiverDoc.data()
+        const notificationSender = notificationSenderDoc.data()
+        const notification:Notification = {
+            deviceToken:notificationReceiver?.deviceId,
+            message:`${notificationSender?.name} has followed you`,
+            meta:{
+                notified_at:new Date()
+            }
+        }
+        await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
+
+}
+
+export async function sendAlertPollNotification(notificationSenderId: string){
+    const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
+    const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
+    const user = userDoc.data()
+    await Promise.all(map(userFollowers.docs,async follower => {
+        const followingUserDoc = await USER_COLLECTION.doc(follower.id).get();
+        const followingUser = followingUserDoc.data();
+            const notification:Notification = {
+                deviceToken:followingUser?.deviceId,
+                message:`${user?.name} added an Alert Poll`,
+                meta:{
+                    notified_at:new Date()
+                }
+            }
+        await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
+    })
+    )
+}
