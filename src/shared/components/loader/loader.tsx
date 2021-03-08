@@ -1,19 +1,18 @@
 import React from "react";
 import Spinner from 'react-native-loading-spinner-overlay';
-import {StyleSheet, View} from "react-native";
+import {ActivityIndicator, StyleSheet, View} from "react-native";
 
 interface ILoaderProps {
-    show:boolean
+    show: boolean
 }
 
-class Loader extends React.Component<ILoaderProps, any>{
+class Loader extends React.Component<ILoaderProps, any> {
     render() {
         return (
-                <Spinner
-                    visible={this.props.show}
-                    textContent={''}
-                    textStyle={styles.spinnerTextStyle}
-                />
+            <Spinner
+                visible={this.props.show}
+                textStyle={styles.spinnerTextStyle}
+            />
         );
     }
 }

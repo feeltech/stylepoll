@@ -18,12 +18,14 @@ import {discoverAllUsers, fetchAllUsers, getRandomPosts} from "../../services/fi
 import {isEmpty, map} from 'lodash';
 import FastImage from "react-native-fast-image";
 import {fetchLocalStorage} from "../../utils/local-storage";
+import Loader from "../../shared/components/loader/loader";
 
 
 interface IDiscoverStates {
     searchResults: User[],
     randomPosts: PostDoc[],
-    user: string
+    user: string,
+    isLoading:boolean
 }
 
 export default class Discover extends React.Component<any, IDiscoverStates> {
@@ -35,13 +37,17 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
         this.state = {
             searchResults: [],
             randomPosts: [],
-            user: ''
+            user: '',
+            isLoading:false
         }
     }
 
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
             fetchLocalStorage("loggedUser").then(res => {
+                this.setState({
+                    isLoading:true
+                })
                 this.onGetRandomPosts(res)
                 this.setState({
                     user: res
@@ -56,7 +62,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
 
     private onGetRandomPosts(user) {
         getRandomPosts(user.userId).then(res => {
-            this.setState({randomPosts: res})
+            this.setState({randomPosts: res,isLoading:false})
         }).catch(err => {
             console.log("get random posts error ", err)
         })
@@ -114,6 +120,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                     />
+                    <Loader show={this.state.isLoading}/>
                     <View style={styles.searchWrapper}>
                         <View style={{
                             width: SCREEN_WIDTH - 30,

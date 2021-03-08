@@ -25,6 +25,8 @@ import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 import {startCase,map} from 'lodash'
 import {goBack, navigate} from "../../services/navigation";
 import {trackPromise} from "react-promise-tracker";
+import {LawIcon} from "@primer/octicons-react";
+import Loader from "../../shared/components/loader/loader";
 
 interface IProfileStates {
     showWardrobe: boolean;
@@ -35,7 +37,8 @@ interface IProfileStates {
     followings: User[],
     followers: User[],
     userPolls: PostDoc[],
-    wardrobe: WardRobe[]
+    wardrobe: WardRobe[],
+    isLoading:boolean
 }
 
 interface IProfileProps {
@@ -57,7 +60,8 @@ export default class Profile extends React.Component<any, IProfileStates> {
             followers: [],
             userPolls: [],
             profileUser: '',
-            wardrobe: []
+            wardrobe: [],
+            isLoading:false
         }
     }
 
@@ -68,7 +72,8 @@ export default class Profile extends React.Component<any, IProfileStates> {
                 if(this._isMounted){
                     const profileUser = res
                     this.setState({
-                        profileUser: profileUser
+                        profileUser: profileUser,
+                        isLoading:true
                     })
 
                     getUserPosts(profileUser.userId).then(res => {
@@ -89,7 +94,8 @@ export default class Profile extends React.Component<any, IProfileStates> {
 
                     getUserPolls(profileUser.userId).then(res => {
                         this.setState({
-                            userPolls: res
+                            userPolls: res,
+                            isLoading:false
                         })
                     })
 
@@ -103,7 +109,8 @@ export default class Profile extends React.Component<any, IProfileStates> {
 
                     getWardrobe(profileUser.userId).then(res => {
                         this.setState({
-                            wardrobe: res
+                            wardrobe: res,
+                            isLoading:false
                         })
                     })
                 }
@@ -147,6 +154,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                             color="white"/>
                     </TouchableOpacity>}
                 />
+                <Loader show={this.state.isLoading}/>
                 <ScrollView style={{backgroundColor: 'none'}}>
                     <View
                         style={{

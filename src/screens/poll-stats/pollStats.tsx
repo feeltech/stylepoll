@@ -13,7 +13,8 @@ import moment from 'moment';
 interface IPollStatsStates {
     imageURI: string,
     poll: any,
-    pollFinished: boolean
+    pollFinished: boolean,
+    isLoading:boolean
 }
 
 class PollStats extends React.Component<any, IPollStatsStates> {
@@ -23,7 +24,8 @@ class PollStats extends React.Component<any, IPollStatsStates> {
         this.state = {
             imageURI: '',
             poll: '',
-            pollFinished: false
+            pollFinished: false,
+            isLoading:false
         }
     }
 
@@ -37,7 +39,9 @@ class PollStats extends React.Component<any, IPollStatsStates> {
     }
 
     private sendToFeed() {
+        this.setState({isLoading:true})
         sendPollToFeed(this.state.poll.user.userId, this.state.poll).then(res => {
+            this.setState({isLoading:false})
             navigate("home")
         }).catch(err => {
 

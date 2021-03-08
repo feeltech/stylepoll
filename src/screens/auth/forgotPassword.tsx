@@ -17,6 +17,7 @@ import {styles} from "./authStyles";
 import {fetchLocalStorage} from "../../utils/local-storage";
 import {resetPassword} from "../../services/firebase/firebaseService";
 import {isEmpty} from 'lodash';
+import Loader from "../../shared/components/loader/loader";
 interface ILoginStates {
     email:string,
     oldPassword:string,
@@ -26,7 +27,8 @@ interface ILoginStates {
     hideNewPassword:boolean,
     hideVerifyPassword:boolean,
     user:any,
-    error: string |null
+    error: string |null,
+    isLoading:boolean
 }
 
 class ForgotPassword extends React.Component<any, ILoginStates>{
@@ -42,7 +44,8 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
             hideNewPassword:false,
             user:'',
             error:null,
-            hideVerifyPassword:false
+            hideVerifyPassword:false,
+            isLoading:false
         }
     }
 
@@ -63,7 +66,13 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
             this.setState({error:'Passwords Do Not Match!'})
             return;
         }
+        this.setState({
+            isLoading:true
+        })
         resetPassword(this.state.email,this.state.oldPassword,this.state.newPassword).then(res => {
+            this.setState({
+                isLoading:false
+            })
             navigate('login')
         }).catch(e => {
             this.setState({
@@ -75,6 +84,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
     render(){
         return (
             <SafeAreaView style={styles.container}>
+                <Loader show={this.state.isLoading}/>
                 <KeyboardAvoidingView>
                     <View style={styles.centerContainer}>
                         <View style={styles.logoWrapper}>

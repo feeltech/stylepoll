@@ -57,6 +57,7 @@ export default class StoryBar extends React.Component<IStoryBarProps, any> {
           {this.props.polls.map((poll, index) => {
             return(
                 <StoryPreviewItem index={index}  key={index} poll={poll}/>
+
             )
           })}
         </ScrollView>

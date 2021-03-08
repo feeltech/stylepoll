@@ -5,11 +5,13 @@ import {PostDoc} from "../../modals";
 import {fetchLocalStorage} from "../../utils/local-storage";
 import {uploadImageAndGetUrl} from "../../utils";
 import {createPost} from "../../services/firebase/firebaseService";
+import Loader from "../../shared/components/loader/loader";
 
 
 interface ISendFeedStates {
     imageURI: string;
-    user:any
+    user:any;
+    isLoading:boolean
 }
 
 class AlertPoll extends React.Component<any, ISendFeedStates>{
@@ -18,7 +20,8 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
         super(props);
         this.state = {
             imageURI: '',
-            user:''
+            user:'',
+            isLoading:false
         }
     }
 
@@ -35,6 +38,9 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
     }
 
     private onSave = (description: string, moods: string[], tags: string[], location: string,pollEndDate?: Date) => {
+        this.setState({
+            isLoading:true
+        })
         uploadImageAndGetUrl(this.state.imageURI).then(res => {
             const post: PostDoc = {
                 description: description,
@@ -49,8 +55,10 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
                 userId:this.state.user.userId
             }
             createPost(post).then(res => {
+                this.setState({isLoading:false})
                 navigate("home")
             }).catch(err => {
+                this.setState({isLoading:false})
                 console.log(err)
             })
         }).catch(err => {
@@ -59,7 +67,11 @@ class AlertPoll extends React.Component<any, ISendFeedStates>{
     }
     render() {
         return (
-            <FeedForm showDate={true} headerTitle={"Alert Poll"} onSubmit={this.onSave} onClose={()=>{goBack()}} imageURI={this.state.imageURI} showHeader={true}/>
+            <>
+                <Loader show={this.state.isLoading}/>
+                <FeedForm showDate={true} headerTitle={"Alert Poll"} onSubmit={this.onSave} onClose={()=>{goBack()}} imageURI={this.state.imageURI} showHeader={true}/>
+
+            </>
         );
     }
 }

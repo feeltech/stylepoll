@@ -9,6 +9,7 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import StackNavigation from "./src/services/navigation/index";
 import Loader from "./src/shared/components/loader/loader";
 import {fetchLocalStorage, storeLocalStorage} from "./src/utils/local-storage";
+import {updateDeviceId} from "./src/services/firebase/firebaseService";
 
 async function  requestUserPermission () {
   const authStatus = await messaging().requestPermission();
@@ -24,12 +25,13 @@ async function  requestUserPermission () {
 }
 
 // generate firebase device token
-function generateDeviceToken() {
+export function generateDeviceToken() {
   // Get the device token
   messaging()
       .getToken()
       .then((token) => {
         console.log("rnfirebase.io token : ", token);
+
         // logger.verbose(FILE_NAME, "Firebase device id -", token);
         onRegister(token);
       });
@@ -41,6 +43,12 @@ function generateDeviceToken() {
   });
 }
 
+function onUpdateDeviceId(deviceId){
+  fetchLocalStorage("loggedUser").then(res => {
+    updateDeviceId(res.userId,deviceId)
+  })
+}
+
 // set device token
 function onRegister(token) {
   storeLocalStorage("deviceToken", token)
@@ -48,6 +56,7 @@ function onRegister(token) {
         console.log("rnfirebase.io token set to AsyncStorage");
         handleForegroundMessage();
         handleBackgroundMessage();
+        onUpdateDeviceId(token)
       })
       .catch((e) => {
         // logger.error(FILE_NAME, "Token Async storage set error - ", e);

@@ -25,6 +25,7 @@ import {startCase,map} from 'lodash';
 import {fetchLocalStorage} from "../../utils/local-storage";
 import {goBack, navigate} from "../../services/navigation";
 import WardrobeBar from "../../shared/components/wardrobe/wardrobe-bar";
+import Loader from "../../shared/components/loader/loader";
 
 interface IProfileStates {
     showWardrobe: boolean;
@@ -35,7 +36,8 @@ interface IProfileStates {
     followings: User[],
     followers: User[],
     userPolls: PostDoc[],
-    wardrobe: WardRobe[]
+    wardrobe: WardRobe[],
+    isLoading:boolean
 }
 
 interface IProfileProps {
@@ -55,14 +57,16 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
             followers: [],
             userPolls: [],
             profileUser: '',
-            wardrobe:[]
+            wardrobe:[],
+            isLoading:false
         }
     }
 
     componentDidMount() {
         const profileUser = this.props.route.params && this.props.route.params.user;
         this.setState({
-            profileUser: profileUser
+            profileUser: profileUser,
+            isLoading:true
         })
         this.focusListener = this.props.navigation.addListener('focus', () => {
             getUserPosts(profileUser.userId).then(res => {
@@ -83,7 +87,8 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
 
             getUserPolls(profileUser.userId).then(res => {
                 this.setState({
-                    userPolls: res
+                    userPolls: res,
+                    isLoading:false
                 })
             })
 
@@ -99,23 +104,29 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
 
             getWardrobe(profileUser.userId).then(res => {
                 this.setState({
-                    wardrobe:res
+                    wardrobe:res,
+                    isLoading:false
                 })
-            })        });
+            })});
 
     }
 
     private onFollowHandle = () => {
+        this.setState({
+            isLoading:true
+        })
         if (this.state.isFollowingUser) {
             unFollowUser(this.state.user.userId, this.state.profileUser.userId).then(res => {
                 this.setState({
-                    isFollowingUser: false
+                    isFollowingUser: false,
+                    isLoading:false
                 })
             })
         } else {
             followUser(this.state.user.userId, this.state.profileUser.userId).then(res => {
                 this.setState({
-                    isFollowingUser: true
+                    isFollowingUser: true,
+                    isLoading:false
                 })
             })
         }
@@ -145,6 +156,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                             <Text style={{color: "#45b5f3", fontWeight: "bold"}}>Edit</Text>
                         </TouchableOpacity>) : <View></View>}
                     />
+                    <Loader show={this.state.isLoading}/>
                     <View
                         style={{
                             flex: 1,

@@ -5,16 +5,18 @@ import {POST_LIST, SCREEN_HEIGHT, SCREEN_WIDTH} from "../../shared/constants";
 import PostItem from "../../shared/components/post-list/postItem";
 import {goBack, navigate} from "../../services/navigation";
 import {fetchLocalStorage} from "../../utils/local-storage";
-import {followUser, getPost, isFollowingUser, unFollowUser} from "../../services/firebase/firebaseService";
+import {deletePost, followUser, getPost, isFollowingUser, unFollowUser} from "../../services/firebase/firebaseService";
 import {PostDoc} from "../../modals";
 import {startCase} from 'lodash';
+import Loader from "../../shared/components/loader/loader";
 
 interface IPostStates {
     userId: string,
     postId: string,
     post:PostDoc| null,
     userIsFollowing:boolean,
-    user:any
+    user:any,
+    isLoading:boolean
 }
 
 export default class Post extends React.Component<any, IPostStates> {
@@ -27,7 +29,8 @@ export default class Post extends React.Component<any, IPostStates> {
             postId: '',
             post:null,
             userIsFollowing:false,
-            user:"any"
+            user:"any",
+            isLoading:false
         }
     }
 
@@ -40,9 +43,12 @@ export default class Post extends React.Component<any, IPostStates> {
         })
 
         this.focusListener = this.props.navigation.addListener('focus', () => {
+            this.setState({
+                isLoading:true
+            })
             getPost(userId,postId).then(res => {
                 this.setState({
-                    post:res
+                    post:res,
                 })
             }).catch(err => {
                 console.log("Failed to fetch post ",err)
@@ -52,7 +58,8 @@ export default class Post extends React.Component<any, IPostStates> {
                 if(res){
                     isFollowingUser(res.userId,userId).then(isFollowing => {
                         this.setState({
-                            userIsFollowing:isFollowing
+                            userIsFollowing:isFollowing,
+                            isLoading:false
                         })
                     })
                     this.setState({
@@ -67,16 +74,21 @@ export default class Post extends React.Component<any, IPostStates> {
 
 
     private onFollowHandle = () => {
+        this.setState({
+            isLoading:true
+        })
         if(this.state.userIsFollowing){
             unFollowUser(this.state.user.userId,this.state.userId).then(res => {
                 this.setState({
-                    userIsFollowing:false
+                    userIsFollowing:false,
+                    isLoading:false
                 })
             })
         }else{
             followUser(this.state.user.userId,this.state.userId).then(res => {
                 this.setState({
-                    userIsFollowing:true
+                    userIsFollowing:true,
+                    isLoading:false
                 })
             })
         }
@@ -88,6 +100,18 @@ export default class Post extends React.Component<any, IPostStates> {
         }else {
             return false
         }
+    }
+
+    private onDeletePost = (postId: string) => {
+        this.setState({
+            isLoading:true
+        })
+        deletePost(postId, this.state.user.userId).then(res => {
+            this.setState({
+                isLoading:false
+            })
+            goBack()
+        })
     }
 
     render() {
@@ -118,12 +142,13 @@ export default class Post extends React.Component<any, IPostStates> {
                             <Text style={{color: "#45b5f3", fontWeight: "bold"}}>{this.state.userIsFollowing ? 'Unfollow' : 'Follow'}</Text>
                         </TouchableOpacity>}
                     />
+                    <Loader show={this.state.isLoading}/>
                     <View>
-                        {this.state.post && 
+                        {this.state.post &&
                         <PostItem
-                            key={1} item={POST_LIST[0]} post={this.state.post} user={this.state.user}/>
+                            key={1} item={POST_LIST[0]} post={this.state.post} user={this.state.user} onDeleteItem={this.onDeletePost}/>
                         }
-                        
+
                     </View>
                 </ScrollView>
             </SafeAreaView>

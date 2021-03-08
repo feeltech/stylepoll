@@ -6,11 +6,13 @@ import {fetchLocalStorage} from "../../utils/local-storage";
 import {createFeed, createPost} from "../../services/firebase/firebaseService";
 import {generateGUID, uploadImageAndGetUrl} from "../../utils";
 import storage from "@react-native-firebase/storage";
+import Loader from "../../shared/components/loader/loader";
 
 
 interface ISendFeedStates {
     imageURI: string,
-    user: any
+    user: any,
+    isLoading:boolean
 }
 
 class SendFeed extends React.Component<any, ISendFeedStates> {
@@ -19,7 +21,8 @@ class SendFeed extends React.Component<any, ISendFeedStates> {
         super(props);
         this.state = {
             imageURI: '',
-            user: ''
+            user: '',
+            isLoading:false
         }
     }
 
@@ -34,6 +37,9 @@ class SendFeed extends React.Component<any, ISendFeedStates> {
     }
 
     private onSave = (description: string, moods: string[], tags: string[], location: string) => {
+        this.setState({
+            isLoading:true
+        })
         uploadImageAndGetUrl(this.state.imageURI)
                 .then((url) => {
                     let documentID = ''
@@ -51,6 +57,9 @@ class SendFeed extends React.Component<any, ISendFeedStates> {
                     }
                     createPost(post).then(res => {
                         documentID = res.id
+                        this.setState({
+                            isLoading:false
+                        })
                         navigate("home")
                     }).then(err => {
                         console.log(err)
@@ -62,9 +71,13 @@ class SendFeed extends React.Component<any, ISendFeedStates> {
 
     render() {
         return (
-            <FeedForm showDate={false} headerTitle={"Send to feed"} onSubmit={this.onSave} onClose={() => {
-                navigate("camera")
-            }} imageURI={this.state.imageURI} showHeader={true}/>
+            <>
+                <Loader show={this.state.isLoading}/>
+                <FeedForm showDate={false} headerTitle={"Send to feed"} onSubmit={this.onSave} onClose={() => {
+                    navigate("camera")
+                }} imageURI={this.state.imageURI} showHeader={true}/>
+            </>
+
         );
     }
 }

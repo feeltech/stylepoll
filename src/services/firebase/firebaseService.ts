@@ -1,16 +1,14 @@
 import firestore from "@react-native-firebase/firestore";
 import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
-import moment from "moment";
-import {err} from "react-native-svg/lib/typescript/xml";
+import messaging from "@react-native-firebase/messaging";
 
 import {AlertPoll, LoggingUser, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
-import {navigate} from "../navigation";
 import {
     ALERT_POLL_COLLECTIONS,
     FEED_COLLECTIONS,
     FOLLOWERS_COLLECTION,
     FOLLOWING_COLLECTION,
-    MOOD_COLLECTIONS,
+    MOOD_COLLECTIONS, NOTIFICATION_COLLECTIONS,
     POST_COLLECTION,
     TAG_COLLECTIONS,
     USER_COLLECTION,
@@ -662,3 +660,17 @@ export async function onDeletePost(postId:string,userId:string){
         await FEED_COLLECTIONS.doc(doc.id).collection("followingUserFeed").doc(postId).delete()
     }))
 }
+
+export async function updateDeviceId(userId:string,deviceId:any){
+    const userDoc = await USER_COLLECTION.doc(userId).get()
+    const user = userDoc.data();
+    if (user) {
+        user["deviceId"] = deviceId;
+        await USER_COLLECTION.doc(userId).set(user);
+    }
+
+}
+
+// export async function sendFollowNotification(notifierId: string, notifyingId: string, data){
+//     await NOTIFICATION_COLLECTIONS.doc(notifierId).set()
+// }

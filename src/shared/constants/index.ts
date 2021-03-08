@@ -195,3 +195,4 @@ export const FEED_COLLECTIONS = firestore().collection('feeds');
 export const ALERT_POLL_COLLECTIONS = firestore().collection('alert-poll');
 export const MOOD_COLLECTIONS = firestore().collection('moods');
 export const TAG_COLLECTIONS = firestore().collection('tags');
+export const NOTIFICATION_COLLECTIONS = firestore().collection('notifications');

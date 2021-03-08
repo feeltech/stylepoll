@@ -24,6 +24,8 @@ import {loginUser} from "../../services/firebase/firebaseService";
 import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 
 import {styles} from "./authStyles";
+import {generateDeviceToken} from "../../../App";
+import Loader from "../../shared/components/loader/loader";
 
 interface ILoginStates {
     email: string;
@@ -31,6 +33,7 @@ interface ILoginStates {
     hidePassword: boolean;
     allowLogin: boolean;
     error: string | null;
+    isLoading: boolean
 }
 
 class Login extends React.Component<any, ILoginStates> {
@@ -41,7 +44,8 @@ class Login extends React.Component<any, ILoginStates> {
             password: "bbb",
             hidePassword: true,
             allowLogin: true,
-            error: null
+            error: null,
+            isLoading: false
         };
     }
 
@@ -59,19 +63,22 @@ class Login extends React.Component<any, ILoginStates> {
             email: this.state.email,
             password: this.state.password,
         };
-
+        this.setState({isLoading: true})
         loginUser(login)
             .then((user) => {
                 this.resetStates();
                 storeLocalStorage("loggedUser", user).then(() => {
                     navigate("root");
                 });
+                generateDeviceToken();
+                this.setState({isLoading: false})
             })
             .catch((err) => {
                 this.setState({
                     error: 'Invalid Credentials!'
                 })
                 console.log("failed to log in");
+                this.setState({isLoading: false})
             });
     };
     private resetStates = () => {
@@ -85,157 +92,162 @@ class Login extends React.Component<any, ILoginStates> {
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <KeyboardAvoidingView
-                    style={styles.keyboardAvoidingViewContainer}
-                    behavior="height"
-                >
-                    <View style={styles.centerContainer}>
-                        <View style={styles.logoWrapper}>
-                            {/*<Image*/}
-                            {/*  resizeMode="contain"*/}
-                            {/*  style={styles.logo}*/}
-                            {/*  source={require("../../../assets/images/logo.png")}*/}
-                            {/*/>*/}
-                            <Text style={{fontSize: 50, fontFamily: 'serif', color: '#318bfb'}}>STYLEPOLL</Text>
-                        </View>
-                        <View style={styles.loginForm}>
-                            <View style={styles.textInputWrapper}>
-                                <TextInput
-                                    autoCapitalize="none"
-                                    value={this.state.email}
-                                    onChangeText={(text) => {
-                                        this.setState({email: text});
-                                    }}
-                                    placeholder="Email"
-                                    placeholderTextColor={"black"}
-                                    style={styles.input}
-                                />
+            <>
+                <Loader show={this.state.isLoading}/>
+                <SafeAreaView style={styles.container}>
+
+                    <KeyboardAvoidingView
+                        style={styles.keyboardAvoidingViewContainer}
+                        behavior="height"
+                    >
+                        <View style={styles.centerContainer}>
+                            <View style={styles.logoWrapper}>
+                                {/*<Image*/}
+                                {/*  resizeMode="contain"*/}
+                                {/*  style={styles.logo}*/}
+                                {/*  source={require("../../../assets/images/logo.png")}*/}
+                                {/*/>*/}
+                                <Text style={{fontSize: 50, fontFamily: 'serif', color: '#318bfb'}}>STYLEPOLL</Text>
                             </View>
-                            <View style={styles.textInputWrapper}>
-                                <TextInput
-                                    value={this.state.password}
-                                    onChangeText={(text) => this.setState({password: text})}
-                                    secureTextEntry={this.state.hidePassword}
-                                    placeholder="Password"
-                                    style={styles.input}
-                                    placeholderTextColor={"black"}
-                                />
-                                <TouchableOpacity
-                                    style={styles.hidePasswordIcon}
-                                    onPress={() => {
-                                        this.setState({hidePassword: !this.state.hidePassword});
-                                    }}
-                                >
-                                    {this.state.hidePassword ? (
-                                        <Icon name="eye-off-outline" size={20} color="#333"/>
-                                    ) : (
-                                        <Icon name="eye-outline" color="#318bfb" size={20}/>
-                                    )}
-                                </TouchableOpacity>
-                            </View>
-                            {
-                                this.state.error &&
-                                <View style={styles.textInputErrorWrapper}>
-                                    <Text style={{color: 'red', fontSize: 13}}>{this.state.error}</Text>
+                            <View style={styles.loginForm}>
+                                <View style={styles.textInputWrapper}>
+                                    <TextInput
+                                        autoCapitalize="none"
+                                        value={this.state.email}
+                                        onChangeText={(text) => {
+                                            this.setState({email: text});
+                                        }}
+                                        placeholder="Email"
+                                        placeholderTextColor={"black"}
+                                        style={styles.input}
+                                    />
                                 </View>
-                            }
-                            <TouchableOpacity
-                                onPress={this.onLogin}
-                                disabled={!this.state.allowLogin}
-                                activeOpacity={0.6}
-                                style={{
-                                    ...styles.btnLogin,
-                                    opacity: this.state.allowLogin ? 1 : 0.6,
-                                }}
-                            >
-                                <Text
+                                <View style={styles.textInputWrapper}>
+                                    <TextInput
+                                        value={this.state.password}
+                                        onChangeText={(text) => this.setState({password: text})}
+                                        secureTextEntry={this.state.hidePassword}
+                                        placeholder="Password"
+                                        style={styles.input}
+                                        placeholderTextColor={"black"}
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.hidePasswordIcon}
+                                        onPress={() => {
+                                            this.setState({hidePassword: !this.state.hidePassword});
+                                        }}
+                                    >
+                                        {this.state.hidePassword ? (
+                                            <Icon name="eye-off-outline" size={20} color="#333"/>
+                                        ) : (
+                                            <Icon name="eye-outline" color="#318bfb" size={20}/>
+                                        )}
+                                    </TouchableOpacity>
+                                </View>
+                                {
+                                    this.state.error &&
+                                    <View style={styles.textInputErrorWrapper}>
+                                        <Text style={{color: 'red', fontSize: 13}}>{this.state.error}</Text>
+                                    </View>
+                                }
+                                <TouchableOpacity
+                                    onPress={this.onLogin}
+                                    disabled={!this.state.allowLogin}
+                                    activeOpacity={0.6}
                                     style={{
-                                        fontSize: 16,
-                                        color: "#fff",
-                                        fontWeight: "500",
-                                    }}
-                                >
-                                    Login
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.otherOptionsWrapper}>
-                            <TouchableOpacity
-                                onPress={() => navigate("reset_password")}
-                                style={styles.forgotPassword}
-                                activeOpacity={1}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: "center",
-                                        fontSize: 12,
-                                        fontWeight: "600",
+                                        ...styles.btnLogin,
+                                        opacity: this.state.allowLogin ? 1 : 0.6,
                                     }}
                                 >
                                     <Text
                                         style={{
+                                            fontSize: 16,
+                                            color: "#fff",
                                             fontWeight: "500",
-                                            color: "#333",
                                         }}
                                     >
-                                        Did your forget your login information?
-                                    </Text>{" "}
-                                    Get helping to login.
-                                </Text>
-                            </TouchableOpacity>
-                            {/*  /!*<View style={styles.divideLine}>*!/*/}
-                            {/*  /!*  <View style={styles.ORtextWrapper}>*!/*/}
-                            {/*  /!*    <Text*!/*/}
-                            {/*  /!*        style={{*!/*/}
-                            {/*  /!*          color: "#333",*!/*/}
-                            {/*  /!*          fontWeight: "600",*!/*/}
-                            {/*  /!*        }}*!/*/}
-                            {/*  /!*    >*!/*/}
-                            {/*  /!*      OR*!/*/}
-                            {/*  /!*    </Text>*!/*/}
-                            {/*  /!*  </View>*!/*/}
-                            {/*  /!*</View>*!/*/}
-                            {/*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*/}
-                            {/*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*/}
-                            {/*  /!*  <Text*!/*/}
-                            {/*  /!*      style={{*!/*/}
-                            {/*  /!*        color: "#318bfb",*!/*/}
-                            {/*  /!*        fontWeight: "bold",*!/*/}
-                            {/*  /!*      }}*!/*/}
-                            {/*  /!*  >*!/*/}
-                            {/*  /!*    Login with Facebook*!/*/}
-                            {/*  /!*  </Text>*!/*/}
-                            {/*  /!*</TouchableOpacity>*!/*/}
+                                        Login
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.otherOptionsWrapper}>
+                                <TouchableOpacity
+                                    onPress={() => navigate("reset_password")}
+                                    style={styles.forgotPassword}
+                                    activeOpacity={1}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            fontSize: 12,
+                                            fontWeight: "600",
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontWeight: "500",
+                                                color: "#333",
+                                            }}
+                                        >
+                                            Did your forget your login information?
+                                        </Text>{" "}
+                                        Get helping to login.
+                                    </Text>
+                                </TouchableOpacity>
+                                {/*  /!*<View style={styles.divideLine}>*!/*/}
+                                {/*  /!*  <View style={styles.ORtextWrapper}>*!/*/}
+                                {/*  /!*    <Text*!/*/}
+                                {/*  /!*        style={{*!/*/}
+                                {/*  /!*          color: "#333",*!/*/}
+                                {/*  /!*          fontWeight: "600",*!/*/}
+                                {/*  /!*        }}*!/*/}
+                                {/*  /!*    >*!/*/}
+                                {/*  /!*      OR*!/*/}
+                                {/*  /!*    </Text>*!/*/}
+                                {/*  /!*  </View>*!/*/}
+                                {/*  /!*</View>*!/*/}
+                                {/*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*/}
+                                {/*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*/}
+                                {/*  /!*  <Text*!/*/}
+                                {/*  /!*      style={{*!/*/}
+                                {/*  /!*        color: "#318bfb",*!/*/}
+                                {/*  /!*        fontWeight: "bold",*!/*/}
+                                {/*  /!*      }}*!/*/}
+                                {/*  /!*  >*!/*/}
+                                {/*  /!*    Login with Facebook*!/*/}
+                                {/*  /!*  </Text>*!/*/}
+                                {/*  /!*</TouchableOpacity>*!/*/}
+                            </View>
                         </View>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigate("register");
-                        }}
-                        activeOpacity={1}
-                        style={styles.registerWrapper}
-                    >
-                        <Text
-                            style={{
-                                textAlign: "center",
-                                fontSize: 12,
-                                fontWeight: "600",
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigate("register");
                             }}
+                            activeOpacity={1}
+                            style={styles.registerWrapper}
                         >
                             <Text
                                 style={{
-                                    fontWeight: "500",
-                                    color: "#333",
+                                    textAlign: "center",
+                                    fontSize: 12,
+                                    fontWeight: "600",
                                 }}
                             >
-                                Don't have account?
-                            </Text>{" "}
-                            Register now.
-                        </Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
-            </SafeAreaView>
+                                <Text
+                                    style={{
+                                        fontWeight: "500",
+                                        color: "#333",
+                                    }}
+                                >
+                                    Don't have account?
+                                </Text>{" "}
+                                Register now.
+                            </Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
+                </SafeAreaView>
+            </>
+
         );
     }
 }

@@ -18,7 +18,7 @@ import {map} from 'lodash'
 import MultiSelect from 'react-native-multiple-select';
 import {PostDoc} from "../../../modals";
 import MyDatePicker from "../date-picker/date-picker";
-import { fontSize } from "../../theme";
+import {fontSize} from "../../theme";
 import moment from 'moment'
 
 interface IFeedFormStates {
@@ -33,7 +33,7 @@ interface IFeedFormStates {
     selectedMoods: string[],
     selectedTags: string[],
     pollStartDate: Date,
-    isDynamicTime:boolean
+    isDynamicTime: boolean
 }
 
 interface IFeedFormProps {
@@ -43,7 +43,7 @@ interface IFeedFormProps {
     headerTitle: string;
     showDate: boolean;
     imageURI: string;
-    headerRightLabel?:string
+    headerRightLabel?: string
 }
 
 class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
@@ -57,14 +57,14 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             mood: '',
             tags: '',
             address: '',
-            when: new Date(moment( new Date()).add(2,"minutes").toISOString()),
+            when: new Date(moment(new Date()).add(2, "minutes").toISOString()),
             imageURL: '',
             moodList: [],
             tagList: [],
             selectedMoods: [],
             selectedTags: [],
             pollStartDate: new Date(),
-            isDynamicTime:false
+            isDynamicTime: false
         }
     }
 
@@ -130,7 +130,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         const moods: string[] = [];
         map(this.state.selectedTags, t => tags.push(this.state.tagList[t]))
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
-        const diff = moment( this.state.when).diff(new Date(),"minutes")
+        const diff = moment(this.state.when).diff(new Date(), "minutes")
         let endDate = this.state.when
         // if(diff < 10) {
         //    endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
@@ -141,35 +141,35 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     private onMoodRemove = (moodIndex) => {
         const moods = this.state.selectedMoods.filter(mood => mood != moodIndex);
         this.setState({
-            selectedMoods:moods
+            selectedMoods: moods
         })
     }
 
     private onTagRemove = (tagIndex) => {
         const tags = this.state.selectedTags.filter(tag => tag != tagIndex);
         this.setState({
-            selectedTags:tags
+            selectedTags: tags
         })
     }
 
-    private handleDateChange = (date:Date) => {
-            this.setState({
-                when:date
-            })
+    private handleDateChange = (date: Date) => {
+        this.setState({
+            when: date
+        })
     }
 
     private onTimeSwitch = () => {
-        if(this.state.isDynamicTime) {
+        if (this.state.isDynamicTime) {
             this.setState({
-                when:new Date(moment( this.state.when).add(2,"minutes").toISOString())
+                when: new Date(moment(this.state.when).add(2, "minutes").toISOString())
             })
-        }else{
+        } else {
             this.setState({
                 when: new Date().toISOString()
             })
         }
         this.setState({
-            isDynamicTime:!this.state.isDynamicTime
+            isDynamicTime: !this.state.isDynamicTime
         })
     }
 
@@ -187,7 +187,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                             display: "flex",
                             backgroundColor: "#0C0D34",
                         }}
-                        leftComponent={<TouchableOpacity onPress={()=>{goBack()}}>
+                        leftComponent={<TouchableOpacity onPress={() => {
+                            goBack()
+                        }}>
                             <Icon
                                 name="close"
                                 color="white"/>
@@ -197,7 +199,10 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                         rightComponent={<TouchableOpacity onPress={this.onSubmit}>
-                            <Text style={{color: "#58ddd9", fontWeight: "bold"}}>{this.props.headerRightLabel || 'Save'}</Text>
+                            <Text style={{
+                                color: "#58ddd9",
+                                fontWeight: "bold"
+                            }}>{this.props.headerRightLabel || 'Save'}</Text>
                         </TouchableOpacity>}
                     />
                     }
@@ -205,25 +210,6 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                     <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.loginForm}>
-                                <View style={{
-                                    flex: 0,
-                                    flexDirection: 'row',
-                                    marginBottom: 10,
-                                    justifyContent: 'space-between'
-                                }}>
-                                    <View style={{flex: 1, flexDirection: 'column'}}>
-                                        <Text style={styles.input_label}>Set your Poll Time</Text>
-                                    </View>
-                                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
-                                        <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
-                                    </View>
-                                    <View
-                                        style={{
-                                            borderBottomColor: 'black',
-                                            borderBottomWidth: 1,
-                                        }}
-                                    />
-                                </View>
                                 <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
@@ -277,12 +263,21 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                                         borderWidth: 1,
                                                         borderColor: "#a2a2a2",
                                                         padding: 5,
-                                                        marginLeft:2,
-                                                        marginBottom:2
+                                                        marginLeft: 2,
+                                                        marginBottom: 2
                                                     }}>
-                                                        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-                                                            <Text style={{color: '#393737',fontSize:12}}>{this.state.moodList[mood].name}</Text>
-                                                            <TouchableOpacity onPress={()=>{this.onMoodRemove(mood)}}>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between'
+                                                        }}>
+                                                            <Text style={{
+                                                                color: '#393737',
+                                                                fontSize: 12
+                                                            }}>{this.state.moodList[mood].name}</Text>
+                                                            <TouchableOpacity onPress={() => {
+                                                                this.onMoodRemove(mood)
+                                                            }}>
                                                                 <Icon name={"close"} size={12} color={'red'}/>
                                                             </TouchableOpacity>
                                                         </View>
@@ -338,12 +333,21 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                                         borderWidth: 1,
                                                         borderColor: "#a2a2a2",
                                                         padding: 5,
-                                                        marginLeft:2,
-                                                        marginBottom:2
+                                                        marginLeft: 2,
+                                                        marginBottom: 2
                                                     }}>
-                                                        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-                                                            <Text style={{color: '#393737',fontSize:12}}>{this.state.tagList[tag].name}</Text>
-                                                            <TouchableOpacity onPress={()=>{this.onTagRemove(tag)}}>
+                                                        <View style={{
+                                                            flexDirection: 'row',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between'
+                                                        }}>
+                                                            <Text style={{
+                                                                color: '#393737',
+                                                                fontSize: 12
+                                                            }}>{this.state.tagList[tag].name}</Text>
+                                                            <TouchableOpacity onPress={() => {
+                                                                this.onTagRemove(tag)
+                                                            }}>
                                                                 <Icon name={"close"} size={12} color={'red'}/>
                                                             </TouchableOpacity>
                                                         </View>
@@ -367,8 +371,34 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 </View>
                                 {this.props.showDate &&
                                 <View>
-                                    <Text style={styles.input_label}>When</Text>
-                                    <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when} disabled={!this.state.isDynamicTime}/>
+                                    <View style={{
+                                        flex: 0,
+                                        flexDirection: 'row',
+                                        marginBottom: 10,
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <View style={{flex: 1, flexDirection: 'column'}}>
+                                            <Text style={styles.input_label}>Set your Poll Time</Text>
+                                        </View>
+                                        <View
+                                            style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                            <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
+                                        </View>
+                                        <View
+                                            style={{
+                                                borderBottomColor: 'black',
+                                                borderBottomWidth: 1,
+                                            }}
+                                        />
+                                    </View>
+                                    {this.state.isDynamicTime &&
+                                    <>
+                                        <Text style={styles.input_label}>When</Text>
+                                        <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when}
+                                                      disabled={!this.state.isDynamicTime}/>
+                                    </>
+                                    }
+
                                 </View>
                                 }
                                 <View style={styles.logoWrapper}>
@@ -445,7 +475,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         display: 'flex',
-        alignSelf:'center',
+        alignSelf: 'center',
         height: 300,
         width: 300,
         overflow: 'hidden',

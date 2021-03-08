@@ -16,6 +16,7 @@ import {styles} from "./authStyles";
 import {User} from "../../modals";
 import {registerUser} from "../../services/firebase/firebaseService";
 import {isEmpty} from 'lodash';
+import Loader from "../../shared/components/loader/loader";
 
 interface ILoginStates {
     name:string,
@@ -25,7 +26,8 @@ interface ILoginStates {
     hidePassword:boolean,
     hideConfirmPassword:boolean,
     allowRegister:boolean,
-    error:string|null
+    error:string|null,
+    isLoading:boolean
 }
 
 export default class Register extends React.Component<any, ILoginStates>{
@@ -40,7 +42,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             hidePassword:true,
             allowRegister:true,
             hideConfirmPassword:true,
-            error:null
+            error:null,
+            isLoading:false
         }
     }
 
@@ -62,8 +65,12 @@ export default class Register extends React.Component<any, ILoginStates>{
             email:this.state.email.toLowerCase(),
             password:this.state.password
         }
+        this.setState({isLoading:true})
         registerUser(user).then(res => {
             this.resetStates()
+            this.setState({
+                isLoading:false
+            })
             navigate("login")
         }).catch(err => {
             this.setState({
@@ -89,6 +96,7 @@ export default class Register extends React.Component<any, ILoginStates>{
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <Loader show={this.state.isLoading}/>
                 <KeyboardAvoidingView style={styles.keyboardAvoidingViewContainer}
                                       behavior="height">
                     <View style={styles.centerContainer}>

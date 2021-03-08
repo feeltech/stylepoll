@@ -24,6 +24,7 @@ import {
 import {includes,map,startCase} from 'lodash';
 import {uploadImageAndGetUrl} from "../../utils";
 import {fetchLocalStorage} from "../../utils/local-storage";
+import Loader from "../../shared/components/loader/loader";
 
 interface ISendToFriendStates{
     postDoc:any;
@@ -31,7 +32,8 @@ interface ISendToFriendStates{
     imageURI: string,
     followingFriends:User[],
     isAlertPoll:boolean,
-    user:any
+    user:any,
+    isLoading:boolean
 }
 
 class SendToFriend extends React.Component<any, ISendToFriendStates> {
@@ -44,7 +46,8 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             imageURI:'',
             followingFriends:[],
             isAlertPoll:false,
-            user:""
+            user:"",
+            isLoading:false
         }
     }
 
@@ -56,7 +59,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             this.setState({isAlertPoll:isAlertPoll})
         }
         fetchLocalStorage("loggedUser").then(res => {
-            this.setState({user:res})
+            this.setState({user:res,isLoading:true})
             this.getFollowingUsers(res);
         })
         this.setState({
@@ -68,11 +71,14 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
     private onSave = () => {
         const postDoc = this.state.postDoc;
         postDoc.DMList = this.state.selectedFriends;
+        this.setState({isLoading:true})
         uploadImageAndGetUrl(this.state.imageURI).then(res => {
             postDoc.image = res
             createPost(postDoc).then(res => {
+                this.setState({isLoading:false})
                 navigate("home")
             }).catch(err => {
+                this.setState({isLoading:false})
                 console.log(err)
             })
         }).catch(err => {
@@ -83,7 +89,9 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
     private sendPollToFriend= () => {
         const postDoc = this.state.postDoc;
         postDoc.DMList = this.state.selectedFriends;
+        this.setState({isLoading:true})
         sendPollToFriends(this.state.postDoc).then(res => {
+            this.setState({isLoading:false})
             navigate("home")
         }).catch(err => {
 
@@ -107,13 +115,17 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
     }
 
     private onSearch = (search: string) => {
+        this.setState({
+            isLoading:true
+        })
         this.getFollowingUsers(search);
     }
 
     private getFollowingUsers = (search:string | null) =>{
         getFollowingUsers(this.state.user.userId).then(res => {
             this.setState({
-                followingFriends:res
+                followingFriends:res,
+                isLoading:false
             })
         }).catch(err => {
         })
@@ -151,6 +163,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                             </TouchableOpacity>
                         }
                     />
+                    <Loader show={this.state.isLoading}/>
                     <ScrollView
                         style={{
                             backgroundColor: 'none'
