@@ -671,6 +671,10 @@ export async function updateDeviceId(userId:string,deviceId:any){
 
 }
 
+export async function updateUser(userId: string,user:any){
+    await USER_COLLECTION.doc(userId).set(user);
+}
+
 // export async function sendFollowNotification(notifierId: string, notifyingId: string, data){
 //     await NOTIFICATION_COLLECTIONS.doc(notifierId).set()
 // }

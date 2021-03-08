@@ -4,12 +4,31 @@ import Camera from "../../shared/components/camera/camera";
 import {navigate} from "../../services/navigation";
 import ImagePicker from 'react-native-image-picker'
 
+interface ICameraScreenStates{
+    isEditProfileCapture:boolean
+}
+class CameraScreen extends React.Component<any, ICameraScreenStates> {
 
-class CameraScreen extends React.Component<any, any> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isEditProfileCapture:false
+        }
+    }
 
+    componentDidMount() {
+        const isEditProfile = this.props.route.params && this.props.route.params.isEditProfile ? this.props.route.params.isEditProfile : false;
+        this.setState({
+            isEditProfileCapture:isEditProfile
+        })
+    }
 
     private onCapture = (imageURI: string) => {
-        navigate("capture_action", {imageUri: `data:image/jpeg;base64,${imageURI}`})
+        if(!this.state.isEditProfileCapture){
+            navigate("capture_action", {imageUri: `data:image/jpeg;base64,${imageURI}`})
+        }else{
+            navigate("profile", {imageUri: `data:image/jpeg;base64,${imageURI}`})
+        }
     }
 
 

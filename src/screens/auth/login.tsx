@@ -37,6 +37,9 @@ interface ILoginStates {
 }
 
 class Login extends React.Component<any, ILoginStates> {
+
+    private focusListener;
+    private _isMounted = false
     constructor(props: any) {
         super(props);
         this.state = {
@@ -51,10 +54,13 @@ class Login extends React.Component<any, ILoginStates> {
 
 
     componentDidMount() {
-        fetchLocalStorage("loggedUser").then(res => {
-            if (res) {
-                navigate("home")
-            }
+        this._isMounted = true
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            fetchLocalStorage("loggedUser").then(res => {
+                if (res) {
+                    navigate("root")
+                }
+            })
         })
     }
 
@@ -89,6 +95,10 @@ class Login extends React.Component<any, ILoginStates> {
             allowLogin: true,
         });
     };
+
+    componentWillMount() {
+        this._isMounted = false
+    }
 
     render() {
         return (

@@ -27,6 +27,7 @@ import {goBack, navigate} from "../../services/navigation";
 import {trackPromise} from "react-promise-tracker";
 import {LawIcon} from "@primer/octicons-react";
 import Loader from "../../shared/components/loader/loader";
+import EditProfile from "./editProfile/editProfile";
 
 interface IProfileStates {
     showWardrobe: boolean;
@@ -38,7 +39,8 @@ interface IProfileStates {
     followers: User[],
     userPolls: PostDoc[],
     wardrobe: WardRobe[],
-    isLoading:boolean
+    isLoading:boolean,
+    showEditProfile:boolean
 }
 
 interface IProfileProps {
@@ -61,16 +63,25 @@ export default class Profile extends React.Component<any, IProfileStates> {
             userPolls: [],
             profileUser: '',
             wardrobe: [],
-            isLoading:false
+            isLoading:false,
+            showEditProfile:false
         }
     }
 
     componentDidMount() {
         this._isMounted = true
         this.focusListener = this.props.navigation.addListener('focus', () => {
+            const imageURL = this.props.route.params && this.props.route.params.imageUri ? this.props.route.params.imageUri : null;
             fetchLocalStorage("loggedUser").then(res => {
                 if(this._isMounted){
                     const profileUser = res
+                    if(imageURL){
+                        profileUser.profileImage = imageURL
+                        this.setState({
+                            profileUser:profileUser,
+                            showEditProfile:true
+                        })
+                    }
                     this.setState({
                         profileUser: profileUser,
                         isLoading:true
@@ -129,6 +140,21 @@ export default class Profile extends React.Component<any, IProfileStates> {
         this._isMounted = false
     }
 
+    private onChangePicture = () => {
+        this.setState({showEditProfile:false});
+        navigate("camera",{isEditProfile:true})
+    }
+
+    private onCloseModal = () => {
+        fetchLocalStorage("loggedUser").then(res => {
+            this.setState({
+                showEditProfile:false,
+                profileUser:res
+            })
+        })
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -164,12 +190,12 @@ export default class Profile extends React.Component<any, IProfileStates> {
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                        <View style={{flex: 1}}>
+                        <TouchableOpacity style={{flex: 1}} onPress={()=>{this.setState({showEditProfile:true})}}>
                             <Image
                                 source={{uri: this.state.profileUser.profileImage}}
                                 style={{borderRadius: 10, width: 75, height: 75}}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <View style={{flex: 1}}>
                             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                                 <Text>{this.state.userPolls.length}</Text>
@@ -263,6 +289,14 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         </View>
                     }
                 </ScrollView>
+                <EditProfile
+                    showEditProfile={this.state.showEditProfile}
+                    onClose={this.onCloseModal}
+                    name={this.state.profileUser.name}
+                    image={this.state.profileUser.profileImage}
+                    user={this.state.profileUser}
+                    onChangePicture={this.onChangePicture}
+                />
             </View>
         )
     }

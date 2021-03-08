@@ -149,7 +149,6 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
 
     render() {
         const {poll} = this.state;
-        console.log("poll ", poll)
         return (
             <>
                 {
@@ -183,7 +182,7 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                             style={styles.image}
                         >
                             <View style={{ flex: 10 }} />
-                            {!(this.state.userReacted || this.state.pollDurationEnded) && (
+                            {!(this.state.userReacted || this.state.remainingTime === "00:00:00") && (
                                 <View
                                     style={{
                                         flex: 1,
@@ -242,7 +241,7 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                                     </TouchableOpacity>
                                 </View>
                             )}
-                            {(this.state.userReacted || this.state.pollDurationEnded) &&
+                            {(this.state.userReacted || this.state.remainingTime === "00:00:00") &&
                             <View style={{padding:10,flexDirection:'row'}}>
                                 <View style={{flexDirection:'column',justifyContent:'center'}}>
                                     <Progress.Bar progress={this.getProgressBarValues("like")} width={SCREEN_WIDTH-40} color={'#57ff00'} height={5} borderRadius={10}/>
