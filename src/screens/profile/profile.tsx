@@ -22,7 +22,7 @@ import {
     isFollowingUser
 } from "../../services/firebase/firebaseService";
 import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
-import {startCase,map} from 'lodash'
+import {startCase,map,isEqual} from 'lodash'
 import {goBack, navigate} from "../../services/navigation";
 import {trackPromise} from "react-promise-tracker";
 import {LawIcon} from "@primer/octicons-react";
@@ -79,7 +79,6 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         profileUser.profileImage = imageURL
                         this.setState({
                             profileUser:profileUser,
-                            showEditProfile:true
                         })
                     }
                     this.setState({
@@ -130,6 +129,13 @@ export default class Profile extends React.Component<any, IProfileStates> {
         });
 
     }
+
+    componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any) {
+        if(!isEqual(nextProps.route.params.isEditProfile, this.props.route.params ? this.props.route.params.isEditProfile : null)){
+            this.setState({showEditProfile:nextProps.route.params.isEditProfile})
+        }
+    }
+
     private logout = () => {
         storeLocalStorage("loggedUser",null).then(()=>{
             navigate("login")
@@ -138,6 +144,11 @@ export default class Profile extends React.Component<any, IProfileStates> {
 
     componentWillMount() {
         this._isMounted = false
+    }
+
+    componentWillUnmount() {
+        this.setState({showEditProfile:false})
+        this.focusListener();
     }
 
     private onChangePicture = () => {

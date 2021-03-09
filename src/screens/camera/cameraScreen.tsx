@@ -9,6 +9,8 @@ interface ICameraScreenStates{
 }
 class CameraScreen extends React.Component<any, ICameraScreenStates> {
 
+    private focusListener;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -17,10 +19,13 @@ class CameraScreen extends React.Component<any, ICameraScreenStates> {
     }
 
     componentDidMount() {
-        const isEditProfile = this.props.route.params && this.props.route.params.isEditProfile ? this.props.route.params.isEditProfile : false;
-        this.setState({
-            isEditProfileCapture:isEditProfile
+        this.focusListener = this.props.navigation.addListener('focus', () => {
+            const isEditProfile = this.props.route.params && this.props.route.params.isEditProfile ? this.props.route.params.isEditProfile : false;
+            this.setState({
+                isEditProfileCapture:isEditProfile
+            })
         })
+
     }
 
     private onCapture = (imageURI: string) => {
@@ -30,6 +35,12 @@ class CameraScreen extends React.Component<any, ICameraScreenStates> {
             navigate("profile", {imageUri: `data:image/jpeg;base64,${imageURI}`})
         }
     }
+
+    componentWillUnmount() {
+
+        this.focusListener();
+    }
+
 
 
     render() {

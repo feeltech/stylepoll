@@ -17,7 +17,7 @@ import {BackHandler, Image, StyleSheet, Text, View} from "react-native";
 import {SCREEN_HEIGHT, SCREENS, STATUS_BAR_HEIGHT} from "../../shared/constants";
 // ? Screens
 import HomeScreen from "../../screens/home/HomeScreen";
-import SearchScreen from "../../screens/search/SearchScreen";
+import Notification from "../../screens/notifications/notificationList";
 import CameraScreen from "../../screens/camera/cameraScreen";
 import CaptureActions from "../../screens/camera/captureActions";
 import SendToFriend from "../../screens/sendToFriend/sendToFriend";
@@ -90,7 +90,7 @@ const Navigation = () => {
                 <Tab.Screen name={SCREENS.HOME} component={HomeScreen}/>
                 <Tab.Screen name={SCREENS.SEARCH} component={Discover}/>
                 <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen}/>
-                <Tab.Screen name={SCREENS.FAVOURITES} component={SearchScreen}/>
+                <Tab.Screen name={SCREENS.FAVOURITES} component={Notification}/>
                 <Tab.Screen name={SCREENS.PROFILE} component={Profile}/>
             </Tab.Navigator>
         );

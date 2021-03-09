@@ -8,7 +8,7 @@ import {
     FEED_COLLECTIONS,
     FOLLOWERS_COLLECTION,
     FOLLOWING_COLLECTION,
-    MOOD_COLLECTIONS, NOTIFICATION_COLLECTIONS,
+    MOOD_COLLECTIONS, NOTIFICATION_COLLECTIONS, NOTIFICATION_TYPES,
     POST_COLLECTION,
     TAG_COLLECTIONS,
     USER_COLLECTION,
@@ -343,7 +343,7 @@ export async function onCreatePost(post: PostDoc) {
             .catch((err) => {
                 console.log("Poll create error ", err);
             });
-        await sendAlertPollNotification(post.userId)
+        await sendAlertPollNotification(post.userId,post)
     }
 
     if (isNull(post.user.profileImage) || isEmpty(post.user.profileImage)) {
@@ -709,14 +709,16 @@ export async function sendFollowNotification(notificationReceiverId: string, not
         message: `${notificationSender?.name} has followed you`,
         meta: {
             notified_at: new Date(),
-            image: notificationSender?.profileImage
+            image: notificationSender?.profileImage,
+            notifier:notificationSender,
+            notificationType:NOTIFICATION_TYPES.FOLLOW_USER
         }
     }
     await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
 
 }
 
-export async function sendAlertPollNotification(notificationSenderId: string) {
+export async function sendAlertPollNotification(notificationSenderId: string,poll) {
     const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
     const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
     const user = userDoc.data()
@@ -728,10 +730,25 @@ export async function sendAlertPollNotification(notificationSenderId: string) {
                 message: `${user?.name} added an Alert Poll`,
                 meta: {
                     notified_at: new Date(),
-                    image: user?.profileImage
+                    image: user?.profileImage,
+                    notifier:user,
+                    alertPoll:poll,
+                    notificationType:NOTIFICATION_TYPES.ALERT_POLL
                 }
             }
             await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
         })
     )
+}
+
+export async function getNotifications(userId: string):Promise<Notification[]> {
+    const notificationDocs = await NOTIFICATION_COLLECTIONS.doc(userId).collection("userNotification").get()
+    const notifications:Notification[] = []
+    if(notificationDocs.empty){
+        return Promise.resolve(notifications)
+    }
+    await Promise.all(map(notificationDocs.docs,async doc => {
+        notifications.push(doc.data())
+    }))
+    return Promise.resolve(notifications)
 }
