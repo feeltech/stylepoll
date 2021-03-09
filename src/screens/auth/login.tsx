@@ -76,7 +76,7 @@ class Login extends React.Component<any, ILoginStates> {
                 storeLocalStorage("loggedUser", user).then(() => {
                     navigate("root");
                 });
-                generateDeviceToken();
+                // generateDeviceToken();
                 this.setState({isLoading: false})
             })
             .catch((err) => {
