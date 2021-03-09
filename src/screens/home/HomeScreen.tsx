@@ -88,6 +88,15 @@ const HomeScreen = () => {
         })
     }
 
+    const sortByCreatedDate = (arr) => {
+        return arr.sort(function compare(a, b) {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            // @ts-ignore
+            return dateB - dateA ;
+        });
+
+    }
 
     return (
         // <SafeAreaView style={styles.container}>
@@ -113,7 +122,7 @@ const HomeScreen = () => {
             >
                 <StoryBar
                     polls={followingPolls}
-                    currentUserPoll={userPolls[userPolls.length-1]}
+                    currentUserPoll={sortByCreatedDate(userPolls)[0]}
                     profileImage={user ? user.profileImage : ""}
                 />
                 <Posts data={POST_LIST} posts={postList} onDeleteItem={onDeletePost}/>

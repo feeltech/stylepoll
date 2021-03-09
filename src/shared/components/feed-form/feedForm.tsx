@@ -57,7 +57,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             mood: '',
             tags: '',
             address: '',
-            when: new Date(moment(new Date()).add(2, "minutes").toISOString()),
+            when: new Date(),
             imageURL: '',
             moodList: [],
             tagList: [],
@@ -132,9 +132,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
         const diff = moment(this.state.when).diff(new Date(), "minutes")
         let endDate = this.state.when
-        // if(diff < 10) {
-        //    endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
-        // }
+        if(!this.state.isDynamicTime){
+               endDate = new Date(moment( this.state.when).add(2,"minutes").toISOString())
+        }
         this.props.onSubmit(this.state.description, moods, tags, this.state.address, endDate)
     }
 
@@ -161,11 +161,11 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     private onTimeSwitch = () => {
         if (this.state.isDynamicTime) {
             this.setState({
-                when: new Date(moment(this.state.when).add(2, "minutes").toISOString())
+                when: new Date()
             })
         } else {
             this.setState({
-                when: new Date().toISOString()
+                when: new Date()
             })
         }
         this.setState({
