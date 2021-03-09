@@ -38,6 +38,7 @@ import OtherUserProfile from "../../screens/other-user-profile/otherUserProfile"
 import WardrobeTagView from "../../screens/wardrobe-tag-view/wardrobe-tag-view";
 import DiscoverSearch from "../../screens/discover/search";
 import ForgotPassword from "../../screens/auth/forgotPassword";
+import EditProfileCamera from "../../screens/camera/editProfileCamera";
 // ? If you want to use stack or tab or both
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -89,7 +90,7 @@ const Navigation = () => {
             >
                 <Tab.Screen name={SCREENS.HOME} component={HomeScreen}/>
                 <Tab.Screen name={SCREENS.SEARCH} component={Discover}/>
-                <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen}/>
+                <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen} initialParams={{isEditProfile:false}} />
                 <Tab.Screen name={SCREENS.FAVOURITES} component={Notification}/>
                 <Tab.Screen name={SCREENS.PROFILE} component={Profile}/>
             </Tab.Navigator>
@@ -145,6 +146,7 @@ const Navigation = () => {
                     <Stack.Screen name={SCREENS.SEARCH_DISCOVER} component={DiscoverSearch}/>
                     <Stack.Screen name={SCREENS.RESET_PASSWORD} component={ForgotPassword}/>
                     <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
+                    <Stack.Screen name={SCREENS.EDIT_PROFILE_CAMERA} component={EditProfileCamera}/>
                 </Stack.Navigator>
                 {/*}*/}
                 {/*{*/}

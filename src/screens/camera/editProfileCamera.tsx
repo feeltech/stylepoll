@@ -7,8 +7,7 @@ import ImagePicker from 'react-native-image-picker'
 interface ICameraScreenStates{
     isEditProfileCapture:boolean
 }
-class CameraScreen extends React.Component<any, ICameraScreenStates> {
-
+class EditProfileCamera extends React.Component<any, ICameraScreenStates> {
 
     constructor(props) {
         super(props);
@@ -18,8 +17,11 @@ class CameraScreen extends React.Component<any, ICameraScreenStates> {
     }
 
     private onCapture = (imageURI: string) => {
-        navigate("capture_action", {imageUri: `data:image/jpeg;base64,${imageURI}`})
+        navigate("profile", {imageUri: `data:image/jpeg;base64,${imageURI}`})
     }
+
+
+
 
 
     render() {
@@ -38,4 +40,4 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
     }
 });
-export default CameraScreen;
+export default EditProfileCamera;

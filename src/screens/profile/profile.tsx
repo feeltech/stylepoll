@@ -131,8 +131,8 @@ export default class Profile extends React.Component<any, IProfileStates> {
     }
 
     componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any) {
-        if(!isEqual(nextProps.route.params.isEditProfile, this.props.route.params ? this.props.route.params.isEditProfile : null)){
-            this.setState({showEditProfile:nextProps.route.params.isEditProfile})
+        if(!isEqual(nextProps.route.params.imageUri,this.props.route.params ? this.props.route.params.imageUri : null)){
+            this.setState({showEditProfile:true})
         }
     }
 
@@ -153,7 +153,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
 
     private onChangePicture = () => {
         this.setState({showEditProfile:false});
-        navigate("camera",{isEditProfile:true})
+        navigate("edit-profile-camera")
     }
 
     private onCloseModal = () => {
