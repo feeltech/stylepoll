@@ -4,11 +4,11 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
-exports.sendAlertPollNotification = functions.firestore.document('/notifications/{userId}').onCreate(async (snapshot, context) => {
+exports.sendNotification = functions.firestore.document('/notifications/{userId}/{notificationId}').onCreate(async (snapshot, context) => {
     const userId = context.params.userId;
     const notification = snapshot.data()
     functions.logger.log("Snapshot ", snapshot.data())
-    await admin.messaging().sendToDevice(
+    const n = await admin.messaging().sendToDevice(
         [notification.deviceToken],
         {
             data: {
@@ -24,6 +24,7 @@ exports.sendAlertPollNotification = functions.firestore.document('/notifications
             priority: 'high'
         }
     )
+    await admin.firestore().collection("completedNotifications").add(n)
 })
 
 

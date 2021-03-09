@@ -223,7 +223,7 @@ export async function onFollowUser(loggedInUser: string, followingUser: string) 
             await FEED_COLLECTIONS.doc(loggedInUser).collection("followingUserFeed").add(post)
         }
     }))
-    await sendFollowNotification(followingUser,loggedInUser)
+    await sendFollowNotification(followingUser, loggedInUser)
 }
 
 export async function unFollowUser(
@@ -338,12 +338,12 @@ export async function onCreatePost(post: PostDoc) {
             .collection("userPolls")
             .add(post)
             .then((res) => {
-                sendAlertPollNotification(post.userId)
                 console.log("Poll created");
             })
             .catch((err) => {
                 console.log("Poll create error ", err);
             });
+        await sendAlertPollNotification(post.userId)
     }
 
     if (isNull(post.user.profileImage) || isEmpty(post.user.profileImage)) {
@@ -675,7 +675,7 @@ export async function updateDeviceId(userId: string, deviceId: any) {
 
 export async function updateUser(userId: string, user: any) {
     await USER_COLLECTION.doc(userId).set(user);
-    onUpdateUser(userId,user)
+    onUpdateUser(userId, user)
 }
 
 export async function onUpdateUser(userId: string, user: any) {
@@ -687,10 +687,10 @@ export async function onUpdateUser(userId: string, user: any) {
     })))
 
     const userFollowers = await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get()
-    await Promise.all(map(userFollowers.docs,async follower => {
-        const feeds = await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").where("userId", "==",userId).get();
-        if(!feeds.empty){
-            await Promise.all(map(feeds.docs,async feed => {
+    await Promise.all(map(userFollowers.docs, async follower => {
+        const feeds = await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").where("userId", "==", userId).get();
+        if (!feeds.empty) {
+            await Promise.all(map(feeds.docs, async feed => {
                 const p = feed.data();
                 p.user = user;
                 await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").doc(feed.id).set(p)
@@ -699,37 +699,39 @@ export async function onUpdateUser(userId: string, user: any) {
     }))
 }
 
-export async function sendFollowNotification(notificationReceiverId: string,notificationSenderId: string){
+export async function sendFollowNotification(notificationReceiverId: string, notificationSenderId: string) {
     const notificationReceiverDoc = await USER_COLLECTION.doc(notificationReceiverId).get();
     const notificationSenderDoc = await USER_COLLECTION.doc(notificationSenderId).get();
-        const notificationReceiver = notificationReceiverDoc.data()
-        const notificationSender = notificationSenderDoc.data()
-        const notification:Notification = {
-            deviceToken:notificationReceiver?.deviceId,
-            message:`${notificationSender?.name} has followed you`,
-            meta:{
-                notified_at:new Date()
-            }
+    const notificationReceiver = notificationReceiverDoc.data()
+    const notificationSender = notificationSenderDoc.data()
+    const notification: Notification = {
+        deviceToken: notificationReceiver?.deviceId,
+        message: `${notificationSender?.name} has followed you`,
+        meta: {
+            notified_at: new Date(),
+            image: notificationSender?.profileImage
         }
-        await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
+    }
+    await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
 
 }
 
-export async function sendAlertPollNotification(notificationSenderId: string){
+export async function sendAlertPollNotification(notificationSenderId: string) {
     const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
     const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
     const user = userDoc.data()
-    await Promise.all(map(userFollowers.docs,async follower => {
-        const followingUserDoc = await USER_COLLECTION.doc(follower.id).get();
-        const followingUser = followingUserDoc.data();
-            const notification:Notification = {
-                deviceToken:followingUser?.deviceId,
-                message:`${user?.name} added an Alert Poll`,
-                meta:{
-                    notified_at:new Date()
+    await Promise.all(map(userFollowers.docs, async follower => {
+            const followingUserDoc = await USER_COLLECTION.doc(follower.id).get();
+            const followingUser = followingUserDoc.data();
+            const notification: Notification = {
+                deviceToken: followingUser?.deviceId,
+                message: `${user?.name} added an Alert Poll`,
+                meta: {
+                    notified_at: new Date(),
+                    image: user?.profileImage
                 }
             }
-        await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
-    })
+            await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
+        })
     )
 }

@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
-import {ActivityIndicator, Platform, StatusBar, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, BackHandler, Platform, StatusBar, StyleSheet, Text, View} from "react-native";
 import {usePromiseTracker} from "react-promise-tracker";
 import messaging from "@react-native-firebase/messaging";
 import PushNotification from "react-native-push-notification";
