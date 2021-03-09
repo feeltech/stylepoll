@@ -71,8 +71,7 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private blueButtonActions = () => {
         const shareOptions = {
-            title: 'Share Im' +
-                'age',
+            message: 'Send by stylepoll',
             failOnCancel: false,
             urls: [this.state.imageURI]
         };

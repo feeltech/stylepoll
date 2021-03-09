@@ -59,6 +59,7 @@ export default class Register extends React.Component<any, ILoginStates>{
             this.setState({
                 error:'Passwords do not match!'
             })
+            return;
         }
         const user: User = {
             name:this.state.name.toLowerCase(),

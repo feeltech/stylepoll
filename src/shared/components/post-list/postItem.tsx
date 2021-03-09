@@ -89,14 +89,20 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
                         <Text style={{
                             fontWeight: '600'
                         }}>{startCase(post?.user?.name)}</Text>
-                        <Text style={{
-                            fontSize: 10,
-                            fontWeight: '600'
-                        }}>{startCase(post?.location)}</Text>
-                        <Text style={{
-                            fontSize: 10,
-                            fontWeight: '600'
-                        }}>{startCase(post?.description)}</Text>
+                        {
+                            !isEmpty(post?.location) &&
+                            <Text style={{
+                                fontSize: 10,
+                                fontWeight: '600'
+                            }}>{startCase(post?.location)}</Text>
+                        }
+                        {
+                            !isEmpty(post?.description) &&
+                            <Text style={{
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            }}>{startCase(post?.description)}</Text>
+                        }
                     </View>
                 </TouchableOpacity>
                     <PostOption  onPress={(eventName:string,index:number|undefined)=>{onPostOption(eventName,index,post)}} actions={post.userId === user.userId ? ['Report', 'Delete'] : ['Report']}/>

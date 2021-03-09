@@ -113,7 +113,7 @@ const HomeScreen = () => {
             >
                 <StoryBar
                     polls={followingPolls}
-                    currentUserPoll={userPolls[0]}
+                    currentUserPoll={userPolls[userPolls.length-1]}
                     profileImage={user ? user.profileImage : ""}
                 />
                 <Posts data={POST_LIST} posts={postList} onDeleteItem={onDeletePost}/>
