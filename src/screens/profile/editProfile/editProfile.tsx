@@ -8,6 +8,7 @@ import {updateUser} from "../../../services/firebase/firebaseService";
 import {storeLocalStorage} from "../../../utils/local-storage";
 import {uploadImageAndGetUrl} from "../../../utils";
 import Loader from "../../../shared/components/loader/loader";
+import {isNull,isEqual} from 'lodash';
 
 interface IEditProfileProps {
     showEditProfile: boolean,
@@ -20,7 +21,8 @@ interface IEditProfileProps {
 
 interface IEditProfileStates {
     name: string;
-    isLoading:boolean
+    isLoading:boolean,
+    updatedImage: boolean
 }
 
 class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates> {
@@ -29,15 +31,22 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
         super(props);
         this.state = {
             name: '',
-            isLoading:false
+            isLoading:false,
+            updatedImage:false
+        }
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<IEditProfileProps>, nextContext: any) {
+        if(!isEqual(this.props.image, nextProps.image) && !isNull(this.props.image)){
+            this.setState({updatedImage:true})
         }
     }
 
     private onEditProfile = () => {
         let user = this.props.user;
         this.setState({isLoading:true})
-        uploadImageAndGetUrl(this.props.image).then(res => {
-            user.profileImage = res;
+        if(this.state.updatedImage){
+            user.profileImage = this.props.image;
             user.name = this.state.name;
             updateUser(user.userId,user).then(r => {
                 storeLocalStorage("loggedUser",user).then(s => {
@@ -45,8 +54,18 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
                     this.props.onClose()
                 })
             })
-        })
-
+        }else{
+            uploadImageAndGetUrl(this.props.image).then(res => {
+                user.profileImage = res;
+                user.name = this.state.name;
+                updateUser(user.userId,user).then(r => {
+                    storeLocalStorage("loggedUser",user).then(s => {
+                        this.setState({isLoading:false})
+                        this.props.onClose()
+                    })
+                })
+            })
+        }
     }
 
     render() {
@@ -59,7 +78,7 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
                         slideFrom: 'top',
                     })}
                     width={SCREEN_WIDTH_NEW - 70}
-                    height={SCREEN_HEIGHT - 400}
+                    height={SCREEN_HEIGHT - 500}
                     onShow={() => {
                         this.setState({name: this.props.user.name})
                     }}
