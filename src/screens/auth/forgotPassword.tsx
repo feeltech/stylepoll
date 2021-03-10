@@ -73,6 +73,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
             this.setState({
                 isLoading:false
             })
+            this.resetStates()
             navigate('login')
         }).catch(e => {
             this.setState({
@@ -80,6 +81,21 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
             })
         })
     }
+
+    private resetStates = () => {
+        this.setState({
+            email:'',
+            oldPassword:'',
+            newPassword:'',
+            confirmPassword:'',
+            hideCurrentPassword:false,
+            hideNewPassword:false,
+            user:'',
+            error:null,
+            hideVerifyPassword:false,
+            isLoading:false
+        });
+    };
 
     render(){
         return (

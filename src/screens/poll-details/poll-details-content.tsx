@@ -85,7 +85,7 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
             const hours = Math.trunc(durationDiff / 3600);
             const minuites = Math.trunc((durationDiff - (hours * 3600)) / 60)
             const seconds = durationDiff - (hours * 3600 + minuites *60);
-            const remainingTime = `${((hours.toString()).length === 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
+            const remainingTime = `${((hours.toString()).length >= 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
 
             if(durationDiff > 0){
                 this.setState({

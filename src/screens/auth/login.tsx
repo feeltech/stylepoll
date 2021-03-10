@@ -93,6 +93,7 @@ class Login extends React.Component<any, ILoginStates> {
             password: "",
             hidePassword: true,
             allowLogin: true,
+            error:null
         });
     };
 

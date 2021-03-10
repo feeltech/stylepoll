@@ -89,7 +89,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             password:'',
             hidePassword:true,
             allowRegister:true,
-            hideConfirmPassword:true
+            hideConfirmPassword:true,
+            error:null
         })
     }
 
