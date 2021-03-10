@@ -12,7 +12,8 @@ import {NOTIFICATION_TYPES, SCREEN_WIDTH} from "../../shared/constants";
 import Loader from "../../shared/components/loader/loader";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {Header} from "react-native-elements";
-import {includes, reverse} from 'lodash'
+import {includes, reverse,isEmpty} from 'lodash'
+import moment from 'moment'
 
 
 interface INotificationStates {
@@ -80,9 +81,11 @@ export default class NotificationList extends Component<any, INotificationStates
     private renderAlertPollNotification = (notification: Notification) => {
         return (
             <>
+                {!isEmpty(notification.meta.alertPoll.description) &&
                 <Text style={{
                     fontWeight: 'bold'
                 }}>{notification.meta.alertPoll.description}</Text>
+                }
                 <Text style={{
                     fontWeight: '600',
                     fontSize:12
@@ -123,10 +126,17 @@ export default class NotificationList extends Component<any, INotificationStates
                                     style={styles.infoWrapper}>
                                     <FastImage style={styles.avatar}
                                                source={{uri: notification.meta.image}}/>
-                                    <View style={{flex: 0, flexDirection: 'column'}}>
-                                        <Text style={{
-                                            fontWeight: '600'
-                                        }}>{notification.meta.notifier.name}</Text>
+                                    <View style={{flex: 1, flexDirection: 'column'}}>
+                                        <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
+                                            <Text style={{
+                                                fontWeight: '600'
+                                            }}>{notification.meta.notifier.name}</Text>
+                                            <Text style={{
+                                                fontWeight: '600',
+                                                fontSize:12
+                                            }}>{moment(notification.meta.notified_at.toDate()).format("DD MMM")}</Text>
+                                        </View>
+
                                         {notification.meta.notificationType === NOTIFICATION_TYPES.FOLLOW_USER && this.renderFollowNotification(notification)}
                                         {notification.meta.notificationType === NOTIFICATION_TYPES.ALERT_POLL && this.renderAlertPollNotification(notification)}
                                     </View>
@@ -181,6 +191,8 @@ const styles = StyleSheet.create({
     infoWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
+        width:'100%',
+        // backgroundColor:'red'
     },
     avatar: {
         borderColor: '#ddd',
