@@ -2,18 +2,24 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import * as NavigationService from "react-navigation-helpers";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
-import {AlertPoll} from "../../../modals";
+import {AlertPoll, StoryItem} from "../../../modals";
 
 
 interface IAddStoryProps {
-  poll: AlertPoll,
-  profileImage:string
+  poll: AlertPoll[],
+  profileImage:string,
+  user:any
 }
 export default class AddStory extends React.Component<IAddStoryProps, any> {
 
   private onAddPoll = () => {
-    if(this.props.poll?.postId) {
-      NavigationService.navigate("poll_details",{poll:this.props.poll})
+    if(this.props.poll.length > 0) {
+      const storyItem : StoryItem = {
+        userId:this.props.user.userId,
+        userName:this.props.user.name,
+        polls:this.props.poll
+      }
+      NavigationService.navigate("poll_details",{poll:storyItem})
     } else {
       NavigationService.navigate("camera")
     }

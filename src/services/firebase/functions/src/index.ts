@@ -24,7 +24,7 @@ exports.sendNotification = functions.firestore.document('/notifications/{userId}
             priority: 'high'
         }
     )
-    await admin.firestore().collection("completedNotifications").add(n)
+    await admin.firestore().collection("completedNotifications").add(notification)
 })
 
 

@@ -11,8 +11,9 @@ import Carausal from "../carausal/carausal";
 
 interface IStoryBarProps {
   polls:StoryItem[],
-  currentUserPoll:AlertPoll,
-  profileImage:string
+  currentUserPoll:AlertPoll[],
+  profileImage:string,
+  user:any
 }
 export default class StoryBar extends React.Component<IStoryBarProps, any> {
   render() {
@@ -53,7 +54,7 @@ export default class StoryBar extends React.Component<IStoryBarProps, any> {
           horizontal={true}
           bounces={false}
         >
-          <AddStory poll={this.props.currentUserPoll} profileImage={this.props.profileImage} />
+          <AddStory poll={this.props.currentUserPoll} profileImage={this.props.profileImage} user={this.props.user} />
           {this.props.polls.map((poll, index) => {
             return(
                 <StoryPreviewItem index={index}  key={index} poll={poll}/>
