@@ -5,7 +5,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {isReadyRef, navigationRef} from "react-navigation-helpers";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Spinner from 'react-native-loading-spinner-overlay';
-import { usePromiseTracker } from "react-promise-tracker"
+import {usePromiseTracker} from "react-promise-tracker"
 
 // const { promiseInProgress } = usePromiseTracker();
 
@@ -43,13 +43,9 @@ import EditProfileCamera from "../../screens/camera/editProfileCamera";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const Navigation = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    React.useEffect(() => {
-        return () => (isReadyRef.current = false);
-    }, []);
+export default class Navigation extends React.Component<any, any> {
 
-    const renderTabNavigation = () => {
+    private renderTabNavigation = () => {
         return (
             <Tab.Navigator
                 screenOptions={({route}) => ({
@@ -90,79 +86,83 @@ const Navigation = () => {
             >
                 <Tab.Screen name={SCREENS.HOME} component={HomeScreen}/>
                 <Tab.Screen name={SCREENS.SEARCH} component={Discover}/>
-                <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen} initialParams={{isEditProfile:false}} />
+                <Tab.Screen name={SCREENS.CAMERA} component={CameraScreen} initialParams={{isEditProfile: false}}/>
                 <Tab.Screen name={SCREENS.FAVOURITES} component={Notification}/>
                 <Tab.Screen name={SCREENS.PROFILE} component={Profile}/>
             </Tab.Navigator>
         );
     };
 
-    return (
-        <NavigationContainer
-            ref={navigationRef}
-            onReady={() => {
-                isReadyRef.current = true;
-            }}
-        >
+    render() {
+        return (
+            <NavigationContainer
+                ref={navigationRef}
+                onReady={() => {
+                    isReadyRef.current = true;
+                }}
+            >
 
-            <View style={{flex: 12}}>
+                <View style={{flex: 12}}>
 
-                {/*{*/}
-                {/*    promiseInProgress &&*/}
-                {/*    <View style={[styles.container, styles.horizontal]}>*/}
-                {/*        <Text>*/}
-                {/*            <Spinner*/}
-                {/*                visible={true}*/}
-                {/*                textContent={""}*/}
-                {/*                textStyle={{color:'#FFF',fontSize:10}}*/}
-                {/*            />*/}
-                {/*        </Text>*/}
-                {/*    </View>*/}
-                {/*}*/}
-                {/*{*/}
-                {/*    isLoggedIn &&*/}
-                <Stack.Navigator
-                    screenOptions={{
-                        headerShown: false,
-                    }}
-                >
+                    {/*{*/}
+                    {/*    promiseInProgress &&*/}
+                    {/*    <View style={[styles.container, styles.horizontal]}>*/}
+                    {/*        <Text>*/}
+                    {/*            <Spinner*/}
+                    {/*                visible={true}*/}
+                    {/*                textContent={""}*/}
+                    {/*                textStyle={{color:'#FFF',fontSize:10}}*/}
+                    {/*            />*/}
+                    {/*        </Text>*/}
+                    {/*    </View>*/}
+                    {/*}*/}
+                    {/*{*/}
+                    {/*    isLoggedIn &&*/}
+                    <Stack.Navigator
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
 
-                    <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
-                    <Stack.Screen name={SCREENS.ROOT} component={renderTabNavigation}/>
-                    {/*<Stack.Screen name={SCREENS.HOME} component={HomeScreen}/>*/}
-                    {/*<Stack.Screen name={SCREENS.CAMERA} component={CameraScreen}/>*/}
-                    {/*<Stack.Screen name={SCREENS.SEARCH} component={Discover}/>*/}
-                    <Stack.Screen name={SCREENS.CAPTURE_ACTION} component={CaptureActions}/>
-                    <Stack.Screen name={SCREENS.SEND_TO_FEED} component={SendFeed}/>
-                    <Stack.Screen name={SCREENS.SEND_TO_FRIEND} component={SendToFriend}/>
-                    <Stack.Screen name={SCREENS.FEED_TO_FRIEND} component={FeedToFriend}/>
-                    <Stack.Screen name={SCREENS.ALERT_POLL} component={AlertPoll}/>
-                    <Stack.Screen name={SCREENS.POLL_DETAILS} component={PollDetails}/>
-                    <Stack.Screen name={SCREENS.POLL_STATS} component={PollStats}/>
-                    <Stack.Screen name={SCREENS.POST} component={Posts}/>
-                    <Stack.Screen name={SCREENS.STORY_VIEW} component={StoryView}/>
-                    <Stack.Screen name={SCREENS.OTHER_USER_PROFILE} component={OtherUserProfile}/>
-                    <Stack.Screen name={SCREENS.WARDROBE_VIEW} component={WardrobeTagView}/>
-                    <Stack.Screen name={SCREENS.SEARCH_DISCOVER} component={DiscoverSearch}/>
-                    <Stack.Screen name={SCREENS.RESET_PASSWORD} component={ForgotPassword}/>
-                    <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
-                    <Stack.Screen name={SCREENS.EDIT_PROFILE_CAMERA} component={EditProfileCamera}/>
-                </Stack.Navigator>
-                {/*}*/}
-                {/*{*/}
-                {/*    !isLoggedIn &&*/}
-                {/*    <Stack.Navigator*/}
-                {/*        screenOptions={{*/}
-                {/*            headerShown: false,*/}
-                {/*        }}*/}
-                {/*    >*/}
-                {/*        <Stack.Screen name={SCREENS.LOGIN} component={Login}/>*/}
-                {/*        <Stack.Screen name={SCREENS.REGISTER} component={Register}/>*/}
-                {/*    </Stack.Navigator>*/}
-                {/*}*/}
-            </View>
-        </NavigationContainer>
-    );
+                        <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
+                        <Stack.Screen name={SCREENS.ROOT} component={this.renderTabNavigation}/>
+                        {/*<Stack.Screen name={SCREENS.HOME} component={HomeScreen}/>*/}
+                        {/*<Stack.Screen name={SCREENS.CAMERA} component={CameraScreen}/>*/}
+                        {/*<Stack.Screen name={SCREENS.SEARCH} component={Discover}/>*/}
+                        <Stack.Screen name={SCREENS.CAPTURE_ACTION} component={CaptureActions}/>
+                        <Stack.Screen name={SCREENS.SEND_TO_FEED} component={SendFeed}/>
+                        <Stack.Screen name={SCREENS.SEND_TO_FRIEND} component={SendToFriend}/>
+                        <Stack.Screen name={SCREENS.FEED_TO_FRIEND} component={FeedToFriend}/>
+                        <Stack.Screen name={SCREENS.ALERT_POLL} component={AlertPoll}/>
+                        <Stack.Screen name={SCREENS.POLL_DETAILS} component={PollDetails}/>
+                        <Stack.Screen name={SCREENS.POLL_STATS} component={PollStats}/>
+                        <Stack.Screen name={SCREENS.POST} component={Posts}/>
+                        <Stack.Screen name={SCREENS.STORY_VIEW} component={StoryView}/>
+                        <Stack.Screen name={SCREENS.OTHER_USER_PROFILE} component={OtherUserProfile}/>
+                        <Stack.Screen name={SCREENS.WARDROBE_VIEW} component={WardrobeTagView}/>
+                        <Stack.Screen name={SCREENS.SEARCH_DISCOVER} component={DiscoverSearch}/>
+                        <Stack.Screen name={SCREENS.RESET_PASSWORD} component={ForgotPassword}/>
+                        <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
+                        <Stack.Screen name={SCREENS.EDIT_PROFILE_CAMERA} component={EditProfileCamera}/>
+                    </Stack.Navigator>
+                    {/*}*/}
+                    {/*{*/}
+                    {/*    !isLoggedIn &&*/}
+                    {/*    <Stack.Navigator*/}
+                    {/*        screenOptions={{*/}
+                    {/*            headerShown: false,*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        <Stack.Screen name={SCREENS.LOGIN} component={Login}/>*/}
+                    {/*        <Stack.Screen name={SCREENS.REGISTER} component={Register}/>*/}
+                    {/*    </Stack.Navigator>*/}
+                    {/*}*/}
+                </View>
+            </NavigationContainer>
+        );
+    }
+
+
 };
 
 export function navigate(name: string, params?: object): void {
@@ -173,11 +173,10 @@ export function goBack(): void {
     navigationRef.current?.goBack()
 }
 
-export function getCurrentNavigationRef(){
+export function getCurrentNavigationRef() {
     return navigationRef.current
 }
 
-export default Navigation;
 
 const styles = StyleSheet.create({
     container: {
