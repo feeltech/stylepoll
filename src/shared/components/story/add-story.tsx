@@ -38,7 +38,7 @@ export default class AddStory extends React.Component<IAddStoryProps, any> {
             uri: this.props.profileImage
           }}
         />
-        { this.props.poll == null &&
+        { this.props.poll.length === 0  &&
           <View style={styles.btnAdd}>
             <Icons name="plus" size={16} color="#fff" />
           </View>
