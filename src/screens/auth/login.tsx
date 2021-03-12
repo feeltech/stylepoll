@@ -3,7 +3,7 @@ import {
     Animated,
     Image,
     KeyboardAvoidingView,
-    SafeAreaView,
+    SafeAreaView, ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -106,11 +106,11 @@ class Login extends React.Component<any, ILoginStates> {
             <>
                 <Loader show={this.state.isLoading}/>
                 <SafeAreaView style={styles.container}>
-
                     <KeyboardAvoidingView
                         style={styles.keyboardAvoidingViewContainer}
                         behavior="height"
                     >
+                        <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.logoWrapper}>
                                 {/*<Image*/}
@@ -181,54 +181,54 @@ class Login extends React.Component<any, ILoginStates> {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.otherOptionsWrapper}>
-                                <TouchableOpacity
-                                    onPress={() => navigate("reset_password")}
-                                    style={styles.forgotPassword}
-                                    activeOpacity={1}
-                                >
-                                    <Text
-                                        style={{
-                                            textAlign: "center",
-                                            fontSize: 12,
-                                            fontWeight: "600",
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                fontWeight: "500",
-                                                color: "#333",
-                                            }}
-                                        >
-                                            Did your forget your login information?
-                                        </Text>{" "}
-                                        Get helping to login.
-                                    </Text>
-                                </TouchableOpacity>
-                                {/*  /!*<View style={styles.divideLine}>*!/*/}
-                                {/*  /!*  <View style={styles.ORtextWrapper}>*!/*/}
-                                {/*  /!*    <Text*!/*/}
-                                {/*  /!*        style={{*!/*/}
-                                {/*  /!*          color: "#333",*!/*/}
-                                {/*  /!*          fontWeight: "600",*!/*/}
-                                {/*  /!*        }}*!/*/}
-                                {/*  /!*    >*!/*/}
-                                {/*  /!*      OR*!/*/}
-                                {/*  /!*    </Text>*!/*/}
-                                {/*  /!*  </View>*!/*/}
-                                {/*  /!*</View>*!/*/}
-                                {/*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*/}
-                                {/*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*/}
-                                {/*  /!*  <Text*!/*/}
-                                {/*  /!*      style={{*!/*/}
-                                {/*  /!*        color: "#318bfb",*!/*/}
-                                {/*  /!*        fontWeight: "bold",*!/*/}
-                                {/*  /!*      }}*!/*/}
-                                {/*  /!*  >*!/*/}
-                                {/*  /!*    Login with Facebook*!/*/}
-                                {/*  /!*  </Text>*!/*/}
-                                {/*  /!*</TouchableOpacity>*!/*/}
-                            </View>
+                            {/*<View style={styles.otherOptionsWrapper}>*/}
+                            {/*    <TouchableOpacity*/}
+                            {/*        onPress={() => navigate("reset_password")}*/}
+                            {/*        style={styles.forgotPassword}*/}
+                            {/*        activeOpacity={1}*/}
+                            {/*    >*/}
+                            {/*        <Text*/}
+                            {/*            style={{*/}
+                            {/*                textAlign: "center",*/}
+                            {/*                fontSize: 12,*/}
+                            {/*                fontWeight: "600",*/}
+                            {/*            }}*/}
+                            {/*        >*/}
+                            {/*            <Text*/}
+                            {/*                style={{*/}
+                            {/*                    fontWeight: "500",*/}
+                            {/*                    color: "#333",*/}
+                            {/*                }}*/}
+                            {/*            >*/}
+                            {/*                Did your forget your login information?*/}
+                            {/*            </Text>{" "}*/}
+                            {/*            Get helping to login.*/}
+                            {/*        </Text>*/}
+                            {/*    </TouchableOpacity>*/}
+                            {/*    /!*  /!*<View style={styles.divideLine}>*!/*!/*/}
+                            {/*    /!*  /!*  <View style={styles.ORtextWrapper}>*!/*!/*/}
+                            {/*    /!*  /!*    <Text*!/*!/*/}
+                            {/*    /!*  /!*        style={{*!/*!/*/}
+                            {/*    /!*  /!*          color: "#333",*!/*!/*/}
+                            {/*    /!*  /!*          fontWeight: "600",*!/*!/*/}
+                            {/*    /!*  /!*        }}*!/*!/*/}
+                            {/*    /!*  /!*    >*!/*!/*/}
+                            {/*    /!*  /!*      OR*!/*!/*/}
+                            {/*    /!*  /!*    </Text>*!/*!/*/}
+                            {/*    /!*  /!*  </View>*!/*!/*/}
+                            {/*    /!*  /!*</View>*!/*!/*/}
+                            {/*    /!*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*!/*/}
+                            {/*    /!*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*!/*/}
+                            {/*    /!*  /!*  <Text*!/*!/*/}
+                            {/*    /!*  /!*      style={{*!/*!/*/}
+                            {/*    /!*  /!*        color: "#318bfb",*!/*!/*/}
+                            {/*    /!*  /!*        fontWeight: "bold",*!/*!/*/}
+                            {/*    /!*  /!*      }}*!/*!/*/}
+                            {/*    /!*  /!*  >*!/*!/*/}
+                            {/*    /!*  /!*    Login with Facebook*!/*!/*/}
+                            {/*    /!*  /!*  </Text>*!/*!/*/}
+                            {/*    /!*  /!*</TouchableOpacity>*!/*!/*/}
+                            {/*</View>*/}
                         </View>
                         <TouchableOpacity
                             onPress={() => {
@@ -255,6 +255,7 @@ class Login extends React.Component<any, ILoginStates> {
                                 Register now.
                             </Text>
                         </TouchableOpacity>
+                        </ScrollView>
                     </KeyboardAvoidingView>
                 </SafeAreaView>
             </>

@@ -213,9 +213,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
-                                               onChangeText={(text) => {
-                                                   this.setState({description: text})
-                                               }} placeholder="Description on the poll" placeholderTextColor={'#515151'}
+                                               onChangeText={(text) => {this.setState({description: text})}} placeholder="Description on the poll" placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {/* <Text style={styles.input_label}>ADD A Mood</Text> */}

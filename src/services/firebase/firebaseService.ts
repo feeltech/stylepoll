@@ -686,6 +686,12 @@ export async function onUpdateUser(userId: string, user: any) {
         await POST_COLLECTION.doc(userId).collection("userPosts").doc(doc.id).set(p)
     })))
 
+    await Promise.all((map(postDocs.docs, async doc => {
+        let p = doc.data();
+        p.user = user;
+        await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(doc.id).set(p)
+    })))
+
     const userFollowers = await FOLLOWERS_COLLECTION.doc(userId).collection("userFollowers").get()
     await Promise.all(map(userFollowers.docs, async follower => {
         const feeds = await FEED_COLLECTIONS.doc(follower.id).collection("followingUserFeed").where("userId", "==", userId).get();

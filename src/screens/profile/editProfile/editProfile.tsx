@@ -16,13 +16,14 @@ interface IEditProfileProps {
     user:any;
     name:string;
     image:string;
-    onChangePicture:()=>void;
+    onChangePicture:(updatedName:string)=>void;
 }
 
 interface IEditProfileStates {
     name: string;
     isLoading:boolean,
-    updatedImage: boolean
+    updatedImage: boolean,
+    imageURI:string
 }
 
 class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates> {
@@ -32,40 +33,39 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
         this.state = {
             name: '',
             isLoading:false,
-            updatedImage:false
+            updatedImage:false,
+            imageURI:''
         }
     }
 
     componentWillReceiveProps(nextProps: Readonly<IEditProfileProps>, nextContext: any) {
         if(!isEqual(this.props.image, nextProps.image) && !isNull(this.props.image)){
-            this.setState({updatedImage:true})
+            this.setState({imageURI:nextProps.image})
+        }
+
+        if(!isEqual(this.props.name, nextProps.name) && !isNull(this.props.name)){
+            this.setState({name:nextProps.name})
         }
     }
 
     private onEditProfile = () => {
         let user = this.props.user;
+        user.profileImage = this.state.imageURI
+        user.name = this.state.name
         this.setState({isLoading:true})
-        if(this.state.updatedImage){
-            user.profileImage = this.props.image;
-            user.name = this.state.name;
-            updateUser(user.userId,user).then(r => {
-                storeLocalStorage("loggedUser",user).then(s => {
-                    this.setState({isLoading:false})
-                    this.props.onClose()
-                })
+        updateUser(user.userId,user).then(r => {
+            storeLocalStorage("loggedUser",user).then(s => {
+                this.setState({isLoading:false})
+                this.props.onClose()
             })
-        }else{
-            uploadImageAndGetUrl(this.props.image).then(res => {
-                user.profileImage = res;
-                user.name = this.state.name;
-                updateUser(user.userId,user).then(r => {
-                    storeLocalStorage("loggedUser",user).then(s => {
-                        this.setState({isLoading:false})
-                        this.props.onClose()
-                    })
-                })
-            })
-        }
+        })
+    }
+
+    componentDidMount() {
+        this.setState({
+            name:this.props.name,
+            imageURI:this.props.image
+        })
     }
 
     render() {
@@ -77,8 +77,8 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
                     dialogAnimation={new SlideAnimation({
                         slideFrom: 'top',
                     })}
-                    width={SCREEN_WIDTH_NEW - 70}
-                    height={SCREEN_HEIGHT - 500}
+                    width={SCREEN_WIDTH_NEW-20}
+                    height={SCREEN_HEIGHT/2}
                     onShow={() => {
                         this.setState({name: this.props.user.name})
                     }}
@@ -93,8 +93,8 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
                 >
                     <DialogContent style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={{fontWeight: 'bold', marginBottom: 20}}>Edit Profile</Text>
-                        <TouchableOpacity onPress={this.props.onChangePicture}>
-                            <Image source={{uri: this.props.image}}
+                        <TouchableOpacity onPress={()=>{this.props.onChangePicture(this.state.name)}}>
+                            <Image source={{uri: this.state.imageURI}}
                                    style={{borderRadius: 50, width: 100, height: 100, marginBottom: 20}}/>
                         </TouchableOpacity>
 

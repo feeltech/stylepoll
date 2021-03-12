@@ -116,6 +116,14 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
                 return getProgressBarValue(dislikeLength, likesLength + dislikeLength)
             }
 
+            if(progressName == "timeRemaining"){
+                // time remaining = end time - start time
+                // progress = 1 - time remaining (in fractions)
+                const timeRemaining = getProgressBarValue(this.state.durationDiff,this.state.pollDuration);
+                const progress = 1 - timeRemaining;
+                return progress;
+            }
+
             return 0
         }else{
             return 0

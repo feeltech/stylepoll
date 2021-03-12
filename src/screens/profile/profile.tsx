@@ -73,14 +73,15 @@ export default class Profile extends React.Component<any, IProfileStates> {
         this.focusListener = this.props.navigation.addListener('focus', () => {
             const imageURL = this.props.route.params && this.props.route.params.imageUri ? this.props.route.params.imageUri : null;
             fetchLocalStorage("loggedUser").then(res => {
+
                 if(this._isMounted){
                     const profileUser = res
                     if(imageURL){
                         profileUser.profileImage = imageURL
-                        this.setState({
-                            profileUser:profileUser,
-                        })
                     }
+                    // if(updatedName){
+                    //     profileUser.name = updatedName
+                    // }
                     this.setState({
                         profileUser: profileUser,
                         isLoading:true
@@ -151,9 +152,9 @@ export default class Profile extends React.Component<any, IProfileStates> {
         this.focusListener();
     }
 
-    private onChangePicture = () => {
+    private onChangePicture = (name:string) => {
         this.setState({showEditProfile:false});
-        navigate("edit-profile-camera")
+        navigate("edit-profile-camera",{name:name})
     }
 
     private onCloseModal = () => {

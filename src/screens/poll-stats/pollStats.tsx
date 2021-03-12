@@ -8,6 +8,7 @@ import {goBack, navigate} from "../../services/navigation";
 import {sendPollToFeed} from "../../services/firebase/firebaseService";
 import {getProgressBarValue} from "../../utils";
 import moment from 'moment';
+import Loader from "../../shared/components/loader/loader";
 
 
 interface IPollStatsStates {
@@ -265,6 +266,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                 {/*        <View style={{width: 35, height: 35, borderRadius: 35 / 2, backgroundColor: "#3299FE"}}/>*/}
                 {/*    </TouchableOpacity>*/}
                 {/*</View>*/}
+                <Loader show={this.state.isLoading}/>
             </View>
 
         );

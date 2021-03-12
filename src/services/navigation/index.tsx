@@ -101,34 +101,14 @@ export default class Navigation extends React.Component<any, any> {
                     isReadyRef.current = true;
                 }}
             >
-
                 <View style={{flex: 12}}>
-
-                    {/*{*/}
-                    {/*    promiseInProgress &&*/}
-                    {/*    <View style={[styles.container, styles.horizontal]}>*/}
-                    {/*        <Text>*/}
-                    {/*            <Spinner*/}
-                    {/*                visible={true}*/}
-                    {/*                textContent={""}*/}
-                    {/*                textStyle={{color:'#FFF',fontSize:10}}*/}
-                    {/*            />*/}
-                    {/*        </Text>*/}
-                    {/*    </View>*/}
-                    {/*}*/}
-                    {/*{*/}
-                    {/*    isLoggedIn &&*/}
                     <Stack.Navigator
                         screenOptions={{
                             headerShown: false,
                         }}
                     >
-
                         <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
                         <Stack.Screen name={SCREENS.ROOT} component={this.renderTabNavigation}/>
-                        {/*<Stack.Screen name={SCREENS.HOME} component={HomeScreen}/>*/}
-                        {/*<Stack.Screen name={SCREENS.CAMERA} component={CameraScreen}/>*/}
-                        {/*<Stack.Screen name={SCREENS.SEARCH} component={Discover}/>*/}
                         <Stack.Screen name={SCREENS.CAPTURE_ACTION} component={CaptureActions}/>
                         <Stack.Screen name={SCREENS.SEND_TO_FEED} component={SendFeed}/>
                         <Stack.Screen name={SCREENS.SEND_TO_FRIEND} component={SendToFriend}/>
@@ -145,18 +125,6 @@ export default class Navigation extends React.Component<any, any> {
                         <Stack.Screen name={SCREENS.REGISTER} component={Register}/>
                         <Stack.Screen name={SCREENS.EDIT_PROFILE_CAMERA} component={EditProfileCamera}/>
                     </Stack.Navigator>
-                    {/*}*/}
-                    {/*{*/}
-                    {/*    !isLoggedIn &&*/}
-                    {/*    <Stack.Navigator*/}
-                    {/*        screenOptions={{*/}
-                    {/*            headerShown: false,*/}
-                    {/*        }}*/}
-                    {/*    >*/}
-                    {/*        <Stack.Screen name={SCREENS.LOGIN} component={Login}/>*/}
-                    {/*        <Stack.Screen name={SCREENS.REGISTER} component={Register}/>*/}
-                    {/*    </Stack.Navigator>*/}
-                    {/*}*/}
                 </View>
             </NavigationContainer>
         );
@@ -171,10 +139,15 @@ export function navigate(name: string, params?: object): void {
 
 export function goBack(): void {
     navigationRef.current?.goBack()
+
 }
 
 export function getCurrentNavigationRef() {
     return navigationRef.current
+}
+
+export function resetParams(){
+    navigationRef.current?.resetParams()
 }
 
 
