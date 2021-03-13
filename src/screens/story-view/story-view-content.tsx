@@ -165,16 +165,16 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
 
                         <View style={[{flexDirection: "row", marginBottom:2}]}>
                             <View style={{flexDirection:'column',justifyContent:'center'}}>
+                                <Progress.Bar progress={1- getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
+                                              borderRadius={10}/>
+                            </View>
+                            <View style={{flexDirection:'column',justifyContent:'center'}}>
                                 <Image
                                     source={{uri: "https://i.pinimg.com/originals/2a/0c/fe/2a0cfecd615bed18b3cf4688d2b5962c.png"}}
                                     style={{width: 20, height: 20, borderRadius: 10, marginRight: 5}}/>
                             </View>
                             <View style={{flexDirection:'column',justifyContent:'center'}}>
                                 <Text style={{color: "#000", fontWeight: "bold", marginRight: 5}}>{this.state.remainingTime}</Text>
-                            </View>
-                            <View style={{flexDirection:'column',justifyContent:'center'}}>
-                                <Progress.Bar progress={1- getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
-                                              borderRadius={10}/>
                             </View>
                         </View>
                         <ImageBackground

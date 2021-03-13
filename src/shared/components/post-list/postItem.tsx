@@ -91,6 +91,11 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
                     text: "Delete",
                     onPress: () => {onPostOption("itemSelected",1,post)},
                     style: "cancel"
+                },
+                {
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "cancel"
                 }
             ]
         } else {
@@ -99,6 +104,11 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
                     text: "Report",
                     onPress: () => {onPostOption("itemSelected",0,post)},
                     style: "destructive"
+                },
+                {
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "cancel"
                 }
             ]
         }

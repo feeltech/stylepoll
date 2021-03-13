@@ -228,6 +228,10 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
                             </View>
                             <View style={[{flexDirection: "row", margin: 5}]}>
                                 <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+                                    <Progress.Bar progress={this.getProgressBarValues("timeRemaining")} width={SCREEN_WIDTH - 100} color={'#979797'} height={20}
+                                                  borderRadius={10}/>
+                                </View>
+                                <View style={{flexDirection: 'column', justifyContent: 'center'}}>
                                     <Image
                                         source={{uri: "https://i.pinimg.com/originals/2a/0c/fe/2a0cfecd615bed18b3cf4688d2b5962c.png"}}
                                         style={{width: 20, height: 20, borderRadius: 10, marginRight: 5}}/>
@@ -238,10 +242,6 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
                                         fontWeight: "bold",
                                         marginRight: 5
                                     }}>{this.state.remainingTime}</Text>
-                                </View>
-                                <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                                    <Progress.Bar progress={this.getProgressBarValues("timeRemaining")} width={SCREEN_WIDTH - 100} color={'#979797'} height={20}
-                                                  borderRadius={10}/>
                                 </View>
                             </View>
                         <View style={styles.logoWrapper}>
