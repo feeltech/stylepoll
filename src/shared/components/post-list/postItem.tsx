@@ -83,6 +83,11 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
         if(post.userId === user.userId){
             return [
                 {
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "cancel"
+                },
+                {
                     text: "Report",
                     onPress: () => {onPostOption("itemSelected",0,post)},
                     style: "destructive"
@@ -90,11 +95,6 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
                 {
                     text: "Delete",
                     onPress: () => {onPostOption("itemSelected",1,post)},
-                    style: "cancel"
-                },
-                {
-                    text: "Cancel",
-                    onPress: () => {setShowReportOptions(false)},
                     style: "cancel"
                 }
             ]

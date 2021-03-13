@@ -6,7 +6,7 @@ import {
     ScrollView,
     StyleSheet,
     KeyboardAvoidingView,
-    View, Text,
+    View, Text,BackHandler
 } from "react-native";
 import {Header} from "react-native-elements";
 import {map, isEqual} from "lodash";
@@ -48,14 +48,25 @@ const HomeScreen = () => {
                 fetchAlertPoll(res);
                 fetchFollowingAlertPoll(res);
                 setUser(res);
+                BackHandler.addEventListener('hardwareBackPress', handleBackButton);
             });
             if (user) {
             }
             return () => {
                 setPostList([]);
+                BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
             };
         }, []),
     );
+
+    useEffect(() => {
+      
+        // returned function will be called on component unmount 
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+        }
+      }, [])
+
     const fetchFeed = (user) => {
         setIsLoading(true)
         getUserFeed(user.userId).then((res) => {
@@ -97,6 +108,12 @@ const HomeScreen = () => {
         });
 
     }
+
+    const handleBackButton = () =>  {
+        console.log("Back handle press")
+        return true;
+    }
+
 
     return (
         // <SafeAreaView style={styles.container}>
