@@ -61,6 +61,13 @@ export default class Register extends React.Component<any, ILoginStates>{
             })
             return;
         }
+        const emailRegex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,8}$')
+        if(!this.state.email.match(emailRegex)){
+            this.setState({
+                error:'Invalid Email!'
+            })
+            return;
+        }
         const user: User = {
             name:this.state.name.toLowerCase(),
             email:this.state.email.toLowerCase(),

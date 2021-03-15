@@ -27,17 +27,13 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private yellowButtonActions = () => {
         Alert.alert(
-            "Do you want to send to feed",
-            "Choose an option below",
+            "Send to Friend",
+            "Send to friend or go back home",
             [
                 {
                     text: "OK!",
-                    onPress: () => {navigate("send_to_feed",{imageUri: this.state.imageURI})},
-                    style: "destructive"
-                },
-                {
-                    text: "Send to a friend",
                     onPress: () => {navigate("feed_to_friend",{imageUri: this.state.imageURI})},
+                    style: "destructive"
                 },
                 {
                     text: "Cancella",
