@@ -56,10 +56,14 @@ export default class StoryBar extends React.Component<IStoryBarProps, any> {
         >
           <AddStory poll={this.props.currentUserPoll} profileImage={this.props.profileImage} user={this.props.user} />
           {this.props.polls.map((poll, index) => {
-            return(
-                <StoryPreviewItem index={index}  key={index} poll={poll}/>
+           if(poll.polls.length > 0){
+             return(
+                       <StoryPreviewItem index={index}  key={index} poll={poll}/>
+             )
+           }else{
+             return null
+           }
 
-            )
           })}
         </ScrollView>
       </View>

@@ -175,7 +175,7 @@ const StoryPreviewItem = ({
           >
             <FastImage
               style={styles.image}
-              source={{ uri: poll.polls[0].image }}
+              source={{ uri: (poll.polls && poll.polls.length > 0) ? poll.polls[0].image  : '' }}
             />
           </TouchableOpacity>
         </View>

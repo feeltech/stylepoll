@@ -321,8 +321,8 @@ export async function onCreatePost(post: PostDoc) {
     if (post.DMList?.length != 0) {
         map(post.DMList, (userId) => {
             FEED_COLLECTIONS.doc(userId)
-                .collection("userFeed")
-                .add(post)
+                .collection("userFeed").doc(post.postId)
+                .set(post)
                 .then((res) => {
                     console.log("Sent to fiends feed");
                 })
@@ -335,8 +335,8 @@ export async function onCreatePost(post: PostDoc) {
     if (post.isPollPost) {
         post.pollCompleted = false
         ALERT_POLL_COLLECTIONS.doc(post.userId)
-            .collection("userPolls")
-            .add(post)
+            .collection("userPolls").doc(post.postId)
+            .set(post)
             .then((res) => {
                 console.log("Poll created");
             })
@@ -591,12 +591,12 @@ export async function hasReactedToPoll(
 export async function sendPollToFeed(userId: string, poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(userId).collection("userPolls").doc(poll.postId).set(poll)
-    await FEED_COLLECTIONS.doc(userId).collection("userFeed").add(poll)
+    await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(poll.postId).set(poll)
     const userFollowers = await getUserFollowers(userId);
     await Promise.all(map(userFollowers, async (user) => {
         await FEED_COLLECTIONS.doc(user.userId)
-            .collection("followingUserFeed")
-            .add(poll)
+            .collection("followingUserFeed").doc(poll.postId)
+            .set(poll)
     }));
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
 }

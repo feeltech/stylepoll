@@ -108,7 +108,7 @@ export default class Navigation extends React.Component<any, any> {
                         }}
                     >
                         <Stack.Screen name={SCREENS.LOGIN} component={Login}/>
-                        <Stack.Screen name={SCREENS.ROOT} component={this.renderTabNavigation}/>
+                        <Stack.Screen name={SCREENS.ROOT} component={this.renderTabNavigation} options={{gestureEnabled:false}}/>
                         <Stack.Screen name={SCREENS.CAPTURE_ACTION} component={CaptureActions}/>
                         <Stack.Screen name={SCREENS.SEND_TO_FEED} component={SendFeed}/>
                         <Stack.Screen name={SCREENS.SEND_TO_FRIEND} component={SendToFriend}/>
@@ -148,6 +148,11 @@ export function getCurrentNavigationRef() {
 
 export function resetParams(){
     navigationRef.current?.resetParams()
+}
+
+function enableGuesture(){
+    const currentRef = getCurrentNavigationRef();
+    return false
 }
 
 

@@ -54,18 +54,10 @@ const HomeScreen = () => {
             }
             return () => {
                 setPostList([]);
-                BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
             };
         }, []),
     );
 
-    useEffect(() => {
-      
-        // returned function will be called on component unmount 
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-        }
-      }, [])
 
     const fetchFeed = (user) => {
         setIsLoading(true)
