@@ -544,6 +544,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.40.5):
     - React-Core
+  - react-native-context-menu-view (1.2.1):
+    - React
   - react-native-image-picker (3.1.4):
     - React-Core
   - react-native-image-resizer (1.4.2):
@@ -610,6 +612,8 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
+  - ReactNativeDarkMode (0.2.2):
+    - React
   - ReactNativeLocalization (2.1.6):
     - React
   - RNCAsyncStorage (1.12.1):
@@ -625,7 +629,7 @@ PODS:
   - RNFBApp (10.5.0):
     - Firebase/CoreOnly (~> 7.4.0)
     - React-Core
-  - RNFBFirestore (10.5.1):
+  - RNFBFirestore (11.0.0):
     - Firebase/Firestore (~> 7.4.0)
     - React-Core
     - RNFBApp
@@ -694,6 +698,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-image-resizer (from `../node_modules/react-native-image-resizer`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -707,6 +712,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeDarkMode (from `../node_modules/react-native-dark-mode`)
   - ReactNativeLocalization (from `../node_modules/react-native-localization`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
@@ -791,6 +797,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-context-menu-view:
+    :path: "../node_modules/react-native-context-menu-view"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-image-resizer:
@@ -817,6 +825,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeDarkMode:
+    :path: "../node_modules/react-native-dark-mode"
   ReactNativeLocalization:
     :path: "../node_modules/react-native-localization"
   RNCAsyncStorage:
@@ -893,6 +903,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-camera: 0bd2e98d3095e181642d94cda38313cc1c5ecd97
+  react-native-context-menu-view: 314d901eb8d8b3d32c2bcc5c5288045c539fe345
   react-native-image-picker: 28d8d1f5a643119876b8b2c7d4d1dcfb2b232dd4
   react-native-image-resizer: 4999a7dff8fc7fed5ed7d7c7dbfa5facbd345861
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
@@ -906,13 +917,14 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
+  ReactNativeDarkMode: 0178ffca3b10f6a7c9f49d6f9810232b328fa949
   ReactNativeLocalization: dbb269b27d8a84bb22b9c2cdec38ba780b51dd72
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDateTimePicker: 8a51a2216c307769e69ef827293d59549ab1ca23
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNFBApp: 43a062dc6a1a88edd934d2229d1ba64f25381598
-  RNFBFirestore: b596de5f7cb73ec799cf0eb24db5be69540be25f
+  RNFBFirestore: 58e533a2c3d69847140ff8b05bf2c5fa05246a74
   RNFBStorage: 32d141885bc7688ec85b217f12e11dec7693eb21
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
@@ -927,4 +939,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3f4f5168b7345a5466b03983b66902359b51a3c6
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1

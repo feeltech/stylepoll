@@ -379,7 +379,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                             <Text style={styles.input_label}>Set your Poll Time</Text>
                                         </View>
                                         <View
-                                            style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                            style={{flex: 1, flexDirection: 'column', alignItems:'flex-end'}}>
                                             <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
                                         </View>
                                         <View
