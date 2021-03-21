@@ -71,7 +71,8 @@ export default class Register extends React.Component<any, ILoginStates>{
         const user: User = {
             name:this.state.name.toLowerCase(),
             email:this.state.email.toLowerCase(),
-            password:this.state.password
+            password:this.state.password,
+            profileImage:'https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg'
         }
         this.setState({isLoading:true})
         registerUser(user).then(res => {
@@ -82,7 +83,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             navigate("login")
         }).catch(err => {
             this.setState({
-                error:err
+                error:err,
+                isLoading:false
             })
             console.log("Register user error ", err)
         })

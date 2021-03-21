@@ -119,7 +119,7 @@ export default class Post extends React.Component<any, IPostStates> {
             <SafeAreaView style={styles.container}>
                 <ScrollView style={{backgroundColor: 'none'}}>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",

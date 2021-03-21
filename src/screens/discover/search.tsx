@@ -59,7 +59,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
             const allUsers = this.state.allUsers;
             const searchResults: User[] = []
             map(allUsers, user => {
-                if (user.name.search(text) >= 0) {
+                if (user.name.toLowerCase().search(text.toLowerCase()) >= 0) {
                     searchResults.push(user)
                 }
             })
@@ -76,7 +76,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height">
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -117,6 +117,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
                                     height: 40,
                                     fontSize: 16
                                 }}
+                                autoCapitalize={'none'}
                                 placeholder={"Search"}
                             />
                         </View>

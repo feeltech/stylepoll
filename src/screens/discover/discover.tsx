@@ -109,7 +109,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                     style={styles.keyboardAvoidingViewContainer}
                     behavior="height">
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",

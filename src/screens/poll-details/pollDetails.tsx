@@ -65,7 +65,7 @@ class PollDetails extends React.Component<any, IPollDetailsStates> {
         return (
             <>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",

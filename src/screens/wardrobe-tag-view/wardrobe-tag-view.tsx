@@ -44,7 +44,7 @@ export default class WardrobeTagView extends React.Component<any, IWardrobeTagVi
         return (
             <SafeAreaView style={styles.container}>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",

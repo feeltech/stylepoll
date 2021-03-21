@@ -53,12 +53,12 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
                 {
                     text: "OK",
                     onPress: () => {navigate("alert_poll",{imageUri: this.state.imageURI})},
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
                     text: "Cancella",
                     onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
+                    style: "destructive"
                 }
             ],
             {cancelable: false}
@@ -67,7 +67,6 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private blueButtonActions = () => {
         const shareOptions = {
-            message: 'Send by stylepoll',
             failOnCancel: false,
             urls: [this.state.imageURI]
         };

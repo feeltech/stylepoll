@@ -171,7 +171,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
         return (
             <View style={styles.container}>
                 <Header
-                    statusBarProps={{barStyle: "dark-content"}}
+                    statusBarProps={{barStyle: "light-content"}}
                     barStyle="dark-content"
                     containerStyle={{
                         display: "flex",
@@ -255,7 +255,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         <View style={{flex: 1, flexDirection: 'column'}}>
                             <Text style={{fontWeight: 'bold', fontSize: 15}}>Your wardrobe</Text>
                         </View>
-                        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                        <View style={{flex: 1, flexDirection: 'column', alignContent:'flex-end'}}>
                             <Switch value={this.state.showWardrobe} onValueChange={() => {
                                 this.setState({showWardrobe: !this.state.showWardrobe})
                             }}/>

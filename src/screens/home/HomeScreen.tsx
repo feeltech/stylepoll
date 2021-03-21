@@ -111,7 +111,7 @@ const HomeScreen = () => {
         // <SafeAreaView style={styles.container}>
         <View>
             <Header
-                statusBarProps={{barStyle: "dark-content"}}
+                statusBarProps={{barStyle: "light-content"}}
                 barStyle="dark-content"
                 containerStyle={{
                     display: "flex",

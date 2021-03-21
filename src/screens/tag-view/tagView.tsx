@@ -9,7 +9,7 @@ export default class TagView extends React.Component<any, any>{
         return (
             <SafeAreaView style={styles.container}>
                 <Header
-                    statusBarProps={{barStyle: "dark-content"}}
+                    statusBarProps={{barStyle: "light-content"}}
                     barStyle="dark-content"
                     containerStyle={{
                         display: "flex",
