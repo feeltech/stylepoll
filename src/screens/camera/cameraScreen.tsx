@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: "transparent",
+        backgroundColor: "#0C0D34",
     }
 });
 export default CameraScreen;

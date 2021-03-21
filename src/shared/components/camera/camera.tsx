@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
                 marginTop: SCREEN_HEIGHT/15
             },
             ios: {
-                marginTop: SCREEN_HEIGHT/15
+                marginTop: SCREEN_HEIGHT/11
             },
         })
     },
