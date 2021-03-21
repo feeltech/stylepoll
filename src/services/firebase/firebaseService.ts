@@ -321,7 +321,7 @@ export async function onCreatePost(post: PostDoc) {
     if (post.DMList?.length != 0) {
         map(post.DMList, (userId) => {
             FEED_COLLECTIONS.doc(userId)
-                .collection("userFeed").doc(post.postId)
+                .collection("followingUserFeed").doc(post.postId)
                 .set(post)
                 .then((res) => {
                     console.log("Sent to fiends feed");
@@ -637,7 +637,7 @@ export async function getFollowingUsers(userId: string): Promise<User[]> {
 }
 
 export async function likeUnlikePost(reactingUserId: string, post: PostDoc): Promise<any> {
-    await FEED_COLLECTIONS.doc(post.userId).collection("userFeed").doc(post.postId).set(post)
+    // await FEED_COLLECTIONS.doc(post.userId).collection("userFeed").doc(post.postId).set(post)
     await POST_COLLECTION.doc(post.userId).collection("userPosts").doc(post.postId).set(post)
     if (post.postId) {
         onLikeUnlikePost(post.postId, post)
@@ -654,6 +654,7 @@ export async function onLikeUnlikePost(postId: string, post: PostDoc) {
 export async function deletePost(postId: string, userId: string) {
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(postId).delete()
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(postId).delete()
+    onDeletePost(postId,userId)
 }
 
 export async function onDeletePost(postId: string, userId: string) {

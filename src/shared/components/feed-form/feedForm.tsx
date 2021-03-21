@@ -181,7 +181,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                     behavior="height">
                     {this.props.showHeader &&
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",

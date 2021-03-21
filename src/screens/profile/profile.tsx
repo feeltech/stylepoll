@@ -171,7 +171,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
         return (
             <View style={styles.container}>
                 <Header
-                    statusBarProps={{barStyle: "dark-content"}}
+                    statusBarProps={{barStyle: "light-content"}}
                     barStyle="dark-content"
                     containerStyle={{
                         display: "flex",

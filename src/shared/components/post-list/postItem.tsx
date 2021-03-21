@@ -83,20 +83,20 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
         if(post.userId === user.userId){
             return [
                 {
-                    text: "Cancel",
-                    onPress: () => {setShowReportOptions(false)},
+                    text: "Delete",
+                    onPress: () => {onPostOption("itemSelected",1,post)},
                     style: "cancel"
                 },
                 {
                     text: "Report",
                     onPress: () => {onPostOption("itemSelected",0,post)},
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
-                    text: "Delete",
-                    onPress: () => {onPostOption("itemSelected",1,post)},
-                    style: "cancel"
-                }
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "destructive"
+                },
             ]
         } else {
             return [
@@ -115,7 +115,7 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
     }
 const onPostOptionClick = (post:PostDoc) => {
         Alert.alert(
-            "Post Options",
+            "",
             "",
             getPostOptions(),
             {cancelable: true}

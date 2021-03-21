@@ -53,8 +53,13 @@ export default class NotificationList extends Component<any, INotificationStates
 
     private getUserNotifications(userId: string) {
         getNotifications(userId).then(notifications => {
+            const sortedNotifications = notifications.sort(function compare(a, b) {
+                const dateA = a.meta.notified_at.toDate();
+                const dateB = b.meta.notified_at.toDate();
+                return dateB - dateA;
+            });
             this.setState({
-                notifications: reverse(notifications),
+                notifications: sortedNotifications,
                 isLoading: false
             })
         })
@@ -98,7 +103,7 @@ export default class NotificationList extends Component<any, INotificationStates
         return (
             <View style={styles.container}>
                 <Header
-                    statusBarProps={{barStyle: "dark-content"}}
+                    statusBarProps={{barStyle: "light-content"}}
                     barStyle="dark-content"
                     containerStyle={{
                         display: "flex",
