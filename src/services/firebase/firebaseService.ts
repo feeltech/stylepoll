@@ -1,6 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
+import firebase from "@react-native-firebase/app";
 import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
-import messaging from "@react-native-firebase/messaging";
+import auth from '@react-native-firebase/auth';
 
 import {AlertPoll, LoggingUser, Notification, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
 import {
@@ -13,11 +14,28 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
+import post from "../../screens/post/post";
 
 
 export async function registerUser(user: User): Promise<User> {
     const isUserExist = await USER_COLLECTION.where("email", "==", user.email).get();
     if (isUserExist.size === 0) {
+        auth()
+            .createUserWithEmailAndPassword(user.email, user.password)
+            .then((res) => {
+                debugger
+                console.log('User account created & signed in!');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    return Promise.reject('That email address is already in use!');
+                }
+                if (error.code === 'auth/invalid-email') {
+                    return Promise.reject('That email address is invalid!');
+                }
+
+                return Promise.reject(error);
+            });
         return USER_COLLECTION.add(user)
             .then((res) => {
                 user.userId = res.id;
@@ -55,6 +73,11 @@ export function loginUser(user: User): Promise<User> {
 }
 
 export async function resetPassword(email: string, oldPassword: string, newPassword: string): Promise<any> {
+    auth().sendPasswordResetEmail(email).then(res => {
+        debugger
+    }).catch(err => {
+        debugger
+    })
     try {
         const userDoc = await USER_COLLECTION.where("email", "==", email).get();
         if (userDoc.docs.length != 0) {
@@ -63,6 +86,7 @@ export async function resetPassword(email: string, oldPassword: string, newPassw
                 const updatedUser = data;
                 updatedUser.password = newPassword;
                 await USER_COLLECTION.doc(data.userId).set(updatedUser);
+
                 return Promise.resolve("")
             } else {
                 return Promise.reject("Incorrect Password!")
@@ -306,6 +330,7 @@ export function getUserFollowers(userID: string): Promise<User[]> {
 }
 
 export async function onCreatePost(post: PostDoc) {
+    debugger
     if (post.isFeedPost) {
         await FEED_COLLECTIONS.doc(post.userId)
             .collection("userFeed").doc(post.postId)
@@ -320,8 +345,9 @@ export async function onCreatePost(post: PostDoc) {
     }
     if (post.DMList?.length != 0) {
         map(post.DMList, (userId) => {
-            FEED_COLLECTIONS.doc(userId)
-                .collection("followingUserFeed").doc(post.postId)
+            post.isDmPoll = true
+            ALERT_POLL_COLLECTIONS.doc(userId)
+                .collection("followingAlertPoll").doc(post.postId)
                 .set(post)
                 .then((res) => {
                     console.log("Sent to fiends feed");
@@ -334,6 +360,7 @@ export async function onCreatePost(post: PostDoc) {
 
     if (post.isPollPost) {
         post.pollCompleted = false
+        post.isDmPoll = post.DMList && post.DMList?.length > 0 ? true : false
         ALERT_POLL_COLLECTIONS.doc(post.userId)
             .collection("userPolls").doc(post.postId)
             .set(post)
@@ -451,6 +478,7 @@ export function getUserPolls(userId: string): Promise<AlertPoll[]> {
         });
 }
 
+
 export async function getFollowingUserPolls(
     userId: string,
 ): Promise<StoryItem[]> {
@@ -469,7 +497,7 @@ export async function getFollowingUserPolls(
                 .collection("userPolls")
                 .get()
             map(alertPolls.docs, async (doc) => {
-                if (!doc.data().pollCompleted) {
+                if (!doc.data().pollCompleted && !doc.data().isDmPoll) {
                     const p = doc.data()
                     p.postId = doc.id
                     storyItem.userName = p.user.name
@@ -481,6 +509,31 @@ export async function getFollowingUserPolls(
             }
         }),
     );
+    debugger
+    const dmPolls = await ALERT_POLL_COLLECTIONS.doc(userId)
+        .collection("followingAlertPoll")
+        .get()
+
+    map(dmPolls.docs, async (doc) => {
+        if (!doc.data().pollCompleted) {
+            const p = doc.data()
+            p.postId = doc.id
+            const userHasPublicPolls = storyItems.filter((storyItem)=>{return storyItem.userId === p.user.userId})
+            debugger
+            if(userHasPublicPolls){
+                userHasPublicPolls[0].polls.push(p)
+            }else{
+                const storyItem:StoryItem = {
+                    userId:p.user.userId,
+                    userName:p.user.name,
+                    polls:p
+                }
+                storyItems.push(storyItem)
+            }
+        }
+    });
+
+
     return Promise.resolve(storyItems);
 }
 
@@ -599,6 +652,9 @@ export async function sendPollToFeed(userId: string, poll: AlertPoll) {
             .set(poll)
     }));
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
+    if(poll.isDmPoll){
+        await completeDMPolls(poll)
+    }
 }
 
 export async function sendPollToFriends(poll: AlertPoll) {
@@ -615,6 +671,16 @@ export async function sendPollToFriends(poll: AlertPoll) {
                 console.log("Send to friend feed error ", err);
             });
     });
+    if(poll.isDmPoll){
+        await completeDMPolls(poll)
+    }
+}
+
+export async function completeDMPolls(poll:AlertPoll){
+    const DMList = poll.DMList;
+    await Promise.all(map(DMList,async dm => {
+        await ALERT_POLL_COLLECTIONS.doc(dm).collection('followingAlertPoll').doc(poll.postId).set(poll)
+    }))
 }
 
 export async function getFollowingUsers(userId: string): Promise<User[]> {
