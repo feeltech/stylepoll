@@ -1,5 +1,4 @@
 import firestore from "@react-native-firebase/firestore";
-import firebase from "@react-native-firebase/app";
 import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
 import auth from '@react-native-firebase/auth';
 
@@ -14,17 +13,24 @@ import {
     TAG_COLLECTIONS,
     USER_COLLECTION,
 } from "../../shared/constants";
-import post from "../../screens/post/post";
 
 
 export async function registerUser(user: User): Promise<User> {
     const isUserExist = await USER_COLLECTION.where("email", "==", user.email).get();
+    let fAuthData;
     if (isUserExist.size === 0) {
-        auth()
+        return auth()
             .createUserWithEmailAndPassword(user.email, user.password)
             .then((res) => {
-                debugger
-                console.log('User account created & signed in!');
+                fAuthData = res.user
+                return USER_COLLECTION.doc(fAuthData.uid).set(user)
+                    .then((res) => {
+                        user.userId = fAuthData.uid;
+                        return Promise.resolve(user);
+                    })
+                    .catch((err) => {
+                        return Promise.reject("Failed to register!");
+                    });
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
@@ -33,16 +39,10 @@ export async function registerUser(user: User): Promise<User> {
                 if (error.code === 'auth/invalid-email') {
                     return Promise.reject('That email address is invalid!');
                 }
-
-                return Promise.reject(error);
-            });
-        return USER_COLLECTION.add(user)
-            .then((res) => {
-                user.userId = res.id;
-                return Promise.resolve(user);
-            })
-            .catch((err) => {
-                return Promise.reject("Failed to register!");
+                if (error.code === 'auth/weak-password'){
+                    return Promise.reject('Password must be at least 6 characters!');
+                }
+                return Promise.reject("Failed to register.");
             });
     } else {
         return Promise.reject("Email Already Registered!");
@@ -50,54 +50,39 @@ export async function registerUser(user: User): Promise<User> {
 
 }
 
-export function loginUser(user: User): Promise<User> {
-    return USER_COLLECTION.where("email", "==", user.email)
-        .get()
-        .then((res) => {
-            if (res.docs.length != 0) {
-                const data = res.docs[0].data();
-                if (data && data.password === user.password) {
+export async function loginUser(user: User): Promise<any> {
+    return auth().signInWithEmailAndPassword(user.email, user.password).then(res => {
+        return USER_COLLECTION.where("email", "==", user.email)
+            .get()
+            .then((res) => {
+                if (res.docs.length != 0) {
+                    const data = res.docs[0].data();
                     user.userId = res.docs[0].id;
                     user.name = data.name;
                     user.profileImage = data.profileImage;
                     return Promise.resolve(user);
                 }
-            } else {
-                return Promise.reject("Invalid credentials");
-            }
-            return Promise.reject("Invalid credentials");
-        })
-        .catch((err) => {
-            return Promise.reject(err);
-        });
+                return Promise.resolve(user);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
+    }).catch(err => {
+        return Promise.reject("Invalid credentials");
+    })
 }
 
 export async function resetPassword(email: string, oldPassword: string, newPassword: string): Promise<any> {
-    auth().sendPasswordResetEmail(email).then(res => {
-        debugger
-    }).catch(err => {
-        debugger
+    return auth().sendPasswordResetEmail(email)
+    .then((res) => {
+        return Promise.resolve(res)
     })
-    try {
-        const userDoc = await USER_COLLECTION.where("email", "==", email).get();
-        if (userDoc.docs.length != 0) {
-            const data = userDoc.docs[0].data();
-            if (data.password === oldPassword) {
-                const updatedUser = data;
-                updatedUser.password = newPassword;
-                await USER_COLLECTION.doc(data.userId).set(updatedUser);
-
-                return Promise.resolve("")
-            } else {
-                return Promise.reject("Incorrect Password!")
-            }
-        } else {
-            return Promise.reject("Email not registered!")
+    .catch((error)=>{
+        if (error.code === 'auth/user-not-found') {
+            return Promise.reject('That email address is not in use!');
         }
-    } catch (e) {
-        return Promise.reject(e)
-    }
-
+        return Promise.reject('Failed to reset password.');
+    })
 }
 
 export function getMoods(): Promise<any> {
@@ -330,7 +315,6 @@ export function getUserFollowers(userID: string): Promise<User[]> {
 }
 
 export async function onCreatePost(post: PostDoc) {
-    debugger
     if (post.isFeedPost) {
         await FEED_COLLECTIONS.doc(post.userId)
             .collection("userFeed").doc(post.postId)
@@ -370,7 +354,7 @@ export async function onCreatePost(post: PostDoc) {
             .catch((err) => {
                 console.log("Poll create error ", err);
             });
-        await sendAlertPollNotification(post.userId,post)
+        await sendAlertPollNotification(post.userId, post)
     }
 
     if (isNull(post.user.profileImage) || isEmpty(post.user.profileImage)) {
@@ -509,7 +493,7 @@ export async function getFollowingUserPolls(
             }
         }),
     );
-    debugger
+    
     const dmPolls = await ALERT_POLL_COLLECTIONS.doc(userId)
         .collection("followingAlertPoll")
         .get()
@@ -518,15 +502,17 @@ export async function getFollowingUserPolls(
         if (!doc.data().pollCompleted) {
             const p = doc.data()
             p.postId = doc.id
-            const userHasPublicPolls = storyItems.filter((storyItem)=>{return storyItem.userId === p.user.userId})
-            debugger
-            if(userHasPublicPolls){
+            const userHasPublicPolls = storyItems.filter((storyItem) => {
+                return storyItem.userId === p.user.userId
+            })
+        
+            if (userHasPublicPolls) {
                 userHasPublicPolls[0].polls.push(p)
-            }else{
-                const storyItem:StoryItem = {
-                    userId:p.user.userId,
-                    userName:p.user.name,
-                    polls:p
+            } else {
+                const storyItem: StoryItem = {
+                    userId: p.user.userId,
+                    userName: p.user.name,
+                    polls: p
                 }
                 storyItems.push(storyItem)
             }
@@ -652,7 +638,7 @@ export async function sendPollToFeed(userId: string, poll: AlertPoll) {
             .set(poll)
     }));
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(poll.postId).set(poll)
-    if(poll.isDmPoll){
+    if (poll.isDmPoll) {
         await completeDMPolls(poll)
     }
 }
@@ -671,14 +657,14 @@ export async function sendPollToFriends(poll: AlertPoll) {
                 console.log("Send to friend feed error ", err);
             });
     });
-    if(poll.isDmPoll){
+    if (poll.isDmPoll) {
         await completeDMPolls(poll)
     }
 }
 
-export async function completeDMPolls(poll:AlertPoll){
+export async function completeDMPolls(poll: AlertPoll) {
     const DMList = poll.DMList;
-    await Promise.all(map(DMList,async dm => {
+    await Promise.all(map(DMList, async dm => {
         await ALERT_POLL_COLLECTIONS.doc(dm).collection('followingAlertPoll').doc(poll.postId).set(poll)
     }))
 }
@@ -720,7 +706,7 @@ export async function onLikeUnlikePost(postId: string, post: PostDoc) {
 export async function deletePost(postId: string, userId: string) {
     await POST_COLLECTION.doc(userId).collection("userPosts").doc(postId).delete()
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(postId).delete()
-    onDeletePost(postId,userId)
+    onDeletePost(postId, userId)
 }
 
 export async function onDeletePost(postId: string, userId: string) {
@@ -783,15 +769,15 @@ export async function sendFollowNotification(notificationReceiverId: string, not
         meta: {
             notified_at: new Date(),
             image: notificationSender?.profileImage,
-            notifier:notificationSender,
-            notificationType:NOTIFICATION_TYPES.FOLLOW_USER
+            notifier: notificationSender,
+            notificationType: NOTIFICATION_TYPES.FOLLOW_USER
         }
     }
     await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
 
 }
 
-export async function sendAlertPollNotification(notificationSenderId: string,poll) {
+export async function sendAlertPollNotification(notificationSenderId: string, poll) {
     const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
     const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
     const user = userDoc.data()
@@ -804,9 +790,9 @@ export async function sendAlertPollNotification(notificationSenderId: string,pol
                 meta: {
                     notified_at: new Date(),
                     image: user?.profileImage,
-                    notifier:user,
-                    alertPoll:poll,
-                    notificationType:NOTIFICATION_TYPES.ALERT_POLL
+                    notifier: user,
+                    alertPoll: poll,
+                    notificationType: NOTIFICATION_TYPES.ALERT_POLL
                 }
             }
             await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
@@ -814,13 +800,13 @@ export async function sendAlertPollNotification(notificationSenderId: string,pol
     )
 }
 
-export async function getNotifications(userId: string):Promise<Notification[]> {
+export async function getNotifications(userId: string): Promise<Notification[]> {
     const notificationDocs = await NOTIFICATION_COLLECTIONS.doc(userId).collection("userNotification").get()
-    const notifications:Notification[] = []
-    if(notificationDocs.empty){
+    const notifications: Notification[] = []
+    if (notificationDocs.empty) {
         return Promise.resolve(notifications)
     }
-    await Promise.all(map(notificationDocs.docs,async doc => {
+    await Promise.all(map(notificationDocs.docs, async doc => {
         notifications.push(doc.data())
     }))
     return Promise.resolve(notifications)

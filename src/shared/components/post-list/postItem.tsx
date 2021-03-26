@@ -103,19 +103,19 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
                 {
                     text: "Report",
                     onPress: () => {onPostOption("itemSelected",0,post)},
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
                     text: "Cancel",
                     onPress: () => {setShowReportOptions(false)},
-                    style: "cancel"
+                    style: "destructive"
                 }
             ]
         }
     }
 const onPostOptionClick = (post:PostDoc) => {
         Alert.alert(
-            "",
+            "Select an Option",
             "",
             getPostOptions(),
             {cancelable: true}

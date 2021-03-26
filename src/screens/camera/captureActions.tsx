@@ -31,13 +31,13 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
             "Send to friend or go back home",
             [
                 {
-                    text: "OK!",
-                    onPress: () => {navigate("feed_to_friend",{imageUri: this.state.imageURI})},
+                    text: "Cancella",
+                    onPress: () => console.log("Cancel Pressed"),
                     style: "destructive"
                 },
                 {
-                    text: "Cancella",
-                    onPress: () => console.log("Cancel Pressed"),
+                    text: "OK!",
+                    onPress: () => {navigate("feed_to_friend",{imageUri: this.state.imageURI})},
                     style: "cancel"
                 }
             ],
@@ -51,15 +51,15 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
             "Start the poll or go back to home",
             [
                 {
-                    text: "OK",
-                    onPress: () => {navigate("alert_poll",{imageUri: this.state.imageURI})},
-                    style: "cancel"
-                },
-                {
                     text: "Cancella",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "destructive"
-                }
+                },
+                {
+                    text: "OK!",
+                    onPress: () => {navigate("alert_poll",{imageUri: this.state.imageURI})},
+                    style: "cancel"
+                },
             ],
             {cancelable: false}
         );
