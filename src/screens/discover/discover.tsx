@@ -7,7 +7,8 @@ import {
     StyleSheet, Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform
 } from "react-native";
 import {Header} from "react-native-elements";
 import {SCREEN_WIDTH, SCREEN_WIDTH_NEW} from "../../shared/constants";
@@ -107,7 +108,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height">
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}>
                     <Header
                         statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"

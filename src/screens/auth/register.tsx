@@ -8,7 +8,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform,
+    ScrollView
 } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {navigate} from "../../services/navigation";
@@ -109,7 +111,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             <SafeAreaView style={styles.container}>
                 <Loader show={this.state.isLoading}/>
                 <KeyboardAvoidingView style={styles.keyboardAvoidingViewContainer}
-                                      behavior="height">
+                                      behavior={Platform.OS === "ios" ? "padding" : 'height'}>
+                    <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                     <View style={styles.centerContainer}>
                         <View style={styles.logoWrapper}>
                             <Text style={{fontSize:50,fontFamily:'serif',color:'#318bfb'}}>STYLEPOLL</Text>
@@ -203,6 +206,7 @@ export default class Register extends React.Component<any, ILoginStates>{
                             {/*</TouchableOpacity>*/}
                         </View>
                     </View>
+                    </ScrollView>
                     <TouchableOpacity
                         onPress={()=>{navigate("login")}}
                         activeOpacity={1}

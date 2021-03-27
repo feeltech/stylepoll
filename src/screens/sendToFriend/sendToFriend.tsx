@@ -7,7 +7,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform
 } from "react-native";
 import {Header} from "react-native-elements";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -151,7 +152,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height"
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}
                 >
                     <Header
                         statusBarProps={{barStyle: "light-content"}}

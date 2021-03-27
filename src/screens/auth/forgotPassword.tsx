@@ -1,23 +1,13 @@
-import React, { useState } from 'react'
-import {
-    Animated,
-    Image,
-    KeyboardAvoidingView,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
-} from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import React from 'react'
+import {KeyboardAvoidingView, SafeAreaView, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import {navigate} from "../../services/navigation";
-import {SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT} from "../../shared/constants";
 import {styles} from "./authStyles";
 import {fetchLocalStorage} from "../../utils/local-storage";
 import {resetPassword} from "../../services/firebase/firebaseService";
 import {isEmpty} from 'lodash';
 import Loader from "../../shared/components/loader/loader";
+
 interface ILoginStates {
     email:string,
     oldPassword:string,
@@ -77,7 +67,8 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
             navigate('login')
         }).catch(e => {
             this.setState({
-                error:e
+                error:e,
+                isLoading:false
             })
         })
     }
@@ -115,66 +106,66 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                                 <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Your Email" placeholderTextColor={"black"}
                                            style={styles.input} />
                             </View>
-                            <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none"
-                                           value={this.state.oldPassword}
-                                           onChangeText={(text)=>{this.setState({oldPassword:text})}}
-                                           placeholder="Current Password"
-                                           placeholderTextColor={"black"}
-                                           secureTextEntry={!this.state.hideCurrentPassword}
-                                           style={styles.input} />
-                                <TouchableOpacity
-                                    style={styles.hidePasswordIcon}
-                                    onPress={()=>{this.setState({hideCurrentPassword:!this.state.hideCurrentPassword})}}
-                                >
-                                    {!this.state.hideCurrentPassword ? (
-                                        <Icon name="eye-off-outline" size={20}
-                                              color="#333" />
-                                    ) : (
-                                        <Icon name="eye-outline" color="#318bfb"
-                                              size={20} />
-                                    )
-                                    }
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.textInputWrapper}>
-                                <TextInput value={this.state.newPassword}
-                                           onChangeText={(text => this.setState({newPassword:text}))}
-                                           secureTextEntry={!this.state.hideNewPassword}
-                                           placeholder="New Password" placeholderTextColor={"black"} style={styles.input} />
-                                <TouchableOpacity
-                                    style={styles.hidePasswordIcon}
-                                    onPress={()=>{this.setState({hideNewPassword:!this.state.hideNewPassword})}}
-                                >
-                                    {!this.state.hideNewPassword ? (
-                                        <Icon name="eye-off-outline" size={20}
-                                              color="#333" />
-                                    ) : (
-                                        <Icon name="eye-outline" color="#318bfb"
-                                              size={20} />
-                                    )
-                                    }
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.textInputWrapper}>
-                                <TextInput value={this.state.confirmPassword}
-                                           onChangeText={(text => this.setState({confirmPassword:text}))}
-                                           secureTextEntry={!this.state.hideVerifyPassword}
-                                           placeholder="Verify Password" placeholderTextColor={"black"} style={styles.input} />
-                                <TouchableOpacity
-                                    style={styles.hidePasswordIcon}
-                                    onPress={()=>{this.setState({hideVerifyPassword:!this.state.hideVerifyPassword})}}
-                                >
-                                    {!this.state.hideVerifyPassword ? (
-                                        <Icon name="eye-off-outline" size={20}
-                                              color="#333" />
-                                    ) : (
-                                        <Icon name="eye-outline" color="#318bfb"
-                                              size={20} />
-                                    )
-                                    }
-                                </TouchableOpacity>
-                            </View>
+                            {/*<View style={styles.textInputWrapper}>*/}
+                            {/*    <TextInput autoCapitalize="none"*/}
+                            {/*               value={this.state.oldPassword}*/}
+                            {/*               onChangeText={(text)=>{this.setState({oldPassword:text})}}*/}
+                            {/*               placeholder="Current Password"*/}
+                            {/*               placeholderTextColor={"black"}*/}
+                            {/*               secureTextEntry={!this.state.hideCurrentPassword}*/}
+                            {/*               style={styles.input} />*/}
+                            {/*    <TouchableOpacity*/}
+                            {/*        style={styles.hidePasswordIcon}*/}
+                            {/*        onPress={()=>{this.setState({hideCurrentPassword:!this.state.hideCurrentPassword})}}*/}
+                            {/*    >*/}
+                            {/*        {!this.state.hideCurrentPassword ? (*/}
+                            {/*            <Icon name="eye-off-outline" size={20}*/}
+                            {/*                  color="#333" />*/}
+                            {/*        ) : (*/}
+                            {/*            <Icon name="eye-outline" color="#318bfb"*/}
+                            {/*                  size={20} />*/}
+                            {/*        )*/}
+                            {/*        }*/}
+                            {/*    </TouchableOpacity>*/}
+                            {/*</View>*/}
+                            {/*<View style={styles.textInputWrapper}>*/}
+                            {/*    <TextInput value={this.state.newPassword}*/}
+                            {/*               onChangeText={(text => this.setState({newPassword:text}))}*/}
+                            {/*               secureTextEntry={!this.state.hideNewPassword}*/}
+                            {/*               placeholder="New Password" placeholderTextColor={"black"} style={styles.input} />*/}
+                            {/*    <TouchableOpacity*/}
+                            {/*        style={styles.hidePasswordIcon}*/}
+                            {/*        onPress={()=>{this.setState({hideNewPassword:!this.state.hideNewPassword})}}*/}
+                            {/*    >*/}
+                            {/*        {!this.state.hideNewPassword ? (*/}
+                            {/*            <Icon name="eye-off-outline" size={20}*/}
+                            {/*                  color="#333" />*/}
+                            {/*        ) : (*/}
+                            {/*            <Icon name="eye-outline" color="#318bfb"*/}
+                            {/*                  size={20} />*/}
+                            {/*        )*/}
+                            {/*        }*/}
+                            {/*    </TouchableOpacity>*/}
+                            {/*</View>*/}
+                            {/*<View style={styles.textInputWrapper}>*/}
+                            {/*    <TextInput value={this.state.confirmPassword}*/}
+                            {/*               onChangeText={(text => this.setState({confirmPassword:text}))}*/}
+                            {/*               secureTextEntry={!this.state.hideVerifyPassword}*/}
+                            {/*               placeholder="Verify Password" placeholderTextColor={"black"} style={styles.input} />*/}
+                            {/*    <TouchableOpacity*/}
+                            {/*        style={styles.hidePasswordIcon}*/}
+                            {/*        onPress={()=>{this.setState({hideVerifyPassword:!this.state.hideVerifyPassword})}}*/}
+                            {/*    >*/}
+                            {/*        {!this.state.hideVerifyPassword ? (*/}
+                            {/*            <Icon name="eye-off-outline" size={20}*/}
+                            {/*                  color="#333" />*/}
+                            {/*        ) : (*/}
+                            {/*            <Icon name="eye-outline" color="#318bfb"*/}
+                            {/*                  size={20} />*/}
+                            {/*        )*/}
+                            {/*        }*/}
+                            {/*    </TouchableOpacity>*/}
+                            {/*</View>*/}
                             {
                                 this.state.error &&
                                 <View style={styles.textInputErrorWrapper}>
@@ -183,16 +174,16 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                             }
                             <TouchableOpacity
                                 onPress={this.onChangePassword}
-                                disabled={(isEmpty(this.state.email) || isEmpty(this.state.oldPassword) || isEmpty(this.state.newPassword) || isEmpty(this.state.confirmPassword))}
+                                disabled={isEmpty(this.state.email) /*|| isEmpty(this.state.oldPassword) || isEmpty(this.state.newPassword) || isEmpty(this.state.confirmPassword))*/}
                                 activeOpacity={0.6} style={{
                                 ...styles.btnLogin,
-                                opacity: (!(isEmpty(this.state.email) || isEmpty(this.state.oldPassword) || isEmpty(this.state.newPassword) || isEmpty(this.state.confirmPassword))) ? 1 : 0.6
+                                opacity: (!isEmpty(this.state.email)) ? 1 : 0.6
                             }}>
                                 <Text style={{
                                     fontSize: 16,
                                     color: '#fff',
                                     fontWeight: '500'
-                                }}>Change Password</Text>
+                                }}>Reset Password</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

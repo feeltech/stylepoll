@@ -32,24 +32,25 @@ class FeedToFriend extends React.Component<any, ISendFeedStates>{
         })
     }
 
-    private onNext = (description: string, moods: string[], tags: string[], location: string) => {
+    private onNext = (description: string, moods: string[], tags: string[], location: string,pollEndDate?: Date) => {
         const post: PostDoc = {
             description: description,
             moods: moods,
             tags: tags,
             location: location,
             isFeedPost: false,
-            isPollPost: false,
+            isPollPost: true,
             user: this.state.user,
             pollStartDate: null,
-            userId:this.state.user.userId
+            userId:this.state.user.userId,
+            pollEndDate: pollEndDate ? pollEndDate : null,
         }
         navigate("send_to_friend",{postDoc:post,imageURI:this.state.imageURI})
     }
 
         render() {
         return (
-            <FeedForm showDate={false} headerTitle={"Send to friend"} onClose={()=>{navigate("camera")}} onSubmit={this.onNext} imageURI={this.state.imageURI} showHeader={true} headerRightLabel={"Next"}/>
+            <FeedForm showDate={true} headerTitle={"Send to friend"} onClose={()=>{navigate("camera")}} onSubmit={this.onNext} imageURI={this.state.imageURI} showHeader={true} headerRightLabel={"Next"}/>
         );
     }
 }

@@ -181,6 +181,13 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                             source={{ uri: poll.image }}
                             style={styles.image}
                         >
+                            {
+                                poll.isDmPoll &&
+                                <View style={{flex:0,justifyContent:'flex-end',alignItems:'flex-end',margin:10, borderRadius:50}}>
+                                    <Text style={{backgroundColor:'#02d5f8',color:'#FFF',fontWeight:'bold'}}>Just for you ❤</Text>
+                                </View>
+                            }
+
                             <View style={{ flex: 10 }} />
                             {!(this.state.userReacted || this.state.remainingTime === "00:00:00") && (
                                 <View

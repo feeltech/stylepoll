@@ -51,15 +51,15 @@ class PollStats extends React.Component<any, IPollStatsStates> {
 
     private onSendPoll = () => {
         Alert.alert(
-            "",
-            "",
+            "Where do you want to share it?",
+            "Choose a destination",
             [
                 {
                     text: "Send to feed",
                     onPress: () => {
                         this.sendToFeed()
                     },
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
                     text: "Send to a friend",
@@ -70,12 +70,12 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             isAlertPoll: true
                         })
                     },
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
                     text: "Cancella",
                     onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
+                    style: "destructive"
                 }
             ],
             {cancelable: false}
@@ -237,16 +237,18 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             alignItems:'center'
                         }}>
                             <TouchableOpacity onPress={this.onSendPoll} style={{
-                                height: 50,
-                                width: 50,
-                                borderRadius: 25,
+                                
                                 // backgroundColor: '#4B7AAD',
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }} disabled={!this.state.pollFinished}>
-                                <Image source={require("../../../assets/images/share.png")}/>
-                            </TouchableOpacity>
-                            <Text style={{fontWeight:'bold',borderColor:'white',borderWidth:1,backgroundColor:'white'}}>Continue</Text>
+                                <Image style={{height: 50,
+                                width: 50,
+                                borderRadius: 25, marginBottom: 10}} source={require("../../../assets/images/share.png")}/>
+                                <View style={{backgroundColor:'white', padding: 3, borderRadius: 5, opacity: 0.6}}>
+                                <Text style={{fontWeight:'bold',borderColor:'white', color: 'black', opacity: 1}}>Continue</Text>
+                            </View>
+                            </TouchableOpacity>                            
                         </View>
                     </ImageBackground>
                 </View>

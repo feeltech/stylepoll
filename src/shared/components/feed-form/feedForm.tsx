@@ -8,6 +8,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Platform
 } from "react-native";
 import {Header, Icon} from "react-native-elements";
 import {SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT} from "../../constants";
@@ -178,7 +179,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height">
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}>
                     {this.props.showHeader &&
                     <Header
                         statusBarProps={{barStyle: "light-content"}}
@@ -305,6 +306,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         selectedItems={this.state.selectedTags}
                                         selectText="Pick Tags"
                                         fontSize={15}
+                                        fixedHeight= {false}
                                         searchInputPlaceholderText="Search Items..."
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"

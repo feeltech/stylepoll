@@ -80,7 +80,7 @@ export type PostList = ExtraPost[]
 export type User = {
   userId?:string,
   email:string,
-  password?:string,
+  password:string,
   name?:string,
   profileImage?: string,
   deviceId?:string
@@ -111,7 +111,8 @@ export type PostDoc = {
   likes?:string[]
   dislikes?:User[]
   pollCompleted?:boolean,
-  postLikes?:string[]
+  postLikes?:string[],
+  isDmPoll?:boolean
 }
 
 export type Notification  = {
