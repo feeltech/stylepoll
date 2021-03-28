@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:431254319371:android:6699991829c3872a1e320e",
+        "mobilesdk_app_id": "1:431254319371:android:44f7b7a467d7ba731e320e",
         "android_client_info": {
           "package_name": "com.stylepoll"
         }
@@ -29,6 +29,13 @@
             {
               "client_id": "431254319371-4a526cdqsvc544tm6ncbvb931kcj7tkm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "431254319371-kdq218umb6eego2ftl7h9geouhcanq0f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.feeltech.stylepoll"
+              }
             }
           ]
         }
