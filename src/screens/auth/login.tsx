@@ -9,6 +9,7 @@ import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 
 import {styles} from "./authStyles";
 import Loader from "../../shared/components/loader/loader";
+import { generateDeviceToken } from '../../../App';
 
 interface ILoginStates {
     email: string;
@@ -59,7 +60,7 @@ class Login extends React.Component<any, ILoginStates> {
                 storeLocalStorage("loggedUser", user).then(() => {
                     navigate("root");
                 });
-                // generateDeviceToken();
+                generateDeviceToken();
                 this.setState({isLoading: false})
             })
             .catch((err) => {
