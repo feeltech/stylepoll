@@ -6,7 +6,7 @@ import {
     ScrollView,
     StyleSheet,
     KeyboardAvoidingView,
-    View, Text,
+    View, Text,BackHandler
 } from "react-native";
 import {Header} from "react-native-elements";
 import {map, isEqual} from "lodash";
@@ -48,6 +48,7 @@ const HomeScreen = () => {
                 fetchAlertPoll(res);
                 fetchFollowingAlertPoll(res);
                 setUser(res);
+                BackHandler.addEventListener('hardwareBackPress', handleBackButton);
             });
             if (user) {
             }
@@ -56,6 +57,8 @@ const HomeScreen = () => {
             };
         }, []),
     );
+
+
     const fetchFeed = (user) => {
         setIsLoading(true)
         getUserFeed(user.userId).then((res) => {
@@ -88,12 +91,27 @@ const HomeScreen = () => {
         })
     }
 
+    const sortByCreatedDate = (arr) => {
+        return arr.sort(function compare(a, b) {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            // @ts-ignore
+            return dateB - dateA ;
+        });
+
+    }
+
+    const handleBackButton = () =>  {
+        console.log("Back handle press")
+        return true;
+    }
+
 
     return (
         // <SafeAreaView style={styles.container}>
         <View>
             <Header
-                statusBarProps={{barStyle: "dark-content"}}
+                statusBarProps={{barStyle: "light-content"}}
                 barStyle="dark-content"
                 containerStyle={{
                     display: "flex",
@@ -113,8 +131,9 @@ const HomeScreen = () => {
             >
                 <StoryBar
                     polls={followingPolls}
-                    currentUserPoll={userPolls[0]}
+                    currentUserPoll={sortByCreatedDate(userPolls)}
                     profileImage={user ? user.profileImage : ""}
+                    user={user}
                 />
                 <Posts data={POST_LIST} posts={postList} onDeleteItem={onDeletePost}/>
 

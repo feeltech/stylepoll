@@ -1,30 +1,13 @@
-import React, {useState} from "react";
-import {
-    Animated,
-    Image,
-    KeyboardAvoidingView,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import React from 'react';
+import {KeyboardAvoidingView, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View, Platform} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {usePromiseTracker} from "react-promise-tracker";
 
 import {navigate} from "../../services/navigation";
-import {
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-    STATUS_BAR_HEIGHT,
-} from "../../shared/constants";
 import {LoggingUser} from "../../modals";
 import {loginUser} from "../../services/firebase/firebaseService";
 import {fetchLocalStorage, storeLocalStorage} from "../../utils/local-storage";
 
 import {styles} from "./authStyles";
-import {generateDeviceToken} from "../../../App";
 import Loader from "../../shared/components/loader/loader";
 
 interface ILoginStates {
@@ -43,8 +26,8 @@ class Login extends React.Component<any, ILoginStates> {
     constructor(props: any) {
         super(props);
         this.state = {
-            email: "akash@gmail.com",
-            password: "bbb",
+            email: "",
+            password: "",
             hidePassword: true,
             allowLogin: true,
             error: null,
@@ -76,7 +59,7 @@ class Login extends React.Component<any, ILoginStates> {
                 storeLocalStorage("loggedUser", user).then(() => {
                     navigate("root");
                 });
-                generateDeviceToken();
+                // generateDeviceToken();
                 this.setState({isLoading: false})
             })
             .catch((err) => {
@@ -93,6 +76,7 @@ class Login extends React.Component<any, ILoginStates> {
             password: "",
             hidePassword: true,
             allowLogin: true,
+            error:null
         });
     };
 
@@ -105,11 +89,11 @@ class Login extends React.Component<any, ILoginStates> {
             <>
                 <Loader show={this.state.isLoading}/>
                 <SafeAreaView style={styles.container}>
-
                     <KeyboardAvoidingView
                         style={styles.keyboardAvoidingViewContainer}
-                        behavior="height"
+                        behavior={Platform.OS === "ios" ? "padding" : 'height'}
                     >
+                        <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.logoWrapper}>
                                 {/*<Image*/}
@@ -204,30 +188,31 @@ class Login extends React.Component<any, ILoginStates> {
                                         Get helping to login.
                                     </Text>
                                 </TouchableOpacity>
-                                {/*  /!*<View style={styles.divideLine}>*!/*/}
-                                {/*  /!*  <View style={styles.ORtextWrapper}>*!/*/}
-                                {/*  /!*    <Text*!/*/}
-                                {/*  /!*        style={{*!/*/}
-                                {/*  /!*          color: "#333",*!/*/}
-                                {/*  /!*          fontWeight: "600",*!/*/}
-                                {/*  /!*        }}*!/*/}
-                                {/*  /!*    >*!/*/}
-                                {/*  /!*      OR*!/*/}
-                                {/*  /!*    </Text>*!/*/}
-                                {/*  /!*  </View>*!/*/}
-                                {/*  /!*</View>*!/*/}
-                                {/*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*/}
-                                {/*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*/}
-                                {/*  /!*  <Text*!/*/}
-                                {/*  /!*      style={{*!/*/}
-                                {/*  /!*        color: "#318bfb",*!/*/}
-                                {/*  /!*        fontWeight: "bold",*!/*/}
-                                {/*  /!*      }}*!/*/}
-                                {/*  /!*  >*!/*/}
-                                {/*  /!*    Login with Facebook*!/*/}
-                                {/*  /!*  </Text>*!/*/}
-                                {/*  /!*</TouchableOpacity>*!/*/}
                             </View>
+                            {/*    /!*  /!*<View style={styles.divideLine}>*!/*!/*/}
+                            {/*    /!*  /!*  <View style={styles.ORtextWrapper}>*!/*!/*/}
+                            {/*    /!*  /!*    <Text*!/*!/*/}
+                            {/*    /!*  /!*        style={{*!/*!/*/}
+                            {/*    /!*  /!*          color: "#333",*!/*!/*/}
+                            {/*    /!*  /!*          fontWeight: "600",*!/*!/*/}
+                            {/*    /!*  /!*        }}*!/*!/*/}
+                            {/*    /!*  /!*    >*!/*!/*/}
+                            {/*    /!*  /!*      OR*!/*!/*/}
+                            {/*    /!*  /!*    </Text>*!/*!/*/}
+                            {/*    /!*  /!*  </View>*!/*!/*/}
+                            {/*    /!*  /!*</View>*!/*!/*/}
+                            {/*    /!*  /!*<TouchableOpacity style={styles.btnLoginWithFacebook}>*!/*!/*/}
+                            {/*    /!*  /!*  <Icon name="facebook" color="#318bfb" size={20} />*!/*!/*/}
+                            {/*    /!*  /!*  <Text*!/*!/*/}
+                            {/*    /!*  /!*      style={{*!/*!/*/}
+                            {/*    /!*  /!*        color: "#318bfb",*!/*!/*/}
+                            {/*    /!*  /!*        fontWeight: "bold",*!/*!/*/}
+                            {/*    /!*  /!*      }}*!/*!/*/}
+                            {/*    /!*  /!*  >*!/*!/*/}
+                            {/*    /!*  /!*    Login with Facebook*!/*!/*/}
+                            {/*    /!*  /!*  </Text>*!/*!/*/}
+                            {/*    /!*  /!*</TouchableOpacity>*!/*!/*/}
+                            {/*</View>*/}
                         </View>
                         <TouchableOpacity
                             onPress={() => {
@@ -254,6 +239,7 @@ class Login extends React.Component<any, ILoginStates> {
                                 Register now.
                             </Text>
                         </TouchableOpacity>
+                        </ScrollView>
                     </KeyboardAvoidingView>
                 </SafeAreaView>
             </>

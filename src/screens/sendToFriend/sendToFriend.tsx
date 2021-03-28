@@ -7,7 +7,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform
 } from "react-native";
 import {Header} from "react-native-elements";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -21,7 +22,7 @@ import {
     sendPollToFeed,
     sendPollToFriends
 } from "../../services/firebase/firebaseService";
-import {includes,map,startCase} from 'lodash';
+import {includes,map,startCase,isEmpty} from 'lodash';
 import {uploadImageAndGetUrl} from "../../utils";
 import {fetchLocalStorage} from "../../utils/local-storage";
 import Loader from "../../shared/components/loader/loader";
@@ -115,10 +116,21 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
     }
 
     private onSearch = (search: string) => {
-        this.setState({
-            isLoading:true
-        })
-        this.getFollowingUsers(search);
+        const searchResults:User[] = []
+        if(isEmpty(search)){
+            this.getFollowingUsers("");
+        }else {
+            map(this.state.followingFriends,(user)=>{
+                if (user.name.toLowerCase().search(search.toLowerCase()) >= 0) {
+                    searchResults.push(user)
+                }
+            })
+            this.setState({
+                followingFriends:searchResults
+            })
+        }
+
+
     }
 
     private getFollowingUsers = (search:string | null) =>{
@@ -128,6 +140,9 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                 isLoading:false
             })
         }).catch(err => {
+            this.setState({
+                isLoading:false
+            })
         })
     }
 
@@ -137,10 +152,10 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height"
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}
                 >
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -158,7 +173,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                         rightComponent={
-                            <TouchableOpacity onPress={this.state.isAlertPoll ? this.sendPollToFriend : this.onSave}>
+                            this.state.followingFriends.length === 0 ? <Text></Text> : <TouchableOpacity onPress={this.state.isAlertPoll ? this.sendPollToFriend : this.onSave}>
                                 <Text style={{color: "#FFF", fontWeight: "bold"}}>Send</Text>
                             </TouchableOpacity>
                         }
@@ -194,6 +209,7 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                                         fontSize: 16
                                     }}
                                     placeholder={"Search"}
+                                    autoCapitalize={'none'}
                                 />
                             </View>
                         </View>

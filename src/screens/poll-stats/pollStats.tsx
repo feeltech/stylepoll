@@ -8,13 +8,14 @@ import {goBack, navigate} from "../../services/navigation";
 import {sendPollToFeed} from "../../services/firebase/firebaseService";
 import {getProgressBarValue} from "../../utils";
 import moment from 'moment';
+import Loader from "../../shared/components/loader/loader";
 
 
 interface IPollStatsStates {
     imageURI: string,
     poll: any,
     pollFinished: boolean,
-    isLoading:boolean
+    isLoading: boolean
 }
 
 class PollStats extends React.Component<any, IPollStatsStates> {
@@ -25,7 +26,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
             imageURI: '',
             poll: '',
             pollFinished: false,
-            isLoading:false
+            isLoading: false
         }
     }
 
@@ -39,9 +40,9 @@ class PollStats extends React.Component<any, IPollStatsStates> {
     }
 
     private sendToFeed() {
-        this.setState({isLoading:true})
+        this.setState({isLoading: true})
         sendPollToFeed(this.state.poll.user.userId, this.state.poll).then(res => {
-            this.setState({isLoading:false})
+            this.setState({isLoading: false})
             navigate("home")
         }).catch(err => {
 
@@ -50,15 +51,15 @@ class PollStats extends React.Component<any, IPollStatsStates> {
 
     private onSendPoll = () => {
         Alert.alert(
-            "Do you want to send to feed",
-            "Choose an option below",
+            "Where do you want to share it?",
+            "Choose a destination",
             [
                 {
-                    text: "OK!",
+                    text: "Send to feed",
                     onPress: () => {
                         this.sendToFeed()
                     },
-                    style: "destructive"
+                    style: "cancel"
                 },
                 {
                     text: "Send to a friend",
@@ -69,11 +70,12 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             isAlertPoll: true
                         })
                     },
+                    style: "cancel"
                 },
                 {
                     text: "Cancella",
                     onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
+                    style: "destructive"
                 }
             ],
             {cancelable: false}
@@ -111,7 +113,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
             <View style={styles.container}>
                 <View style={{flex: 10}}>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -162,7 +164,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                                                     marginTop: 200 - this.getGraphValue("dislike") * 2,
                                                     height: this.getGraphValue("dislike") * 2
                                                 }}/>
-                                        <View style={{ justifyContent: 'center',alignItems:'center'}}>
+                                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={{
                                                 fontWeight: "bold",
                                                 fontSize: 10
@@ -194,7 +196,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                                                 marginTop: 200 - this.getGraphValue("like") * 2,
                                                 height: this.getGraphValue("like") * 2
                                             }}></View>
-                                        <View style={{ justifyContent: 'center',alignItems:'center'}}>
+                                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                             <Text style={{
                                                 fontWeight: "bold",
                                                 fontSize: 10,
@@ -230,19 +232,23 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                             </View>
                         </View>
                         <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center'
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems:'center'
                         }}>
                             <TouchableOpacity onPress={this.onSendPoll} style={{
-                                height: 50,
-                                width: 50,
-                                borderRadius: 25,
+                                
                                 // backgroundColor: '#4B7AAD',
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }} disabled={!this.state.pollFinished}>
-                                <Image source={require("../../../assets/images/share.png")}/>
-                            </TouchableOpacity>
+                                <Image style={{height: 50,
+                                width: 50,
+                                borderRadius: 25, marginBottom: 10}} source={require("../../../assets/images/share.png")}/>
+                                <View style={{backgroundColor:'white', padding: 3, borderRadius: 5, opacity: 0.6}}>
+                                <Text style={{fontWeight:'bold',borderColor:'white', color: 'black', opacity: 1}}>Continue</Text>
+                            </View>
+                            </TouchableOpacity>                            
                         </View>
                     </ImageBackground>
                 </View>
@@ -265,6 +271,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                 {/*        <View style={{width: 35, height: 35, borderRadius: 35 / 2, backgroundColor: "#3299FE"}}/>*/}
                 {/*    </TouchableOpacity>*/}
                 {/*</View>*/}
+                <Loader show={this.state.isLoading}/>
             </View>
 
         );

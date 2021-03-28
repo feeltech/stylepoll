@@ -8,6 +8,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Platform
 } from "react-native";
 import {Header, Icon} from "react-native-elements";
 import {SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT} from "../../constants";
@@ -57,7 +58,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             mood: '',
             tags: '',
             address: '',
-            when: new Date(moment(new Date()).add(2, "minutes").toISOString()),
+            when: new Date(),
             imageURL: '',
             moodList: [],
             tagList: [],
@@ -132,9 +133,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
         const diff = moment(this.state.when).diff(new Date(), "minutes")
         let endDate = this.state.when
-        // if(diff < 10) {
-        //    endDate = new Date(moment( this.state.when).add(10,"minutes").toISOString())
-        // }
+        if(!this.state.isDynamicTime){
+               endDate = new Date(moment( this.state.when).add(2,"minutes").toISOString())
+        }
         this.props.onSubmit(this.state.description, moods, tags, this.state.address, endDate)
     }
 
@@ -161,11 +162,11 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     private onTimeSwitch = () => {
         if (this.state.isDynamicTime) {
             this.setState({
-                when: new Date(moment(this.state.when).add(2, "minutes").toISOString())
+                when: new Date()
             })
         } else {
             this.setState({
-                when: new Date().toISOString()
+                when: new Date()
             })
         }
         this.setState({
@@ -178,10 +179,10 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height">
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}>
                     {this.props.showHeader &&
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -213,9 +214,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
-                                               onChangeText={(text) => {
-                                                   this.setState({description: text})
-                                               }} placeholder="Description on the poll" placeholderTextColor={'#515151'}
+                                               onChangeText={(text) => {this.setState({description: text})}} placeholder="Description on the poll" placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {/* <Text style={styles.input_label}>ADD A Mood</Text> */}
@@ -307,6 +306,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         selectedItems={this.state.selectedTags}
                                         selectText="Pick Tags"
                                         fontSize={15}
+                                        fixedHeight= {false}
                                         searchInputPlaceholderText="Search Items..."
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
@@ -381,7 +381,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                             <Text style={styles.input_label}>Set your Poll Time</Text>
                                         </View>
                                         <View
-                                            style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                            style={{flex: 1, flexDirection: 'column', alignItems:'flex-end'}}>
                                             <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
                                         </View>
                                         <View

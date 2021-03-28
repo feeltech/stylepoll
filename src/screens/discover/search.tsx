@@ -7,7 +7,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform
 } from "react-native";
 import {Header} from "react-native-elements";
 import {SCREEN_WIDTH} from "../../shared/constants";
@@ -59,7 +60,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
             const allUsers = this.state.allUsers;
             const searchResults: User[] = []
             map(allUsers, user => {
-                if (user.name.search(text) >= 0) {
+                if (user.name.toLowerCase().search(text.toLowerCase()) >= 0) {
                     searchResults.push(user)
                 }
             })
@@ -74,9 +75,9 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
             <View style={styles.container}>
                 <KeyboardAvoidingView
                     style={styles.keyboardAvoidingViewContainer}
-                    behavior="height">
+                    behavior={Platform.OS === "ios" ? "padding" : 'height'}>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -117,6 +118,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
                                     height: 40,
                                     fontSize: 16
                                 }}
+                                autoCapitalize={'none'}
                                 placeholder={"Search"}
                             />
                         </View>

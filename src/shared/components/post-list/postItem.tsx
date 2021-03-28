@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Alert, Animated, Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import FastImage from 'react-native-fast-image'
-import {default as Icon, default as Icons} from 'react-native-vector-icons/MaterialCommunityIcons'
+import { default as Icons} from 'react-native-vector-icons/MaterialCommunityIcons'
 import {ExtraPost, PostDoc} from "../../../modals";
 import PhotoShower from "./photoShower";
 import CirclePagination from "../circle-pagination/circlePagination";
@@ -10,6 +10,9 @@ import {navigate} from "../../../services/navigation";
 import {deletePost, likeUnlikePost, onDeletePost} from "../../../services/firebase/firebaseService";
 import {MenuOption} from "react-native-popup-menu";
 import PostOption from "./postOption";
+import {Icon} from "react-native-elements";
+
+import ReportOptions from "./reportOptions";
 
 export interface PostItemProps {
     item?: ExtraPost,
@@ -24,7 +27,7 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
     const _animBookmarkNotification = React.useMemo(() => new Animated.Value(0), [])
     const [isLiked, setIsLiked] = useState<boolean>(false)
     const [postLikes, setPostLikes] = useState<string[] | undefined>([])
-    const [showOptions, setShowOptions] = useState<boolean>(false)
+    const [showReportOptions, setShowReportOptions] = useState<boolean>(false)
     useEffect(() => {
             setPostLikes(post?.postLikes)
             setIsLiked(includes(post?.postLikes, user.userId))
@@ -68,90 +71,146 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
     const onPostOption = (eventName:string, index:number|undefined,post:PostDoc) => {
         if (eventName !== 'itemSelected') return
         if (index === 0){
-
+            setShowReportOptions(true)
         } else{
             if(post.postId){
                 onDeleteItem(post.postId)
             }
         }
     }
-    return (
-        <View style={styles.container}>
-            <View style={styles.postHeader}>
-                <TouchableOpacity
-                    onPress={() => {
-                        navigate("other_user_profile", {user: post?.user})
-                    }}
-                    style={styles.infoWrapper}>
-                    <FastImage style={styles.avatar}
-                               source={{uri: post?.user?.profileImage}}/>
-                    <View style={{flex: 0, flexDirection: 'column'}}>
-                        <Text style={{
-                            fontWeight: '600'
-                        }}>{startCase(post?.user?.name)}</Text>
-                        <Text style={{
-                            fontSize: 10,
-                            fontWeight: '600'
-                        }}>{startCase(post?.location)}</Text>
-                        <Text style={{
-                            fontSize: 10,
-                            fontWeight: '600'
-                        }}>{startCase(post?.description)}</Text>
-                    </View>
-                </TouchableOpacity>
-                    <PostOption  onPress={(eventName:string,index:number|undefined)=>{onPostOption(eventName,index,post)}} actions={post.userId === user.userId ? ['Report', 'Delete'] : ['Report']}/>
-            </View>
-            <View style={styles.body}>
-                <PhotoShower onChangePage={_onChangePageHandler} post={post}/>
-                <Animated.View style={{
-                    ...styles.bookmarkAddionNotification,
-                    transform: [{
-                        translateY: _animBookmarkNotification
-                    }]
-                }}>
-                </Animated.View>
-            </View>
-            <View style={styles.reactionsWrapper}>
-                <View style={styles.reactions}>
-                    <View style={styles.lReactions}>
-                        <TouchableOpacity
-                            onPress={onReaction}
-                        >
-                            <Icons name={isLiked
-                                ? "heart" : "heart-outline"}
-                                   size={24}
-                                   color={
-                                       isLiked ? 'red' : '#000'
-                                   }/>
-                        </TouchableOpacity>
-                        {postLikes && postLikes.length !== 0 && <Text style={{
-                            fontSize: 15
-                            // marginVertical: 5,
-                        }}>{postLikes.length >= 1000 ?
-                            (Math.round(postLikes.length / 1000) + 'k')
-                            : postLikes.length} {postLikes.length < 2 ? 'like' : 'likes'}</Text>}
-                    </View>
-                    {item?.source && item.source.length > 1 && <CirclePagination
-                        maxPage={item.source?.length || 0}
-                        currentPage={currentPage}
-                    />}
-                    {/*<TouchableOpacity*/}
-                    {/*    activeOpacity={0.7}*/}
-                    {/*    // onPress={_onToggleBookmark}*/}
-                    {/*>*/}
-                    {/*    <Image*/}
-                    {/*        style={{*/}
-                    {/*            height: 24,*/}
-                    {/*            width: 24*/}
-                    {/*        }}*/}
-                    {/*        source={*/}
-                    {/*            true ? require('../../../../assets/icons/bookmarked.png')*/}
-                    {/*                : require('../../../../assets/icons/bookmark.png')} />*/}
-                    {/*</TouchableOpacity>*/}
-                </View>
 
+    const getPostOptions = ():any => {
+        if(post.userId === user.userId){
+            return [
+                {
+                    text: "Delete",
+                    onPress: () => {onPostOption("itemSelected",1,post)},
+                    style: "cancel"
+                },
+                {
+                    text: "Report",
+                    onPress: () => {onPostOption("itemSelected",0,post)},
+                    style: "cancel"
+                },
+                {
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "destructive"
+                },
+            ]
+        } else {
+            return [
+                {
+                    text: "Report",
+                    onPress: () => {onPostOption("itemSelected",0,post)},
+                    style: "cancel"
+                },
+                {
+                    text: "Cancel",
+                    onPress: () => {setShowReportOptions(false)},
+                    style: "destructive"
+                }
+            ]
+        }
+    }
+const onPostOptionClick = (post:PostDoc) => {
+        Alert.alert(
+            "Select an Option",
+            "",
+            getPostOptions(),
+            {cancelable: true}
+        );
+    }
+    return (
+        <>
+            <View style={styles.container}>
+                <View style={styles.postHeader}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigate("other_user_profile", {user: post?.user})
+                        }}
+                        style={styles.infoWrapper}>
+                        <FastImage style={styles.avatar}
+                                   source={{uri: post?.user?.profileImage}}/>
+                        <View style={{flex: 0, flexDirection: 'column'}}>
+                            <Text style={{
+                                fontWeight: '600'
+                            }}>{startCase(post?.user?.name)}</Text>
+                            {
+                                !isEmpty(post?.location) &&
+                                <Text style={{
+                                    fontSize: 10,
+                                    fontWeight: '600'
+                                }}>{startCase(post?.location)}</Text>
+                            }
+                        </View>
+                    </TouchableOpacity>
+                    {
+                        Platform.OS === 'ios' ?
+                            <TouchableOpacity onPress={()=>{onPostOptionClick(post)}}>
+                                <Icon
+                                    name='more-vert'
+                                    size={24}
+                                    color={'grey'}
+                                />
+                            </TouchableOpacity>                    :
+                            <PostOption  onPress={(eventName:string,index:number|undefined)=>{onPostOption(eventName,index,post)}} actions={post.userId === user.userId ? ['Report', 'Delete'] : ['Report']}/>
+                    }
+                </View>
+                <View style={styles.body}>
+                    <PhotoShower onChangePage={_onChangePageHandler} post={post}/>
+                </View>
+                <View style={styles.reactionsWrapper}>
+                    <View style={styles.reactions}>
+                        <View style={styles.lReactions}>
+                            <TouchableOpacity
+                                onPress={onReaction}
+                            >
+                                <Icons name={isLiked
+                                    ? "heart" : "heart-outline"}
+                                       size={24}
+                                       color={
+                                           isLiked ? 'red' : '#000'
+                                       }/>
+                            </TouchableOpacity>
+                            {postLikes && postLikes.length !== 0 && <Text style={{
+                                fontSize: 15
+                                // marginVertical: 5,
+                            }}>{postLikes.length >= 1000 ?
+                                (Math.round(postLikes.length / 1000) + 'k')
+                                : postLikes.length} {postLikes.length < 2 ? 'like' : 'likes'}</Text>}
+                        </View>
+                        {
+                            !isEmpty(post?.description) &&
+                            <Text style={{
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            }}>{startCase(post?.description)}</Text>
+                        }
+                        {item?.source && item.source.length > 1 && <CirclePagination
+                            maxPage={item.source?.length || 0}
+                            currentPage={currentPage}
+                        />}
+                        {/*<TouchableOpacity*/}
+                        {/*    activeOpacity={0.7}*/}
+                        {/*    // onPress={_onToggleBookmark}*/}
+                        {/*>*/}
+                        {/*    <Image*/}
+                        {/*        style={{*/}
+                        {/*            height: 24,*/}
+                        {/*            width: 24*/}
+                        {/*        }}*/}
+                        {/*        source={*/}
+                        {/*            true ? require('../../../../assets/icons/bookmarked.png')*/}
+                        {/*                : require('../../../../assets/icons/bookmark.png')} />*/}
+                        {/*</TouchableOpacity>*/}
+                    </View>
+
+                </View>
             </View>
-        </View>
+            <ReportOptions showEditProfile={showReportOptions} onClose={()=>{setShowReportOptions(false)}}/>
+        </>
+
     )
 }
 
@@ -210,11 +269,12 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     reactionsWrapper: {
-        padding: 10
+        paddingTop: 5,
+        paddingLeft:10
     },
     reactions: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
         justifyContent: 'space-between'
     },
     lReactions: {

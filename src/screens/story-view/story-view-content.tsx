@@ -108,7 +108,7 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
             const hours = Math.trunc(durationDiff / 3600);
             const minuites = Math.trunc((durationDiff - (hours * 3600)) / 60)
             const seconds = durationDiff - (hours * 3600 + minuites *60);
-            const remainingTime = `${((hours.toString()).length === 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
+            const remainingTime = `${((hours.toString()).length >= 2) ? hours : `0${hours}`}:${((minuites.toString()).length === 2) ? minuites : `0${minuites}`}:${((seconds.toString()).length === 2) ? seconds : `0${seconds}`}`;
 
             if(durationDiff > 0){
                 this.setState({
@@ -165,6 +165,10 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
 
                         <View style={[{flexDirection: "row", marginBottom:2}]}>
                             <View style={{flexDirection:'column',justifyContent:'center'}}>
+                                <Progress.Bar progress={1- getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
+                                              borderRadius={10}/>
+                            </View>
+                            <View style={{flexDirection:'column',justifyContent:'center'}}>
                                 <Image
                                     source={{uri: "https://i.pinimg.com/originals/2a/0c/fe/2a0cfecd615bed18b3cf4688d2b5962c.png"}}
                                     style={{width: 20, height: 20, borderRadius: 10, marginRight: 5}}/>
@@ -172,15 +176,18 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                             <View style={{flexDirection:'column',justifyContent:'center'}}>
                                 <Text style={{color: "#000", fontWeight: "bold", marginRight: 5}}>{this.state.remainingTime}</Text>
                             </View>
-                            <View style={{flexDirection:'column',justifyContent:'center'}}>
-                                <Progress.Bar progress={1- getProgressBarValue(this.state.durationDiff,this.state.pollDuration)} width={SCREEN_WIDTH - 100} color={'#979797'} height={5}
-                                              borderRadius={10}/>
-                            </View>
                         </View>
                         <ImageBackground
                             source={{ uri: poll.image }}
                             style={styles.image}
                         >
+                            {
+                                poll.isDmPoll &&
+                                <View style={{flex:0,justifyContent:'flex-end',alignItems:'flex-end',margin:10, borderRadius:50}}>
+                                    <Text style={{backgroundColor:'#02d5f8',color:'#FFF',fontWeight:'bold'}}>Just for you ❤</Text>
+                                </View>
+                            }
+
                             <View style={{ flex: 10 }} />
                             {!(this.state.userReacted || this.state.remainingTime === "00:00:00") && (
                                 <View

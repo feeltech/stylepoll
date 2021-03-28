@@ -3,6 +3,8 @@ import {RNCamera} from "react-native-camera";
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-dynamic-vector-icons";
 import {launchImageLibrary} from "react-native-image-picker";
+import {goBack} from "../../../services/navigation";
+import {SCREEN_HEIGHT} from "../../constants";
 
 interface ICameraStates {
     cameraView: any;
@@ -64,6 +66,16 @@ class Camera extends React.Component<ICameraProps, ICameraStates> {
             >
                 <View style={{flex:1,flexDirection:'row'}}>
                     <TouchableOpacity
+                        onPress={goBack}
+                        style={{  flex:1,
+                            alignItems: "flex-start",
+                            justifyContent:"flex-start",
+                            paddingTop:30,
+                            paddingLeft:20
+                        }}>
+                        <Icon name={"x"} type="Feather" size={30} color={"#FFFFFF"}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={this.changeViewMode.bind(this)}
                         style={{  flex:1,
                             alignItems: "flex-end",
@@ -114,10 +126,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         ...Platform.select({
             android: {
-                marginTop: 44
+                marginTop: SCREEN_HEIGHT/15
             },
             ios: {
-                marginTop: 22
+                marginTop: SCREEN_HEIGHT/11
             },
         })
     },

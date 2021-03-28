@@ -26,7 +26,8 @@ export const SCREENS = {
     OTHER_USER_PROFILE:'other_user_profile',
     WARDROBE_VIEW:'wardrobe_view',
     SEARCH_DISCOVER:'search-discover',
-    SEARCH_FRIENDS: 'search-friends'
+    SEARCH_FRIENDS: 'search-friends',
+    EDIT_PROFILE_CAMERA:'edit-profile-camera'
 };
 
 export const STATUS_BAR_HEIGHT: number = getStatusBarHeight();
@@ -196,3 +197,8 @@ export const ALERT_POLL_COLLECTIONS = firestore().collection('alert-poll');
 export const MOOD_COLLECTIONS = firestore().collection('moods');
 export const TAG_COLLECTIONS = firestore().collection('tags');
 export const NOTIFICATION_COLLECTIONS = firestore().collection('notifications');
+
+export const NOTIFICATION_TYPES = {
+    ALERT_POLL:'alert-poll',
+    FOLLOW_USER:'follow-user'
+}

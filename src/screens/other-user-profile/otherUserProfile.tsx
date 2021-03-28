@@ -137,7 +137,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
             <View style={styles.container}>
                 <ScrollView style={{backgroundColor: 'none'}}>
                     <Header
-                        statusBarProps={{barStyle: "dark-content"}}
+                        statusBarProps={{barStyle: "light-content"}}
                         barStyle="dark-content"
                         containerStyle={{
                             display: "flex",
@@ -216,7 +216,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                                 alignItems: 'center',
                                 marginRight: 3,
                                 padding: 3
-                            }} onPress={this.onFollowHandle}>
+                            }} onPress={this.onFollowHandle} disabled={this.state.user.userId === this.state.profileUser.userId}>
                                 <Text style={{fontSize: 12}}>{this.state.isFollowingUser ? 'Unfollow' : 'Follow'}</Text>
                             </TouchableOpacity>
                         </View>

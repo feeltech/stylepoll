@@ -8,7 +8,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Platform,
+    ScrollView
 } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {navigate} from "../../services/navigation";
@@ -59,11 +61,20 @@ export default class Register extends React.Component<any, ILoginStates>{
             this.setState({
                 error:'Passwords do not match!'
             })
+            return;
+        }
+        const emailRegex = new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,8}$')
+        if(!this.state.email.match(emailRegex)){
+            this.setState({
+                error:'Invalid Email!'
+            })
+            return;
         }
         const user: User = {
             name:this.state.name.toLowerCase(),
             email:this.state.email.toLowerCase(),
-            password:this.state.password
+            password:this.state.password,
+            profileImage:'https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg'
         }
         this.setState({isLoading:true})
         registerUser(user).then(res => {
@@ -74,7 +85,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             navigate("login")
         }).catch(err => {
             this.setState({
-                error:err
+                error:err,
+                isLoading:false
             })
             console.log("Register user error ", err)
         })
@@ -88,7 +100,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             password:'',
             hidePassword:true,
             allowRegister:true,
-            hideConfirmPassword:true
+            hideConfirmPassword:true,
+            error:null
         })
     }
 
@@ -98,7 +111,8 @@ export default class Register extends React.Component<any, ILoginStates>{
             <SafeAreaView style={styles.container}>
                 <Loader show={this.state.isLoading}/>
                 <KeyboardAvoidingView style={styles.keyboardAvoidingViewContainer}
-                                      behavior="height">
+                                      behavior={Platform.OS === "ios" ? "padding" : 'height'}>
+                    <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                     <View style={styles.centerContainer}>
                         <View style={styles.logoWrapper}>
                             <Text style={{fontSize:50,fontFamily:'serif',color:'#318bfb'}}>STYLEPOLL</Text>
@@ -192,6 +206,7 @@ export default class Register extends React.Component<any, ILoginStates>{
                             {/*</TouchableOpacity>*/}
                         </View>
                     </View>
+                    </ScrollView>
                     <TouchableOpacity
                         onPress={()=>{navigate("login")}}
                         activeOpacity={1}

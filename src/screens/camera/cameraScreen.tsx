@@ -9,6 +9,7 @@ interface ICameraScreenStates{
 }
 class CameraScreen extends React.Component<any, ICameraScreenStates> {
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -16,19 +17,8 @@ class CameraScreen extends React.Component<any, ICameraScreenStates> {
         }
     }
 
-    componentDidMount() {
-        const isEditProfile = this.props.route.params && this.props.route.params.isEditProfile ? this.props.route.params.isEditProfile : false;
-        this.setState({
-            isEditProfileCapture:isEditProfile
-        })
-    }
-
     private onCapture = (imageURI: string) => {
-        if(!this.state.isEditProfileCapture){
-            navigate("capture_action", {imageUri: `data:image/jpeg;base64,${imageURI}`})
-        }else{
-            navigate("profile", {imageUri: `data:image/jpeg;base64,${imageURI}`})
-        }
+        navigate("capture_action", {imageUri: `data:image/jpeg;base64,${imageURI}`})
     }
 
 
@@ -45,7 +35,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: "transparent",
+        backgroundColor: "#0C0D34",
     }
 });
 export default CameraScreen;
