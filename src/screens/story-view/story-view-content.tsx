@@ -84,9 +84,9 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
 
     private onDislikePoll = (poll:AlertPoll) => {
         if (poll.dislikes) {
-            poll.dislikes.push(this.state.user);
+            poll.dislikes.push(this.props.user);
         } else {
-            poll.dislikes = [this.state.user];
+            poll.dislikes = [this.props.user];
         }
         reactToPoll(this.state.user, poll)
             .then((res) => {
