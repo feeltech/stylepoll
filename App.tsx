@@ -7,6 +7,7 @@ import { updateDeviceId } from "./src/services/firebase/firebaseService";
 import messaging from "@react-native-firebase/messaging";
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import { NOTIFICATION_TYPES } from "./src/shared/constants";
 
 function onUpdateDeviceId(deviceId) {
   fetchLocalStorage("loggedUser").then(res => {
@@ -71,7 +72,11 @@ function onRegister(token) {
 function handleForegroundMessage() {
   messaging().onMessage(async (message) => {
     // logger.verbose(FILE_NAME, "Firebase foreground message - ", message);
-    handlePushNotification(message);
+    console.log("rnfirebase.io handleForegroundMessage", message);
+    if(message.data?.user){
+      const data = JSON.parse(message.data.user);
+      handlePushNotification({title: data.message, body: data.meta.notificationType === NOTIFICATION_TYPES.FOLLOW_USER ? "Check "+ data.meta.notifier.name + " for amazing content." : "Check out "+ data.meta.notifier.name + "'s Alert Poll."});
+    }
   });
 }
 
