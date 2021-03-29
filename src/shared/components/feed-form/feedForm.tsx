@@ -257,7 +257,8 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         {
                                             this.state.selectedMoods.map(mood => {
                                                 return (
-                                                    <View style={{
+                                                    this.state.moodList[mood] &&
+                                                      <View style={{
                                                         borderRadius: 10,
                                                         borderWidth: 1,
                                                         borderColor: "#a2a2a2",
@@ -280,7 +281,6 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                                                 <Icon name={"close"} size={12} color={'red'}/>
                                                             </TouchableOpacity>
                                                         </View>
-
                                                     </View>
                                                 )
 
@@ -328,6 +328,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         {
                                             this.state.selectedTags.map(tag => {
                                                 return (
+                                                    this.state.selectedTags[tag] &&
                                                     <View style={{
                                                         borderRadius: 10,
                                                         borderWidth: 1,

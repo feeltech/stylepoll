@@ -354,7 +354,7 @@ export async function onCreatePost(post: PostDoc) {
             .catch((err) => {
                 console.log("Poll create error ", err);
             });
-        await sendAlertPollNotification(post.userId, post)
+            await sendAlertPollNotification(post.userId, post)
     }
 
     if (isNull(post.user.profileImage) || isEmpty(post.user.profileImage)) {
@@ -493,7 +493,7 @@ export async function getFollowingUserPolls(
             }
         }),
     );
-    
+
     const dmPolls = await ALERT_POLL_COLLECTIONS.doc(userId)
         .collection("followingAlertPoll")
         .get()
@@ -505,7 +505,7 @@ export async function getFollowingUserPolls(
             const userHasPublicPolls = storyItems.filter((storyItem) => {
                 return storyItem.userId === p.user.userId
             })
-        
+
             if (userHasPublicPolls) {
                 userHasPublicPolls[0].polls.push(p)
             } else {
