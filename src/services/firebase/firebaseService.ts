@@ -781,7 +781,7 @@ export async function sendFollowNotification(notificationReceiverId: string, not
     if(notificationSender){
         notificationSender.userId = notificationSenderDoc.id
     }
-    const title = `${notificationSender?.name} has followed you`;
+    const title = `${notificationSender?.name} followed you`;
     const message = `Checkout ${notificationSender?.name} for awesome Content`;
     const notificationTrigger:NotificationTrigger = {
         deviceTokens:[],
@@ -791,7 +791,7 @@ export async function sendFollowNotification(notificationReceiverId: string, not
     }
     const notification: Notification = {
         deviceToken: notificationReceiver?.deviceId,
-        message: `${notificationSender?.name} has followed you`,
+        message: `${notificationSender?.name} followed you`,
         meta: {
             notified_at: new Date(),
             image: notificationSender?.profileImage,
@@ -810,7 +810,7 @@ export async function sendAlertPollNotification(notificationSenderId: string, po
     const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
     const user = userDoc.data()
     const title = `${user?.name} added an Alert Poll`;
-    const message = `Checkout ${user?.name} for awesome Content`;
+    const message = `Checkout ${user?.name}'s Alert Poll.`;
     const notificationTrigger:NotificationTrigger = {
         deviceTokens:[],
         title:title,
@@ -844,7 +844,7 @@ export async function sendAlertPollNotificationToFriend(notificationSenderId: st
     const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
     const user = userDoc.data()
     const title = `${user?.name} added an Alert Poll`;
-    const message = `Checkout ${user?.name} for awesome Content`;
+    const message = `Checkout ${user?.name}'s Alert Poll.`;
     const notificationTrigger:NotificationTrigger = {
         deviceTokens:[],
         title:title,

@@ -73,10 +73,7 @@ function handleForegroundMessage() {
   messaging().onMessage(async (message) => {
     // logger.verbose(FILE_NAME, "Firebase foreground message - ", message);
     console.log("rnfirebase.io handleForegroundMessage", message);
-    if(message.data?.user){
-      const data = JSON.parse(message.data.user);
-      handlePushNotification({title: data.message, body: data.meta.notificationType === NOTIFICATION_TYPES.FOLLOW_USER ? "Check "+ data.meta.notifier.name + " for amazing content." : "Check out "+ data.meta.notifier.name + "'s Alert Poll."});
-    }
+    handlePushNotification(message);
   });
 }
 
@@ -122,7 +119,7 @@ function configureLocalPush() {
 function handlePushNotification(firebaseMessage) {
   console.log("rnfirebase.io handlePushNotification", firebaseMessage);
   console.log("rnfirebase.io device platform : ", Platform.OS);
-  const messageData = JSON.parse(firebaseMessage.data)
+  const messageData = firebaseMessage.data
   if (Platform.OS === "ios") {
     sendPushIOS(
       messageData.title,
@@ -161,6 +158,9 @@ export default class App extends React.Component<any, any> {
     configureLocalPush();
     handleNotificationClick()
     await requestUserPermission();
+    PushNotificationIOS.addEventListener('notification', function(){
+      navigate("favourites")
+    });
   }
   render() {
     return (
