@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { AsyncStorage, Platform, StatusBar, StyleSheet, } from "react-native";
-import StackNavigation from "./src/services/navigation/index";
+import StackNavigation, {navigate} from "./src/services/navigation/index";
 import { fetchLocalStorage, storeLocalStorage } from "./src/utils/local-storage";
 import { updateDeviceId } from "./src/services/firebase/firebaseService";
 import messaging from "@react-native-firebase/messaging";
@@ -83,6 +83,12 @@ function handleBackgroundMessage() {
   });
 }
 
+function handleNotificationClick(){
+  messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    navigate("favourites")
+  })
+}
+
 function configureLocalPush() {
   PushNotification.configure({
     onRegister: function (token) {
@@ -111,15 +117,16 @@ function configureLocalPush() {
 function handlePushNotification(firebaseMessage) {
   console.log("rnfirebase.io handlePushNotification", firebaseMessage);
   console.log("rnfirebase.io device platform : ", Platform.OS);
+  const messageData = JSON.parse(firebaseMessage.data)
   if (Platform.OS === "ios") {
     sendPushIOS(
-      firebaseMessage.notification.title,
-      firebaseMessage.notification.body
+      messageData.title,
+      messageData.message
     );
   } else {
     sendPushAndroid(
-      firebaseMessage.notification.title,
-      firebaseMessage.notification.body
+        messageData.title,
+        messageData.message
     );
   }
 }
@@ -146,7 +153,8 @@ export default class App extends React.Component<any, any> {
     super(props);
   }
   async componentDidMount() {
-    // configureLocalPush();
+    configureLocalPush();
+    handleNotificationClick()
     await requestUserPermission();
   }
   render() {
