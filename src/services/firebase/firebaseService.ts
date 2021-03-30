@@ -241,7 +241,6 @@ export async function onFollowUser(loggedInUser: string, followingUser: string) 
             await FEED_COLLECTIONS.doc(loggedInUser).collection("followingUserFeed").add(post)
         }
     }))
-    debugger
     await sendFollowNotification(followingUser, loggedInUser)
 }
 
