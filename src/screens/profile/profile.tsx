@@ -88,7 +88,12 @@ export default class Profile extends React.Component<any, IProfileStates> {
                     })
 
                     getUserPosts(profileUser.userId).then(res => {
-                        this.setState({posts: res})
+                        const sortedPosts = res.sort(function compare(a, b) {
+                            const dateA = a.createdAt.toDate()
+                            const dateB = b.createdAt.toDate();
+                            return dateB - dateA;
+                        });
+                        this.setState({posts: sortedPosts})
                     })
 
                     getUserFollowings(profileUser.userId).then(res => {

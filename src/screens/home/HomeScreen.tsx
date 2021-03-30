@@ -62,17 +62,26 @@ const HomeScreen = () => {
     const fetchFeed = (user) => {
         setIsLoading(true)
         getUserFeed(user.userId).then((res) => {
+            const sortedFeed = res.sort(function compare(a, b) {
+                const dateA = a.createdAt.toDate();
+                const dateB = b.createdAt.toDate();
+                return dateB - dateA;
+            });
             setIsLoading(false)
-            setPostList(res);
+            setPostList(sortedFeed);
         });
     };
 
     const fetchAlertPoll = (user) => {
         setIsLoading(true)
         getUserPolls(user.userId).then((res) => {
+            const sortedAlertPolls = res.sort(function compare(a, b) {
+                const dateA = a.createdAt.toDate();
+                const dateB = b.createdAt.toDate();
+                return dateB - dateA;
+            });
+            setUserPolls(sortedAlertPolls);
             setIsLoading(false)
-
-            setUserPolls(res);
         });
     };
 

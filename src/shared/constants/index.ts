@@ -197,6 +197,7 @@ export const ALERT_POLL_COLLECTIONS = firestore().collection('alert-poll');
 export const MOOD_COLLECTIONS = firestore().collection('moods');
 export const TAG_COLLECTIONS = firestore().collection('tags');
 export const NOTIFICATION_COLLECTIONS = firestore().collection('notifications');
+export const NOTIFICATION_TRIGGERS = firestore().collection('notification-triggers');
 
 export const NOTIFICATION_TYPES = {
     ALERT_POLL:'alert-poll',

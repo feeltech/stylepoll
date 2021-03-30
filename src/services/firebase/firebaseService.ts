@@ -2,13 +2,22 @@ import firestore from "@react-native-firebase/firestore";
 import {map, filter, includes, sortBy, isNull, isEmpty} from "lodash";
 import auth from '@react-native-firebase/auth';
 
-import {AlertPoll, LoggingUser, Notification, Post, PostDoc, StoryItem, User, WardRobe} from "../../modals";
+import {
+    AlertPoll,
+    LoggingUser,
+    Notification, NotificationTrigger,
+    Post,
+    PostDoc,
+    StoryItem,
+    User,
+    WardRobe
+} from "../../modals";
 import {
     ALERT_POLL_COLLECTIONS,
     FEED_COLLECTIONS,
     FOLLOWERS_COLLECTION,
     FOLLOWING_COLLECTION,
-    MOOD_COLLECTIONS, NOTIFICATION_COLLECTIONS, NOTIFICATION_TYPES,
+    MOOD_COLLECTIONS, NOTIFICATION_COLLECTIONS, NOTIFICATION_TRIGGERS, NOTIFICATION_TYPES,
     POST_COLLECTION,
     TAG_COLLECTIONS,
     USER_COLLECTION,
@@ -232,6 +241,7 @@ export async function onFollowUser(loggedInUser: string, followingUser: string) 
             await FEED_COLLECTIONS.doc(loggedInUser).collection("followingUserFeed").add(post)
         }
     }))
+    debugger
     await sendFollowNotification(followingUser, loggedInUser)
 }
 
@@ -327,7 +337,7 @@ export async function onCreatePost(post: PostDoc) {
                 .set(post)
         }));
     }
-    if (post.DMList?.length != 0) {
+    if (post.DMList && post.DMList?.length != 0) {
         map(post.DMList, (userId) => {
             post.isDmPoll = true
             ALERT_POLL_COLLECTIONS.doc(userId)
@@ -340,6 +350,7 @@ export async function onCreatePost(post: PostDoc) {
                     console.log("Send to friend feed error ", err);
                 });
         });
+        await sendAlertPollNotificationToFriend(post.userId, post,post?.DMList)
     }
 
     if (post.isPollPost) {
@@ -354,7 +365,9 @@ export async function onCreatePost(post: PostDoc) {
             .catch((err) => {
                 console.log("Poll create error ", err);
             });
+        if(!post.DMList){
             await sendAlertPollNotification(post.userId, post)
+        }
     }
 
     if (isNull(post.user.profileImage) || isEmpty(post.user.profileImage)) {
@@ -578,6 +591,7 @@ function getWardrobePosts(posts: PostDoc[], tags: string[]): WardRobe[] {
                 }
             })
         });
+
         wardrobeList.push(wardrobe);
     });
     return wardrobeList;
@@ -630,6 +644,7 @@ export async function hasReactedToPoll(
 export async function sendPollToFeed(userId: string, poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(userId).collection("userPolls").doc(poll.postId).set(poll)
+    poll.createdAt = new Date();
     await FEED_COLLECTIONS.doc(userId).collection("userFeed").doc(poll.postId).set(poll)
     const userFollowers = await getUserFollowers(userId);
     await Promise.all(map(userFollowers, async (user) => {
@@ -647,6 +662,7 @@ export async function sendPollToFriends(poll: AlertPoll) {
     poll.pollCompleted = true
     await ALERT_POLL_COLLECTIONS.doc(poll.user.userId).collection("userPolls").doc(poll.postId).set(poll)
     await map(poll.DMList, async (userId) => {
+        poll.createdAt = new Date()
         await FEED_COLLECTIONS.doc(userId)
             .collection("userFeed")
             .add(poll)
@@ -763,6 +779,17 @@ export async function sendFollowNotification(notificationReceiverId: string, not
     const notificationSenderDoc = await USER_COLLECTION.doc(notificationSenderId).get();
     const notificationReceiver = notificationReceiverDoc.data()
     const notificationSender = notificationSenderDoc.data()
+    if(notificationSender){
+        notificationSender.userId = notificationSenderDoc.id
+    }
+    const title = `${notificationSender?.name} has followed you`;
+    const message = `Checkout ${notificationSender?.name} for awesome Content`;
+    const notificationTrigger:NotificationTrigger = {
+        deviceTokens:[],
+        title:title,
+        message:message,
+        navigateTo:undefined
+    }
     const notification: Notification = {
         deviceToken: notificationReceiver?.deviceId,
         message: `${notificationSender?.name} has followed you`,
@@ -773,7 +800,9 @@ export async function sendFollowNotification(notificationReceiverId: string, not
             notificationType: NOTIFICATION_TYPES.FOLLOW_USER
         }
     }
+    notificationTrigger.deviceTokens.push(notificationReceiver?.deviceId)
     await NOTIFICATION_COLLECTIONS.doc(notificationReceiverId).collection("userNotification").add(notification)
+    await saveNotificationTrigger(notificationTrigger)
 
 }
 
@@ -781,23 +810,68 @@ export async function sendAlertPollNotification(notificationSenderId: string, po
     const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
     const userFollowers = await FOLLOWERS_COLLECTION.doc(notificationSenderId).collection("userFollowers").get()
     const user = userDoc.data()
-    await Promise.all(map(userFollowers.docs, async follower => {
-            const followingUserDoc = await USER_COLLECTION.doc(follower.id).get();
-            const followingUser = followingUserDoc.data();
-            const notification: Notification = {
-                deviceToken: followingUser?.deviceId,
-                message: `${user?.name} added an Alert Poll`,
-                meta: {
-                    notified_at: new Date(),
-                    image: user?.profileImage,
-                    notifier: user,
-                    alertPoll: poll,
-                    notificationType: NOTIFICATION_TYPES.ALERT_POLL
-                }
+    const title = `${user?.name} added an Alert Poll`;
+    const message = `Checkout ${user?.name} for awesome Content`;
+    const notificationTrigger:NotificationTrigger = {
+        deviceTokens:[],
+        title:title,
+        message:message,
+        navigateTo:undefined
+    }
+    const deviceTokens = userFollowers.docs.map(async follower => {
+        const followingUserDoc = await USER_COLLECTION.doc(follower.id).get();
+        const followingUser = followingUserDoc.data();
+        const notification: Notification = {
+            deviceToken: followingUser?.deviceId,
+            message: `${user?.name} added an Alert Poll`,
+            meta: {
+                notified_at: new Date(),
+                image: user?.profileImage,
+                notifier: user,
+                alertPoll: poll,
+                notificationType: NOTIFICATION_TYPES.ALERT_POLL
             }
-            await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
-        })
-    )
+        }
+        const n = await NOTIFICATION_COLLECTIONS.doc(follower.id).collection("userNotification").add(notification)
+        return Promise.resolve(followingUser?.deviceId)
+    });
+    const dT = await Promise.all(deviceTokens)
+    notificationTrigger.deviceTokens = dT
+    await saveNotificationTrigger(notificationTrigger)
+}
+
+export async function sendAlertPollNotificationToFriend(notificationSenderId: string, poll,receiverIds:string[]) {
+
+    const userDoc = await USER_COLLECTION.doc(notificationSenderId).get()
+    const user = userDoc.data()
+    const title = `${user?.name} added an Alert Poll`;
+    const message = `Checkout ${user?.name} for awesome Content`;
+    const notificationTrigger:NotificationTrigger = {
+        deviceTokens:[],
+        title:title,
+        message:message,
+        navigateTo:undefined
+    }
+    const deviceTokens = receiverIds.map(async r => {
+        const receiverDoc = await USER_COLLECTION.doc(r).get();
+        const receiver = receiverDoc.data();
+        const notification: Notification = {
+            deviceToken: receiver?.deviceId,
+            message: `${user?.name} added an Alert Poll`,
+            meta: {
+                notified_at: new Date(),
+                image: user?.profileImage,
+                notifier: user,
+                alertPoll: poll,
+                notificationType: NOTIFICATION_TYPES.ALERT_POLL
+            }
+        }
+        await NOTIFICATION_COLLECTIONS.doc(r).collection("userNotification").add(notification)
+        return Promise.resolve(receiver?.deviceId)
+    })
+    const dT = await Promise.all(deviceTokens)
+    notificationTrigger.deviceTokens = dT
+    await saveNotificationTrigger(notificationTrigger);
 }
 
 export async function getNotifications(userId: string): Promise<Notification[]> {
@@ -810,4 +884,8 @@ export async function getNotifications(userId: string): Promise<Notification[]> 
         notifications.push(doc.data())
     }))
     return Promise.resolve(notifications)
+}
+
+export async function saveNotificationTrigger(trigger:NotificationTrigger){
+    await NOTIFICATION_TRIGGERS.add(trigger)
 }

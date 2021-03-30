@@ -4,17 +4,16 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
-exports.sendNotification = functions.firestore.document('/notifications/{userId}/{notificationId}').onCreate(async (snapshot, context) => {
-    const userId = context.params.userId;
+exports.sendNotification = functions.firestore.document('/notification-triggers').onCreate(async (snapshot, context) => {
     const notification = snapshot.data()
     functions.logger.log("Snapshot ", snapshot.data())
     const n = await admin.messaging().sendToDevice(
-        [notification.deviceToken],
+        [notification.deviceTokens],
         {
             data: {
-                owner: JSON.stringify(notification),
-                user: JSON.stringify(notification),
-                picture: JSON.stringify(notification)
+                title:notification.title,
+                message:notification.message,
+                navigateTo:notification.navigateTo ? notification.navigateTo : undefined
             }
         },
         {

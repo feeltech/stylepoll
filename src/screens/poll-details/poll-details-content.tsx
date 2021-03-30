@@ -59,7 +59,9 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
             }
 
             setInterval(() => {
-                this.getRemainingTime(poll);
+                if(poll.createdAt.toDate){
+                    this.getRemainingTime(poll);
+                }
             },1000)
             this.setState({
                 poll:poll

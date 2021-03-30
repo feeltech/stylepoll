@@ -121,6 +121,16 @@ export type Notification  = {
   meta?: any
 }
 
+export type NotificationTrigger = {
+  deviceTokens:any[],
+  title:string,
+  message:string,
+  navigateTo?:{
+    path:string,
+    params:any
+  }
+}
+
 export type AlertPoll = PostDoc & {
   likes:User[]
   dislikes:User[],
