@@ -156,7 +156,7 @@ export default class App extends React.Component<any, any> {
   }
   async componentDidMount() {
     configureLocalPush();
-    handleNotificationClick()
+    // handleNotificationClick()
     await requestUserPermission();
     PushNotificationIOS.addEventListener('notification', function(){
       navigate("favourites")
