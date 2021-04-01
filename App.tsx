@@ -1,8 +1,11 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { AsyncStorage, Platform, StatusBar, StyleSheet, } from "react-native";
-import StackNavigation, {navigate} from "./src/services/navigation/index";
-import { fetchLocalStorage, storeLocalStorage } from "./src/utils/local-storage";
+import { AsyncStorage, Platform, StatusBar, StyleSheet } from "react-native";
+import StackNavigation, { navigate } from "./src/services/navigation/index";
+import {
+  fetchLocalStorage,
+  storeLocalStorage,
+} from "./src/utils/local-storage";
 import { updateDeviceId } from "./src/services/firebase/firebaseService";
 import messaging from "@react-native-firebase/messaging";
 import PushNotification from "react-native-push-notification";
@@ -10,9 +13,9 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import { NOTIFICATION_TYPES } from "./src/shared/constants";
 
 function onUpdateDeviceId(deviceId) {
-  fetchLocalStorage("loggedUser").then(res => {
-    updateDeviceId(res.userId, deviceId)
-  })
+  fetchLocalStorage("loggedUser").then((res) => {
+    updateDeviceId(res.userId, deviceId);
+  });
 }
 
 // TODO - add react-native-community/push-notification-ios
@@ -56,10 +59,9 @@ function onRegister(token) {
     .then((res) => {
       console.log("rnfirebase.io token set to AsyncStorage");
       AsyncStorage.getItem("deviceToken").then((dt) => {
-        console.log("rnfirebase.io  device_token from storage : ", dt)
-        onUpdateDeviceId(dt)
-      }
-      );
+        console.log("rnfirebase.io  device_token from storage : ", dt);
+        onUpdateDeviceId(dt);
+      });
       handleForegroundMessage();
       handleBackgroundMessage();
     })
@@ -85,10 +87,10 @@ function handleBackgroundMessage() {
   });
 }
 
-function handleNotificationClick(){
+function handleNotificationClick() {
   messaging().onNotificationOpenedApp(async (remoteMessage) => {
-    navigate("favourites")
-  })
+    navigate("favourites");
+  });
 }
 
 function configureLocalPush() {
@@ -98,10 +100,13 @@ function configureLocalPush() {
     },
     onNotification: function (notification) {
       console.log("NOTIFICATION:", notification);
+      if (notification.userInteraction) {
+        navigate("favourites");
+      }
     },
     onAction: function (notification) {
       console.log("ACTION:", notification.action);
-      console.log("NOTIFICATION:", notification);
+      console.log("NOTIFICATION ACTION:", notification);
     },
     onRegistrationError: function (err) {
       console.error(err.message, err);
@@ -119,17 +124,11 @@ function configureLocalPush() {
 function handlePushNotification(firebaseMessage) {
   console.log("rnfirebase.io handlePushNotification", firebaseMessage);
   console.log("rnfirebase.io device platform : ", Platform.OS);
-  const messageData = firebaseMessage.data
+  const messageData = firebaseMessage.data;
   if (Platform.OS === "ios") {
-    sendPushIOS(
-      messageData.title,
-      messageData.message
-    );
+    sendPushIOS(messageData.title, messageData.message);
   } else {
-    sendPushAndroid(
-        messageData.title,
-        messageData.message
-    );
+    sendPushAndroid(messageData.title, messageData.message);
   }
 }
 
@@ -156,15 +155,9 @@ export default class App extends React.Component<any, any> {
   }
   async componentDidMount() {
     configureLocalPush();
-    // handleNotificationClick()
     await requestUserPermission();
-    PushNotificationIOS.addEventListener('notification', function(){
-      navigate("favourites")
-    });
   }
   render() {
-    return (
-      <StackNavigation />
-    );
+    return <StackNavigation />;
   }
 }
