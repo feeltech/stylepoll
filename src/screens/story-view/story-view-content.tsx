@@ -41,8 +41,8 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
         };
     }
 
-    componentWillReceiveProps(prevProps:Readonly<IStoryViewContentProps>, prevState:Readonly<IStoryViewContentStates>, snapshot?:any) {
-        let poll = this.props.poll;
+    componentWillReceiveProps(nextProps) {
+        let poll = nextProps.poll;
         if(!isNull(poll)){
             if(poll.createdAt >= new Date()){
                 this.setState({
@@ -67,31 +67,35 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
 
     }
 
-    private onLikePoll = (poll:AlertPoll) => {
+    private onLikePoll = () => {
+        const poll = this.state.poll
         if (poll.likes) {
             poll.likes.push(this.props.user);
         } else {
             poll.likes = [this.props.user];
         }
-        reactToPoll(this.state.user, poll)
+        reactToPoll(this.props.user, poll)
             .then((res) => {
                 this.setState({
                     userReacted: true,
+                    poll:res
                 });
             })
             .catch((err) => {});
     };
 
-    private onDislikePoll = (poll:AlertPoll) => {
+    private dislikePoll = () => {
+        const poll = this.state.poll
         if (poll.dislikes) {
             poll.dislikes.push(this.props.user);
         } else {
             poll.dislikes = [this.props.user];
         }
-        reactToPoll(this.state.user, poll)
+        reactToPoll(this.props.user, poll)
             .then((res) => {
                 this.setState({
                     userReacted: true,
+                    poll:res
                 });
             })
             .catch((err) => {});
@@ -209,7 +213,7 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}
-                                        onPress={()=>{this.onDislikePoll(this.state.poll)}}
+                                        onPress={()=>{this.dislikePoll()}}
                                     >
                                         <Image
                                             source={{
@@ -232,7 +236,7 @@ export default class StoryViewContent extends React.Component<IStoryViewContentP
                                             justifyContent: "center",
                                             alignItems: "center",
                                         }}
-                                        onPress={()=>{this.onLikePoll(this.state.poll)}}
+                                        onPress={()=>{this.onLikePoll()}}
                                     >
                                         <Image
                                             source={{

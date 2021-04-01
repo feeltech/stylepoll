@@ -23,7 +23,7 @@ import {
 import * as Progress from "react-native-progress";
 import moment from "moment";
 import {getProgressBarValue} from "../../utils";
-import {startCase,isEmpty,map} from 'lodash';
+import {startCase} from 'lodash';
 import { ParallaxImage} from 'react-native-snap-carousel';
 import Carousal from "../../shared/components/carausal/carausal";
 import post from "../post/post";

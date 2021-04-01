@@ -115,14 +115,27 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     }
 
     private onMoodSelect = (moods) => {
+        const formattedMoods = moods;
+        map(formattedMoods, ((m, i) => {
+            if (!Number.isInteger(m)) {
+                formattedMoods.splice(i, 1)
+            }
+        }))
         this.setState({
-            selectedMoods: moods
+            selectedMoods: formattedMoods
         })
+
     }
 
     private onTagSelect = (tags) => {
+        const formattedTags = tags;
+        map(formattedTags, ((m, i) => {
+            if (!Number.isInteger(m)) {
+                formattedTags.splice(i, 1)
+            }
+        }))
         this.setState({
-            selectedTags: tags
+            selectedTags: formattedTags
         })
     }
 
@@ -133,8 +146,8 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
         map(this.state.selectedMoods, m => moods.push(this.state.moodList[m]))
         const diff = moment(this.state.when).diff(new Date(), "minutes")
         let endDate = this.state.when
-        if(!this.state.isDynamicTime){
-               endDate = new Date(moment( this.state.when).add(2,"minutes").toISOString())
+        if (!this.state.isDynamicTime) {
+            endDate = new Date(moment(this.state.when).add(2, "minutes").toISOString())
         }
         this.props.onSubmit(this.state.description, moods, tags, this.state.address, endDate)
     }
@@ -175,6 +188,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
     }
 
     render() {
+        console.log(" state ",this.state)
         return (
             <View style={styles.container}>
                 <KeyboardAvoidingView
@@ -214,7 +228,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                 <Text style={styles.input_label}>Add a Description</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
-                                               onChangeText={(text) => {this.setState({description: text})}} placeholder="Description on the poll" placeholderTextColor={'#515151'}
+                                               onChangeText={(text) => {
+                                                   this.setState({description: text})
+                                               }} placeholder="Description on the poll" placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {/* <Text style={styles.input_label}>ADD A Mood</Text> */}
@@ -258,7 +274,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                             this.state.selectedMoods.map(mood => {
                                                 return (
                                                     this.state.moodList[mood] &&
-                                                      <View style={{
+                                                    <View style={{
                                                         borderRadius: 10,
                                                         borderWidth: 1,
                                                         borderColor: "#a2a2a2",
@@ -306,7 +322,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         selectedItems={this.state.selectedTags}
                                         selectText="Pick Tags"
                                         fontSize={15}
-                                        fixedHeight= {false}
+                                        fixedHeight={false}
                                         searchInputPlaceholderText="Search Items..."
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
@@ -328,7 +344,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         {
                                             this.state.selectedTags.map(tag => {
                                                 return (
-                                                    this.state.selectedTags[tag] &&
+                                                    this.state.tagList[tag] &&
                                                     <View style={{
                                                         borderRadius: 10,
                                                         borderWidth: 1,
@@ -382,7 +398,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                             <Text style={styles.input_label}>Set your Poll Time</Text>
                                         </View>
                                         <View
-                                            style={{flex: 1, flexDirection: 'column', alignItems:'flex-end'}}>
+                                            style={{flex: 1, flexDirection: 'column', alignItems: 'flex-end'}}>
                                             <Switch value={this.state.isDynamicTime} onValueChange={this.onTimeSwitch}/>
                                         </View>
                                         <View

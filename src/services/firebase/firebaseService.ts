@@ -597,16 +597,16 @@ function getWardrobePosts(posts: PostDoc[], tags: string[]): WardRobe[] {
 }
 
 
-export function reactToPoll(user: User, poll: AlertPoll): Promise<boolean> {
+export function reactToPoll(user: User, poll: AlertPoll): Promise<AlertPoll> {
     return ALERT_POLL_COLLECTIONS.doc(poll.user.userId)
         .collection("userPolls")
         .doc(poll.postId)
         .set(poll)
         .then((res) => {
-            return Promise.resolve(true);
+            return Promise.resolve(poll);
         })
         .catch((err) => {
-            return Promise.resolve(false);
+            return Promise.resolve(poll);
         });
 }
 
