@@ -160,10 +160,10 @@ export default class PollDetailContent extends React.Component<IPollDetailConten
                     <View style={{flex:1,width: SCREEN_WIDTH_NEW, height: SCREEN_HEIGHT-60}}>
                             <View style={[ {flexDirection: "row", marginBottom: 10}]}>
                                 {this.getReactUsers().length != 0 ?
-                                    <Text style={{color: '#8ef64c', fontWeight: 'bold'}}>Reacted users</Text>
+                                    <Text style={{color: '#8ef64c', fontWeight: 'bold'}}>Reazioni</Text>
                                     :
                                     <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
-                                        <Text style={{color: '#707070', fontWeight: 'bold'}}>No reactions yet 😤</Text>
+                                        <Text style={{color: '#707070', fontWeight: 'bold'}}>In attesa dei feedback</Text>
                                     </View>
                                 }
                                 {/*<FastImage*/}

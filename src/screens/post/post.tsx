@@ -139,7 +139,7 @@ export default class Post extends React.Component<any, IPostStates> {
                             </View>
                         </View>}
                         rightComponent={this.isUserPost() ? <View/> :<TouchableOpacity onPress={this.onFollowHandle}>
-                            <Text style={{color: "#45b5f3", fontWeight: "bold"}}>{this.state.userIsFollowing ? 'Unfollow' : 'Follow'}</Text>
+                            <Text style={{color: "#45b5f3", fontWeight: "bold"}}>{this.state.userIsFollowing ? 'Smetti di seguire' : 'Seguire'}</Text>
                         </TouchableOpacity>}
                     />
                     <Loader show={this.state.isLoading}/>

@@ -83,17 +83,17 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
         if(post.userId === user.userId){
             return [
                 {
-                    text: "Delete",
+                    text: "Elmina",
                     onPress: () => {onPostOption("itemSelected",1,post)},
                     style: "cancel"
                 },
                 {
-                    text: "Report",
+                    text: "Segnala",
                     onPress: () => {onPostOption("itemSelected",0,post)},
                     style: "cancel"
                 },
                 {
-                    text: "Cancel",
+                    text: "Annulla",
                     onPress: () => {setShowReportOptions(false)},
                     style: "destructive"
                 },
@@ -101,22 +101,37 @@ const PostItem = ({setPost, item, post,user,onDeleteItem}: PostItemProps) => {
         } else {
             return [
                 {
-                    text: "Report",
+                    text: "Segnala",
                     onPress: () => {onPostOption("itemSelected",0,post)},
                     style: "cancel"
                 },
                 {
-                    text: "Cancel",
+                    text: "Annulla",
                     onPress: () => {setShowReportOptions(false)},
                     style: "destructive"
                 }
             ]
         }
     }
+
+const getPostOptionDetails = () => {
+    if(post.userId === user.userId){
+        return {
+            title:'Vuoi eliminare il tuo post?',
+            subtitle:"Elimina il post dal tuo feed e da quello di tutti i tuoi amici"
+        }
+       
+    }else{
+        return {
+            title:'Scegli cosa vuoi fare',
+            subtitle:"Segnala il post o annulla l'operazione"
+        }
+    }
+}
 const onPostOptionClick = (post:PostDoc) => {
         Alert.alert(
-            "Select an Option",
-            "",
+           getPostOptionDetails().title,
+           getPostOptionDetails().subtitle,
             getPostOptions(),
             {cancelable: true}
         );

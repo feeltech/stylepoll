@@ -85,14 +85,14 @@ class EditProfile extends React.Component<IEditProfileProps, IEditProfileStates>
                     footer={
                         <DialogFooter style={{marginTop:0}}>
                             <DialogButton
-                                text="Save"
+                                text="Salva"
                                 onPress={this.onEditProfile}
                             />
                         </DialogFooter>
                     }
                 >
                     <DialogContent style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{fontWeight: 'bold', marginBottom: 20}}>Edit Profile</Text>
+                        <Text style={{fontWeight: 'bold', marginBottom: 20}}>Modifica il tuo profilo</Text>
                         <TouchableOpacity onPress={()=>{this.props.onChangePicture(this.state.name)}}>
                             <Image source={{uri: this.state.imageURI}}
                                    style={{borderRadius: 50, width: 100, height: 100, marginBottom: 20}}/>

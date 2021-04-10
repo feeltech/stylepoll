@@ -27,16 +27,16 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private yellowButtonActions = () => {
         Alert.alert(
-            "Send to Friend",
-            "Send to friend or go back home",
+            "Invia a un amico",
+            "",
             [
                 {
-                    text: "Cancella",
+                    text: "Annulla",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "destructive"
                 },
                 {
-                    text: "OK!",
+                    text: "Invia",
                     onPress: () => {navigate("feed_to_friend",{imageUri: this.state.imageURI})},
                     style: "cancel"
                 }
@@ -48,15 +48,15 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
     private redButtonActions = () => {
         Alert.alert(
             "Alert Poll",
-            "Start the poll or go back to home",
+            "",
             [
                 {
-                    text: "Cancella",
+                    text: "Annulla",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "destructive"
                 },
                 {
-                    text: "OK!",
+                    text: "Invia",
                     onPress: () => {navigate("alert_poll",{imageUri: this.state.imageURI})},
                     style: "cancel"
                 },
@@ -67,6 +67,7 @@ class CaptureActions extends React.Component<any, ICaptureActionStatus> {
 
     private blueButtonActions = () => {
         const shareOptions = {
+            message: 'Seguimi su Stylepoll e condividi i tuoi Poll!',
             failOnCancel: false,
             urls: [this.state.imageURI]
         };

@@ -117,7 +117,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                             backgroundColor: "#0C0D34",
                         }}
                         centerComponent={{
-                            text: 'Discover',
+                            text: 'Esplora',
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                     />
@@ -146,7 +146,7 @@ export default class Discover extends React.Component<any, IDiscoverStates> {
                                     fontSize: 16
                                 }}
                                 onFocus={()=>{navigate("search-discover",{user:this.state.user})}}
-                                placeholder={"Search"}
+                                placeholder={"Cerca"}
                             />
                         </View>
                     </View>

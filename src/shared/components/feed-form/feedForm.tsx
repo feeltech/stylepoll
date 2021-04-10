@@ -217,7 +217,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                             <Text style={{
                                 color: "#58ddd9",
                                 fontWeight: "bold"
-                            }}>{this.props.headerRightLabel || 'Save'}</Text>
+                            }}>{this.props.headerRightLabel || 'Lancia'}</Text>
                         </TouchableOpacity>}
                     />
                     }
@@ -225,12 +225,12 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                     <ScrollView style={{backgroundColor: 'none', marginBottom: 0}}>
                         <View style={styles.centerContainer}>
                             <View style={styles.loginForm}>
-                                <Text style={styles.input_label}>Add a Description</Text>
+                                <Text style={styles.input_label}>Aggiungi una descrizione</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.description}
                                                onChangeText={(text) => {
                                                    this.setState({description: text})
-                                               }} placeholder="Description on the poll" placeholderTextColor={'#515151'}
+                                               }} placeholder="Descrivi il tuo outfit e l'occasione" placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
                                 {/* <Text style={styles.input_label}>ADD A Mood</Text> */}
@@ -248,9 +248,9 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         }}
                                         onSelectedItemsChange={this.onMoodSelect}
                                         selectedItems={this.state.selectedMoods}
-                                        selectText="Pick Moods"
+                                        selectText="Come ti senti?"
                                         fontSize={15}
-                                        searchInputPlaceholderText="Search Items..."
+                                        searchInputPlaceholderText="Cerca"
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
                                         tagRemoveIconColor="#CCC"
@@ -320,10 +320,10 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         }}
                                         onSelectedItemsChange={this.onTagSelect}
                                         selectedItems={this.state.selectedTags}
-                                        selectText="Pick Tags"
+                                        selectText="Cosa indossi?"
                                         fontSize={15}
                                         fixedHeight={false}
-                                        searchInputPlaceholderText="Search Items..."
+                                        searchInputPlaceholderText="Cerca"
                                         onChangeInput={(text) => console.log(text)}
                                         // altFontFamily="ProximaNova-Light"
                                         tagRemoveIconColor="#CCC"
@@ -376,13 +376,13 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         }
                                     </View>
                                 }
-                                <Text style={styles.input_label}>Edit Map</Text>
+                                <Text style={styles.input_label}>Dove ti trovi?</Text>
                                 <View style={styles.textInputWrapper}>
                                     <TextInput autoCapitalize="none" value={this.state.address}
                                                onChangeText={(text) => {
                                                    this.setState({address: text})
                                                }}
-                                               placeholder="Your Location"
+                                               placeholder="Aggiungi la tua posizione"
                                                placeholderTextColor={'#515151'}
                                                style={styles.input}/>
                                 </View>
@@ -395,7 +395,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                         justifyContent: 'space-between'
                                     }}>
                                         <View style={{flex: 1, flexDirection: 'column'}}>
-                                            <Text style={styles.input_label}>Set your Poll Time</Text>
+                                            <Text style={styles.input_label}>Imposta la durata del tuo Poll</Text>
                                         </View>
                                         <View
                                             style={{flex: 1, flexDirection: 'column', alignItems: 'flex-end'}}>
@@ -410,7 +410,7 @@ class FeedForm extends React.Component<IFeedFormProps, IFeedFormStates> {
                                     </View>
                                     {this.state.isDynamicTime &&
                                     <>
-                                        <Text style={styles.input_label}>When</Text>
+                                        <Text style={styles.input_label}>Quando</Text>
                                         <MyDatePicker onDateChange={this.handleDateChange} date={this.state.when}
                                                       disabled={!this.state.isDynamicTime}/>
                                     </>

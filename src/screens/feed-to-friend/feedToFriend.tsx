@@ -50,7 +50,7 @@ class FeedToFriend extends React.Component<any, ISendFeedStates>{
 
         render() {
         return (
-            <FeedForm showDate={true} headerTitle={"Send to friend"} onClose={()=>{navigate("camera")}} onSubmit={this.onNext} imageURI={this.state.imageURI} showHeader={true} headerRightLabel={"Next"}/>
+            <FeedForm showDate={true} headerTitle={"Invia ad un amico"} onClose={()=>{navigate("camera")}} onSubmit={this.onNext} imageURI={this.state.imageURI} showHeader={true} headerRightLabel={"Avanti"}/>
         );
     }
 }

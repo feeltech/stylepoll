@@ -169,12 +169,12 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                             />
                         </TouchableOpacity>}
                         centerComponent={{
-                            text: "Send to Friend",
+                            text: "Invia ad un amico",
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                         rightComponent={
                             this.state.followingFriends.length === 0 ? <Text></Text> : <TouchableOpacity onPress={this.state.isAlertPoll ? this.sendPollToFriend : this.onSave}>
-                                <Text style={{color: "#FFF", fontWeight: "bold"}}>Send</Text>
+                                <Text style={{color: "#FFF", fontWeight: "bold"}}>Invia</Text>
                             </TouchableOpacity>
                         }
                     />
@@ -208,13 +208,13 @@ class SendToFriend extends React.Component<any, ISendToFriendStates> {
                                         height: 40,
                                         fontSize: 16
                                     }}
-                                    placeholder={"Search"}
+                                    placeholder={"Cerca"}
                                     autoCapitalize={'none'}
                                 />
                             </View>
                         </View>
                         <View style={{marginLeft:15}}>
-                            <Text style={styles.input_label}>SEARCH TO WHO YOU WANT TO SEND IT</Text>
+                            <Text style={styles.input_label}>Scegli a chi inviare il tuo Poll</Text>
                         </View>
                         {
                             map(this.state.followingFriends,friend => (

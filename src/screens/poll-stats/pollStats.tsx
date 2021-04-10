@@ -51,18 +51,18 @@ class PollStats extends React.Component<any, IPollStatsStates> {
 
     private onSendPoll = () => {
         Alert.alert(
-            "Where do you want to share it?",
-            "Choose a destination",
+            "Dove vuoi condividerlo",
+            "",
             [
                 {
-                    text: "Send to feed",
+                    text: "Inviare al feed",
                     onPress: () => {
                         this.sendToFeed()
                     },
                     style: "cancel"
                 },
                 {
-                    text: "Send to a friend",
+                    text: "Invia agli amici",
                     onPress: () => {
                         navigate("send_to_friend", {
                             imageUri: this.state.imageURI,
@@ -73,7 +73,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                     style: "cancel"
                 },
                 {
-                    text: "Cancella",
+                    text: "Annulla",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "destructive"
                 }
@@ -137,14 +137,13 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                                 color: "#000",
                                 fontWeight: 'bold',
                                 fontSize: 20
-                            }}>{this.state.pollFinished ? 'Hey the poll is finished' : 'Your current poll result'}</Text>
+                            }}>{this.state.pollFinished ? 'Il Poll è terminato' : 'Il risultato del sondaggio corrente'}</Text>
                             {
                                 this.getGraphValue("total") == 0 ?
                                     <View style={{marginTop: 2}}>
-                                        <Text style={{color: '#db0000', fontWeight: 'bold'}}>No reactions 😤</Text>
+                                        <Text style={{color: '#db0000', fontWeight: 'bold'}}>Nessun voto ricevuto</Text>
                                     </View> :
-                                    <Text style={{color: "#000", fontWeight: 'bold', fontSize: 20}}>this is the
-                                        result:</Text>
+                                    <Text style={{color: "#000", fontWeight: 'bold', fontSize: 20}}>questo è il risultato:</Text>
                             }
 
                             {
@@ -246,7 +245,7 @@ class PollStats extends React.Component<any, IPollStatsStates> {
                                 width: 50,
                                 borderRadius: 25, marginBottom: 10}} source={require("../../../assets/images/share.png")}/>
                                 <View style={{backgroundColor:'white', padding: 3, borderRadius: 5, opacity: 0.6}}>
-                                <Text style={{fontWeight:'bold',borderColor:'white', color: 'black', opacity: 1}}>Continue</Text>
+                                <Text style={{fontWeight:'bold',borderColor:'white', color: 'black', opacity: 1}}>Continua</Text>
                             </View>
                             </TouchableOpacity>                            
                         </View>

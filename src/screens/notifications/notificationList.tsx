@@ -79,7 +79,7 @@ export default class NotificationList extends Component<any, INotificationStates
         return (
             <Text style={{
                 fontWeight: 'bold'
-            }}>Started to follow you</Text>
+            }}>Ha iniziato a seguirti</Text>
         )
     }
 
@@ -94,7 +94,7 @@ export default class NotificationList extends Component<any, INotificationStates
                 <Text style={{
                     fontWeight: '600',
                     fontSize:12
-                }}>Check this poll, I need your help to sort what to use</Text>
+                }}>Aiutami a scegliere, vota questo poll.</Text>
             </>
         )
     }
@@ -116,7 +116,7 @@ export default class NotificationList extends Component<any, INotificationStates
                     //       size={20}/>
                     // </TouchableOpacity>}
                     centerComponent={{
-                        text: 'Notifications',
+                        text: 'Notifiche',
                         style: {color: "#FFF", fontWeight: "bold"},
                     }}
                 />

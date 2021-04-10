@@ -90,7 +90,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
                             size={20}/>
                         </TouchableOpacity>}
                         centerComponent={{
-                            text: 'Search',
+                            text: 'Cerca',
                             style: {color: "#FFF", fontWeight: "bold"},
                         }}
                     />
@@ -119,7 +119,7 @@ class DiscoverSearch extends React.Component<any, IDiscoverSearchStates> {
                                     fontSize: 16
                                 }}
                                 autoCapitalize={'none'}
-                                placeholder={"Search"}
+                                placeholder={"Cerca"}
                             />
                         </View>
                     </View>

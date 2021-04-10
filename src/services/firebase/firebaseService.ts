@@ -49,7 +49,7 @@ export async function registerUser(user: User): Promise<User> {
                     return Promise.reject('That email address is invalid!');
                 }
                 if (error.code === 'auth/weak-password'){
-                    return Promise.reject('Password must be at least 6 characters!');
+                    return Promise.reject('La password deve contenere almeno 6 caratteri');
                 }
                 return Promise.reject("Failed to register.");
             });
@@ -88,7 +88,7 @@ export async function resetPassword(email: string, oldPassword: string, newPassw
     })
     .catch((error)=>{
         if (error.code === 'auth/user-not-found') {
-            return Promise.reject('That email address is not in use!');
+            return Promise.reject("Stylepoll non riconosce questo indirizzo. Inserisci l'indirizzo email con cui ti sei registrato");
         }
         return Promise.reject('Failed to reset password.');
     })

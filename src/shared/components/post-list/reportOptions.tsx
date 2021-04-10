@@ -35,23 +35,23 @@ class ReportOptions extends React.Component<IReportOptionsProps, IReportOptionsS
                     })}
                     width={SCREEN_WIDTH_NEW-20}
                     height={SCREEN_HEIGHT/2}
-                    dialogTitle={<DialogTitle title="Report" />}
+                    dialogTitle={<DialogTitle title="Segnala" />}
                     footer={
                         <DialogFooter style={{marginTop:0}}>
                             <DialogButton
-                                text="It's spam"
+                                text="È spam"
                                 onPress={this.onEditProfile}
                             />
                             <DialogButton
-                                text="It's inappropriate"
+                                text="È inappropriato"
                                 onPress={this.onEditProfile}
                             />
                         </DialogFooter>
                     }
                 >
                     <DialogContent style={{flex: 1, justifyContent: 'center', alignItems: 'flex-start'}}>
-                        <Text style={{fontWeight: 'bold', marginBottom: 20}}>Why are you reporting this post?</Text>
-                        <Text style={{marginBottom: 20}}>Your report is anonymous, except if you're reporting an intellectual property infringement. If someone is immediate danger, call the local emergency services - don't wait</Text>
+                        <Text style={{fontWeight: 'bold', marginBottom: 20}}>Perchè stai segnalando questo post?</Text>
+                        <Text style={{marginBottom: 20}}>Le tue segnalazioni sono sempre anonime, tranne quando segnali una violazione della proprietà intellettuale. Se pensi che qualcuno sia in pericolo imminente, chiama i servizi per le emergenze locali.</Text>
                     </DialogContent>
                 </Dialog>
         )

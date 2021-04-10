@@ -103,7 +103,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                         </View>
                         <View style={styles.loginForm}>
                             <View style={styles.textInputWrapper}>
-                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Your Email" placeholderTextColor={"black"}
+                                <TextInput autoCapitalize="none" value={this.state.email} onChangeText={(text)=>{this.setState({email:text})}} placeholder="Inserisci la tua Email" placeholderTextColor={"black"}
                                            style={styles.input} />
                             </View>
                             {/*<View style={styles.textInputWrapper}>*/}
@@ -168,7 +168,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                             {/*</View>*/}
                             {
                                 this.state.error &&
-                                <View style={styles.textInputErrorWrapper}>
+                                <View>
                                     <Text style={{color: 'red', fontSize: 13}}>{this.state.error}</Text>
                                 </View>
                             }
@@ -183,7 +183,7 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                                     fontSize: 16,
                                     color: '#fff',
                                     fontWeight: '500'
-                                }}>Reset Password</Text>
+                                }}>Resetta la password</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -199,8 +199,12 @@ class ForgotPassword extends React.Component<any, ILoginStates>{
                             <Text style={{
                                 fontWeight: '500',
                                 color: '#333'
-                            }}>Already have a account?
-                            </Text> Login</Text>
+                            }}>Sei già registrato?
+                            </Text > <Text style={{
+                                fontWeight: 'bold',
+                                color: '#333'
+                            }}>Effetta il login.
+                            </Text ></Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
             </SafeAreaView>

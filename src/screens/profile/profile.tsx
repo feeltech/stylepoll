@@ -222,13 +222,13 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         <View style={{flex: 1}}>
                             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                                 <Text>{this.state.posts.length}</Text>
-                                <Text>Wardrobe</Text>
+                                <Text>Armadio</Text>
                             </View>
                         </View>
                         <View style={{flex: 1}}>
                             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                                 <Text>{this.state.followings.length}</Text>
-                                <Text>Following</Text>
+                                <Text>Seguiti</Text>
                             </View>
                         </View>
                     </View>
@@ -258,7 +258,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                         justifyContent: 'space-between'
                     }}>
                         <View style={{flex: 1, flexDirection: 'column'}}>
-                            <Text style={{fontWeight: 'bold', fontSize: 15}}>Your wardrobe</Text>
+                            <Text style={{fontWeight: 'bold', fontSize: 15}}>Il tuo armadio</Text>
                         </View>
                         <View style={{flex: 1, flexDirection: 'column', alignItems:'flex-end'}}>
                             <Switch value={this.state.showWardrobe} onValueChange={() => {
@@ -302,7 +302,7 @@ export default class Profile extends React.Component<any, IProfileStates> {
                     {
                         this.state.posts.length == 0 &&
                         <View style={{flex:5,justifyContent:'center',alignItems:'center',flexDirection: 'column',}}>
-                            <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>No Posts Yet</Text>
+                            <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>Ancora nessun Poll</Text>
                         </View>
                     }
                 </ScrollView>

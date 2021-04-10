@@ -185,7 +185,7 @@ export default class Register extends React.Component<any, ILoginStates>{
                                     fontSize: 16,
                                     color: '#fff',
                                     fontWeight: '500'
-                                }}>Register</Text>
+                                }}>Registra il profilo</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.otherOptionsWrapper}>
@@ -219,8 +219,8 @@ export default class Register extends React.Component<any, ILoginStates>{
                             <Text style={{
                                 fontWeight: '500',
                                 color: '#333'
-                            }}>Already have a account?
-                            </Text> Login</Text>
+                            }}>Hai già un account? 
+                            </Text> <Text style={{fontWeight:'bold'}}>Accesso</Text></Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
             </SafeAreaView>

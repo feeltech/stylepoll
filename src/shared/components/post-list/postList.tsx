@@ -47,7 +47,7 @@ class Posts extends React.Component<PostListProps, PostListStates>{
                 {
                     this.props.posts.length === 0 &&
                     <View style={{flex:5,justifyContent:'center',alignItems:'flex-end',flexDirection: 'row'}}>
-                        <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>No Posts Yet</Text>
+                        <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>Ancora nessun Poll</Text>
                     </View>
                 }
             </View>

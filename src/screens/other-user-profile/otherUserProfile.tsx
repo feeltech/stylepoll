@@ -180,13 +180,13 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                         <View style={{flex: 1}}>
                             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                                 <Text>{this.state.posts.length}</Text>
-                                <Text>Wardrobe</Text>
+                                <Text>Armadio</Text>
                             </View>
                         </View>
                         <View style={{flex: 1}}>
                             <View style={{flexDirection: 'column', alignItems: 'center'}}>
                                 <Text>{this.state.followings.length}</Text>
-                                <Text>Following</Text>
+                                <Text>Seguiti</Text>
                             </View>
                         </View>
                     </View>
@@ -217,7 +217,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                                 marginRight: 3,
                                 padding: 3
                             }} onPress={this.onFollowHandle} disabled={this.state.user.userId === this.state.profileUser.userId}>
-                                <Text style={{fontSize: 12}}>{this.state.isFollowingUser ? 'Unfollow' : 'Follow'}</Text>
+                                <Text style={{fontSize: 12}}>{this.state.isFollowingUser ? 'Smetti di seguire' : 'Seguire'}</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{flex: 1, flexDirection: 'column'}}>
@@ -230,7 +230,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                             }} onPress={() => {
                                 this.setState({showWardrobe: !this.state.showWardrobe})
                             }}>
-                                <Text style={{fontSize: 12}}>Show Wardrobe</Text>
+                                <Text style={{fontSize: 12}}>Mostra l'armadio</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -264,7 +264,7 @@ export default class OtherUserProfile extends React.Component<any, IProfileState
                     {
                         this.state.posts.length == 0 &&
                         <View style={{flex:5,justifyContent:'center',alignItems:'center',flexDirection: 'column',}}>
-                            <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>No Posts Yet</Text>
+                            <Text style={{color:"#3a464f",fontSize:25, fontWeight:'bold'}}>Ancora nessun Poll</Text>
                         </View>
                         }
                 </ScrollView>

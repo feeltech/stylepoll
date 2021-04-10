@@ -184,9 +184,14 @@ class Login extends React.Component<any, ILoginStates> {
                                                 color: "#333",
                                             }}
                                         >
-                                            Did your forget your login information?
+                                            Hai dimenticato la tua password?
                                         </Text>{" "}
-                                        Get helping to login.
+                                        <Text
+                                            style={{
+                                                fontWeight: "bold",
+                                                color: "#333",
+                                            }}
+                                        >Recupera qui la tua password.</Text>
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -226,7 +231,7 @@ class Login extends React.Component<any, ILoginStates> {
                                 style={{
                                     textAlign: "center",
                                     fontSize: 12,
-                                    fontWeight: "600",
+                                    fontWeight: "bold",
                                 }}
                             >
                                 <Text
@@ -235,9 +240,9 @@ class Login extends React.Component<any, ILoginStates> {
                                         color: "#333",
                                     }}
                                 >
-                                    Don't have account?
+                                    Non hai ancora un profilo?
                                 </Text>{" "}
-                                Register now.
+                                Registrati qui.
                             </Text>
                         </TouchableOpacity>
                         </ScrollView>
